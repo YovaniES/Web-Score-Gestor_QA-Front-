@@ -1,0 +1,249 @@
+@import "variables.scss";
+
+.modal-title {
+  font-size: 1.6rem;
+  font-weight: 400;
+  // color: $color-blue;
+  color: #0daef4;
+
+  margin: 4px 0;
+  text-align: center;
+}
+
+.cli-table {
+  width: 100%;
+  background-color: #fff;
+  & th {
+    padding: 4px;
+    font-weight: 300;
+    text-align: center;
+  }
+  & td {
+    vertical-align: middle;
+    // text-align: center;
+    font-size: 0.7rem;
+  }
+  &-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &-input {
+    border: 1px solid $color-grey-4;
+    border-radius: 2px;
+  }
+}
+
+.text-alert {
+  font-size: 10px;
+  color: #f66d7a;
+  margin-top: 0;
+}
+
+.total {
+  color: #97999b;
+}
+
+.id-version {
+  color: #97999b;
+  border: solid 1px #0daef4;
+  border-radius: 10px;
+  padding: 0px 4px;
+  // padding: 2px 3px;
+}
+
+.obs-score {
+  min-width: 295px;
+  color: #878f96;
+  text-align: left;
+}
+
+.btn-obs {
+  border: none;
+  border-radius: 3px;
+  margin: 0 3px;
+  color: #438fffd4;
+  // font-family: "Webapp-Bold" !important;
+  display: flex;
+  align-items: center;
+
+  &:hover:enabled {
+    background-color: #8cbaffd4;
+    color: #fff;
+  }
+  &:hover:enabled:active {
+    background-color: #066affd4;
+  }
+
+  & mat-icon {
+    margin: 0 3px;
+  }
+  &:disabled {
+    background-color: #bcd7ff;
+    color: #fff;
+  }
+}
+
+.btn-observar {
+  background-color: #fff;
+  color: #ff5969;
+  border: solid 1px #ff5969;
+  transition: ease 0.3s;
+  &:hover:enabled {
+    background-color: #ffabb4;
+    color: #fff;
+  }
+  &:hover:enabled:active {
+    background-color: #ff5969;
+  }
+}
+
+.btn-sol-score {
+  background-color: #fff;
+  transition: ease 0.3s;
+  color: #0dcaf0;
+  border: solid 1px #0dcaf0;
+  &:hover:enabled {
+    background-color: #60d9f2;
+    color: #ffffff;
+  }
+  &:hover:enabled:active {
+    background-color: #00d5ff;
+  }
+}
+
+.btn-fin {
+  background-color: #fff;
+  transition: ease 0.3s;
+  color: #3486ff;
+  border: solid 1px #3486ff;
+  &:hover:enabled {
+    background-color: #6da7ff;
+    color: #ffffff;
+  }
+  &:hover:enabled:active {
+    background-color: #0066ff;
+  }
+}
+
+.btn-aprobar {
+  background-color: #fff;
+  transition: ease 0.3s;
+  color: #03bccf;
+  border: solid 1px #03bccf;
+  &:hover:enabled {
+    background-color: #30c5d5;
+    color: #ffffff;
+  }
+  &:hover:enabled:active {
+    background-color: #03bccf;
+  }
+}
+
+.cli-user {
+  display: flex;
+  align-items: center;
+  color: #0d6efd;
+  background: #f4f4f4;
+}
+
+.form-select {
+  font-size: 10px;
+}
+
+.form-control {
+  font-size: 14px;
+  text-align: center;
+}
+
+.card-footer:last-child {
+  font-size: 10px;
+}
+
+.id-score {
+  font-size: 18px;
+  text-align: center;
+  font-weight: 400;
+
+  color: #212529;
+  // font-weight: 500;
+  border: solid 0.5px #0daef4;
+  border-radius: 4px;
+  background: #f8f9fa;
+  padding: 5px;
+}
+
+::ng-deep .mat-form-field {
+  // display: inline-block;
+  // position: relative;
+  text-align: center;
+}
+
+::ng-deep.mat-form-field-appearance-outline .mat-form-field-wrapper {
+  margin: 0.01em 0;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: 0em 0 0.5em 0;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0.015em;
+}
+
+.cli-import {
+  border: solid 1px #6c757d;
+  border-radius: 4px;
+  color: #20c997;
+  font-size: 12px;
+  padding: 3.5px;
+}
+
+.score-section {
+  margin-left: 10px;
+  padding-left: 20px;
+  padding-top: 4px;
+  border-top: 4px solid #0daef4;
+}
+
+.tabs-container{
+  background: #eee;
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+  height: 30px;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  color: #6c757d;
+}
+
+.tabs-container .tab-link{
+  width: 50%;
+  position: relative;
+  height: 100%;
+  padding: 4px;
+  float: left;
+  text-align: center;
+  cursor: pointer;
+}
+
+.active{
+  border-bottom: 3px solid #03bccf;
+  transition: ease-in-out .3s;
+  font-weight: 500;
+  color: #03bccf;
+  background: #e9fdff;
+}
+
+@media (max-width: 768px) {
+  .modal-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 5px 0;
+    text-align: center;
+  }
+  .btn-m {
+    height: 20px;
+    padding: 15px;
+  }
+}

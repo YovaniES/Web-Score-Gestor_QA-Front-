@@ -1,0 +1,186 @@
+<div class="cli-card fit-card">
+  <div class="cli-card-body">
+    <div class="modal-title c-male">Solicitud Envío de Score</div>
+    <div>
+      <!-- BUSCADOR POR FILTRO ---------------------------------------------------------------->
+      <div class="card" style="border-radius: 2px; font-weight: 600; padding: 7px">
+          <form class="row g-3" [formGroup]="filtroForm">
+            <div class="col-sm-3 cli-form-element" >
+              <label>Lider QA</label>
+              <input
+                type="text"
+                class="form-control cli-input-white"
+                formControlName="lider"/>
+            </div>
+
+            <div class="col-sm-3 cli-form-element">
+              <label>Estado Score</label>
+              <select class="cli-input-white" formControlName="id_estado">
+                <option [value]="0" disabled>- Seleccione -</option>
+                <option [value]="estado.idEstado" *ngFor="let estado of listEstado">{{estado.cNombre}}</option>
+              </select>
+            </div>
+
+            <div class="col-sm-3 cli-form-element">
+              <label>Actualizado por:</label>
+              <input
+                type="text"
+                class="form-control cli-input-white"
+                formControlName="actualiza_por"/>
+            </div>
+
+            <div class="col-sm-3 cli-form-element">
+              <label class="form-label">Fecha de Solicitud</label>
+              <mat-form-field color="accent" appearance="outline">
+                <mat-date-range-input [rangePicker]="picker">
+                  <input matStartDate formControlName="fecha_envio_ini" placeholder="Desde">
+                  <input matEndDate   formControlName="fecha_envio_fin" placeholder="Hasta">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+              </mat-form-field>
+            </div>
+
+            <div class="cli-form-buttons" style="margin-top: 8px">
+              <button
+                type="submit"
+                class="cli-btn btn-salir"
+                style="border-radius: 2px; padding: 0.225rem 0.75rem"
+                (click)="limpiarFiltro()"
+                ><mat-icon class="icon-18">rotate_left</mat-icon>
+                Limpiar
+              </button>
+
+              <button
+                type="button"
+                class="cli-btn btn-skyblue"
+                style="border-radius: 2px; padding: 0.225rem 0.75rem"
+                (click)="cargarOBuscarScoreM()"
+                ><mat-icon class="icon-18">search</mat-icon>
+                Buscar
+              </button>
+            </div>
+          </form>
+      </div>
+
+      <!-- BOTON MODAL PARA CREAR SCORE ----------------------------------------------------->
+      <div style="display: flex" class="mt-4 mb-1">
+          <!-- <button *ngIf="authService.esUsuarioSolicitante()"
+            class="cli-btn btn-blue"
+            style="margin: 0"
+            type="button"
+            (click)="CrearScore_M()"
+            ><mat-icon class="icon-18">add</mat-icon>Agregar Solcitud
+          </button> -->
+
+        <div class="flex-1"></div>
+        <div class="mt-2" style="color: #0daef4; font-weight: 600;">
+          Total : <span class="total">{{ listScore.length }} Solicitudes</span>
+        </div>
+      </div>
+
+      <!-- TABLA DEL EVENTOS ------------------------------------------------------------------>
+      <div style="overflow: auto; min-height: 430px">
+        <table class="cli-table stripedtable underlinedtable">
+          <thead>
+            <tr class="bgc-blue-light c-white">
+              <th>Acción</th>
+              <th>ID Score</th>
+              <!-- <th>Solicitante</th> -->
+              <th>Fecha Solicitud</th>
+              <th>Solicitante</th>
+              <th>Caso Score</th>
+              <th>Tipo Score</th>
+              <th>Fecha Prueba</th>
+              <!-- <th>Formato Envío</th> -->
+              <!-- <th>Carga </th> -->
+              <th>Estado</th>
+              <th>Fecha Creación</th>
+              <th>Actualizado Por:</th>
+              <th>Fecha Actualizado</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let score of listScore | paginate:
+                      { itemsPerPage: pageSize,
+                        currentPage : page,
+                        totalItems  : totalScore
+                      } ">
+              <td class="w50">
+                <div class="cli-table-actions">
+
+                  <button matTooltip="Actualizar"
+                  class="icon-btn btn-trans c-blue"
+                  (click)="actualizarScore(score)"
+                  ><mat-icon class="icon-13">drive_file_rename_outline</mat-icon>
+                </button>
+
+                  <button matTooltip ="Descargar"
+                    class="icon-btn btn-trans c-green-export"
+                    (click)="exportarRegistro(score.idScoreM, score.formato_envio)"
+                    ><mat-icon class="icon-13">file_download</mat-icon>
+                  </button>
+                </div>
+              </td>
+              <td class="w150">{{ score.idScore_M }}</td>
+              <td class="w100">{{ score.fecha_solicitud }}</td>
+              <td>{{ score.solicitante }}</td>
+              <td >
+                <span style="align-items: center; display: flex; color: #999999;" *ngIf="score.casoScore == 'Corporativo'"><mat-icon class="icon-10 icon-btn" style="margin-right: 5px; display: flex; color: #c3a2ff;">fiber_manual_record</mat-icon>{{ score.casoScore | uppercase }}</span>
+                <span style="align-items: center; display: flex; color: #999999;" *ngIf="score.casoScore == 'Residencial'"><mat-icon class="icon-10 icon-btn" style="margin-right: 5px; display: flex; color: #00d4ff;">workspaces_filled  </mat-icon>{{ score.casoScore | uppercase }}</span>
+                <span style="align-items: center; display: flex; color: #999999;" *ngIf="score.casoScore == 'Excepción'"  ><mat-icon class="icon-10 icon-btn" style="margin-right: 5px; display: flex; color: #00ffc3;">adjust             </mat-icon>{{ score.casoScore | uppercase }}</span>
+              </td>
+              <td>{{ score.tipoScore }}</td>
+
+              <td>
+                <div class="cli-table"
+                style="display: flex; align-items: center; justify-content: space-evenly; background: none; color: #6c757d; border: solid 1px #c4c7ca; min-width: 150px; border-radius: 3px; font-size: 11px;">
+                  {{ score.fecha_crea}}<mat-icon class="icon-13">trending_flat</mat-icon>{{ score.fecha_solicitud }}
+                </div>
+              </td>
+              <!-- <td><div matBadgeSize="small" [matBadge] = 15 matBadgeOverlap="false" class="demo-section" matBadgePosition="after" matBadgeColor="accent">{{ score.solicitante}}</div></td> -->
+
+              <!-- <td class="w100">{{ score.carga }}</td> -->
+              <td >
+                <span *ngIf="score.estado == 'Registrado'"    class="label est-reg">       {{ score.estado | uppercase }}</span>
+                <span *ngIf="score.estado == 'En Validación'" class="label est-valid">     {{ score.estado | uppercase }}</span>
+                <span *ngIf="score.estado == 'Solicitado'"    class="label est-sol ">      {{ score.estado | uppercase }}</span>
+                <span *ngIf="score.estado == 'Observado'"     class="label est-obs ">      {{ score.estado | uppercase }}</span>
+                <span *ngIf="score.estado == 'Aprobado'"      class="label est-aprobado">  {{ score.estado | uppercase }}</span>
+                <span *ngIf="score.estado == 'Enviado'"       class="label est-enviado ">  {{ score.estado | uppercase }}</span>
+                <span *ngIf="score.estado == 'Finalizado'"    class="label est-finalizado">{{ score.estado | uppercase }}</span>
+                <span *ngIf="score.estado == 'Subsanado'"     class="label est-subsanado"> {{ score.estado | uppercase }}</span>
+              </td>
+
+              <td style="min-width: 95px;"> {{ score.fecha_crea }}</td>
+              <td style="min-width: 100px;">{{ score.actualiza }}</td>
+              <td style="min-width: 115px"> {{ score.fecha_crea }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="cli-loader" *ngIf="loadingItem">
+          <mat-spinner style="margin-right: 20px" diameter="20"></mat-spinner>cargando...
+        </div>
+
+        <div
+          *ngIf="!loadingItem && listScore.length == 0"
+          class="cli-loader mt-5"
+          style="color: #f83434"
+          >No hay Score para mostrar
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer pb-0 pt-3">
+      <pagination-controls
+        previousLabel="Anterior"
+        nextLabel="Siguiente"
+        [responsive]="false"
+        (pageChange)="cambiarPagina($event)">
+      </pagination-controls>
+    </div>
+  </div>
+</div>
+
+

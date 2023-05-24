@@ -1,0 +1,34 @@
+<div class="cli-header">
+  <div (click)="openMobileMenu()" class="header-icon">
+    <mat-icon>menu</mat-icon>
+  </div>
+  <div class="logoheader">
+    <img class="hlogo" src="../../../assets/images/logos/cardano-white.svg" />
+    <div class="logo-let" style="color: #FFF">
+      <div style="font-weight: 200">Dynamo<span style="font-weight: 700; color: #0daef4"> PROCESOS</span></div>
+    </div>
+  </div>
+  <div class="header-nav-items"></div>
+  <div class="row">
+    <div class="col-sm-12 personname" style="color: #555555">
+      {{ currentUser | uppercase }}
+      <br>
+      <!-- <div *ngIf="authService.esUsuarioGestor()" class="cli-rol col-sm-12 cli-btn" style="font-size: 12px; font-weight: 400; margin-top: -11px;"><mat-icon class="icon-13">person</mat-icon> {{userRolName}}</div> -->
+      <div *ngIf="authService.esUsuarioGestor()" class="cli-rol col-sm-12 cli-btn" style="font-size: 12px; font-weight: 400; margin-top: -11px;"><mat-icon class="icon-13">person</mat-icon> {{userRolName}}</div>
+      <div *ngIf="authService.esUsuarioLider()"  class="cli-rol-sol col-sm-12 cli-btn" style="font-size: 12px; font-weight: 400; margin-top: -11px;"><mat-icon class="icon-13">person</mat-icon> {{userRolName}}</div>
+    </div>
+
+    <div ng-class="{'className1' : modalValue, cssProperty: modalValue2}"></div>
+  </div>
+  <app-user-section [photouri]="phtouri" [nameini]="nameini"></app-user-section>
+
+  <button
+      type="submit"
+      class="btn-grey mb-2 mt-3 btn-logout"
+      (click)="logOut()"
+      ><mat-icon class="icon-16">logout</mat-icon>Salir
+   </button>
+
+</div>
+
+<app-menu-mobile></app-menu-mobile>

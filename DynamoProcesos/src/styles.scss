@@ -1,0 +1,136 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.c-green-export {
+  color: #029d55;
+  border: solid 0.5px #029d55;
+}
+
+.btn-logout {
+  border: solid 1px #0daef4;
+  border-radius: 20px;
+  margin: 0 5px;
+  height: 30px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+}
+
+
+// ESTILOS GLOBALES
+.label {
+  // padding: 3px 10px;
+  padding: 2px 6px;
+  line-height: 13px;
+  color: #fff;
+  font-weight: 400;
+  border-radius: 4px;
+  font-size: 75%;
+  background-color: #398bf7;
+}
+
+.est-sol {
+  // background-color: #0dcaf0;
+  background-color: #57ccff;
+  padding: 3.5px 13px;
+  color: #fff;
+}
+
+.est-usu-inac {
+  background-color: #ffdc73;
+  padding: 3.5px 5px;
+  color: #6f42c1;
+}
+
+.est-no-exit-lb {
+  background-color: #a269ff;
+  padding: 3.5px 10px;
+  color: #fff;
+  font-weight: 100;
+}
+
+.est-no-autorizado {
+  background-color: #ffad69;
+  padding: 3.5px 10px;
+  font-weight: 100;
+}
+
+.est-observado {
+  background-color: #ff6f7c;
+  padding: 3.5px 13px;
+  color: #fff;
+  font-weight: 100;
+}
+
+.est-enviado {
+  background-color: #81ffd9;
+  padding: 2.5px 19px;
+  color: #5f5d5d;
+}
+
+
+.est-finalizado {
+  background-color: #0d6efd;
+  padding: 2.5px 12px;
+  color: #fff;
+}
+
+.est-aprobado {
+  background-color: #03bccf;
+  padding: 2.5px 15px;
+  color: #fff;
+}
+
+.est-subsanado {
+  background-color: #fcf700;
+  padding: 2.5px 12px;
+  color: #6c757d;
+  border: solid 1px #adadad;
+}
+
+.est-CantLinEr {
+  background-color: #0dcaf0;
+  padding: 3.5px 19px;
+  color: #FFF;
+  font-weight: 100;
+}
+
+.est-CapFinEr {
+  background-color: #96a4b0;
+  padding: 3.5px 22px;
+  color: #FFFF;
+  font-weight: 100;
+}
+
+.btn-hardware {
+  color: #fff;
+  margin: 0 1px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  border: solid 1px #0daef4;
+  background: #0daef4;
+}
+
+.input-group-text {
+  // background-color: #ffffff;
+  border: none;
+  padding: 0.5px 5px;
+}
+
+.version {
+  font-size: 12px;
+  text-align: center;
+  font-weight: 500;
+  color: #20c997;
+  padding: 1px;
+}
+
+.buscar {
+  border-radius: 2px;
+  // font-weight: 500;
+  padding: 5px;
+  // border: 0.5px solid #e1e1e2;
+}

@@ -1,0 +1,67 @@
+<div style="display: flex">
+  <div class="flex-1"></div>
+  <div class="modal-title c-male"> Aprobar u Observar registro</div>
+  <div class="flex-1"></div>
+
+  <button (click)="close()" class="icon-btn btn-trans c-orange moda-close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<form class="row g-3" [formGroup]="asigObservacionForm">
+  <div class="cli-form newvac-wrapper">
+    <div class="chart-draw">
+
+      <div style="display: flex" >
+        <div class="id-score">Score : <span  class="total">{{asigObservacionForm.controls['score'].value}}</span></div>
+        <div class="flex-1" style="background: #f8f9fa;"></div>
+          <ng-container class="input-group">
+            <div class="input-group-text" style="background: #f8f9fa; color: #858d95;"><mat-icon class="icon-13">contact_page</mat-icon></div>
+            <div class="cli-user">{{asigObservacionForm.controls['tipo_documento'].value | uppercase}}</div>
+          </ng-container>
+          <div class="flex-1" style="background: #f8f9fa;"></div>
+          <div class="s-dni">Número DOC : <span  class="total">{{asigObservacionForm.controls['numero_documento'].value}}</span></div>
+      </div>
+
+        <div class="pr-module-container">
+          <div class="row g-3">
+            <div class="col-sm-12 cli-form-element">
+              <label>Estado</label>
+              <select class="cli-input-white" formControlName="id_estado_d">
+                <option [value]="0" disabled>- Seleccione -</option>
+                <option [value]="estado.id_correlativo"*ngFor="let estado of listEstadoDetalle">{{ estado.valor_texto_1 }}</option>
+              </select>
+            </div>
+
+            <div class="cli-form-element mb-2" *ngIf="asigObservacionForm.controls['id_estado_d'].value == 5 || asigObservacionForm.controls['id_estado_d'].value == 10">
+              <label>Nota Gestor QA*</label>
+              <textarea
+                class="form-control"
+                style="background-image: none; border-color: #bdbdbd; font-size: 12px;"
+                rows="3"
+                placeholder="Escriba alguna Nota del registro para el Solicitante del score..."
+                formControlName="observacion_gestor">
+              </textarea>
+              <small class="form-text text-alert" *ngIf="campoNoValido('observacion_gestor')">* Describa un comentario es obligatorio</small>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+    <div class="cli-form-buttons" style="margin-top: 8%">
+      <button class="cli-btn btn-m btn-salir" type="submit" (click)="close()">
+        <mat-icon class="icon-18">cancel</mat-icon> Salir
+      </button>
+      <button
+        class="cli-btn btn-m btn-skyblue"
+        [disabled]="asigObservacionForm.invalid"
+        (click)="actualizarObservacion()">
+        <mat-icon class="icon-18">save</mat-icon> Guardar
+      </button>
+    </div>
+  </div>
+</form>
+
+
+

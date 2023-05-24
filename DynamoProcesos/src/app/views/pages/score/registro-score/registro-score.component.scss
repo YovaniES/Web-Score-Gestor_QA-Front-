@@ -1,0 +1,154 @@
+@import "variables.scss";
+
+.modal-title {
+  font-size: 1.9rem;
+  font-weight: 500;
+  margin: 10px 0;
+  text-align: left;
+}
+
+.cli-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+}
+
+.total {
+  color: #97999b;
+  font-size: 18px;
+  font-weight: 550;
+}
+
+.w50 {
+  width: 50px;
+}
+
+.w150 {
+  width: 150px;
+  height: 40px;
+}
+
+.c-green-export {
+  color: #029d55;
+  border: solid 0.5px #029d55;
+}
+
+.date-rango {
+  color: #5c5c5c;
+  font-size: 10px;
+  font-weight: 400;
+}
+
+// Estilos Adjuntar Archivos
+.fileatt {
+  &-cont {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+    padding: 5px;
+    border: dashed 1px $color-grey-3;
+  }
+  &-btn {
+    margin: 2px;
+    display: flex;
+    align-items: center;
+    color: $color-green;
+    background-color: $color-grey-1;
+    border: none;
+    border-radius: 2px;
+  }
+  margin: 2px 3px;
+  padding: 2px 5px;
+  border-radius: 2px;
+  background-color: $color-grey-1;
+  display: flex;
+  align-items: center;
+}
+
+.est-reg {
+  background-color: #bac1c7;
+  padding: 2.5px 10px;
+  color: #fff;
+}
+
+.est-valid {
+  background-color: #fbe8b0;
+  padding: 2.5px 5px;
+  color: #6c757d;
+}
+
+.est-sol {
+  background-color: #57ccff;
+  padding: 2.5px 13px;
+}
+// ff6473eb
+
+.est-obs {
+  background-color: #ff727f;
+  padding: 2.5px 12px;
+  color: #fff;
+}
+
+.est-aprobado {
+  background-color: #03bccf;
+  padding: 2.5px 14px;
+  color: #fff;
+}
+
+.est-finalizado {
+  background-color: #0d6efd;
+  padding: 2.5px 12px;
+  color: #fff;
+}
+
+// estilos para el rango de fechas
+.input-group {
+  width: auto;
+  justify-content: center;
+}
+
+::ng-deep .mat-form-field-type-mat-date-range-input .mat-form-field-infix {
+  height: 50px;
+  margin-top: -10px;
+}
+
+::ng-deep .mat-date-range-input-start-wrapper {
+  font-size: 12px;
+}
+
+::ng-deep .mat-date-range-input-end-wrapper {
+  font-size: 12px;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-wrapper {
+  margin: 0 0;
+}
+
+.mat-hint {
+  font-size: 8px;
+}
+
+::ng-deep .mat-form-field-subscript-wrapper {
+  margin-top: 1px;
+}
+
+::ng-deep .mat-calendar-body-selected {
+  background-color: #0daef4;
+  color: #fff;
+}
+
+// Styles Badge
+// :host {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: flex-start;
+// }
+
+// .demo-section + .demo-section {
+//   margin-top: 8px;
+// }
+
+@media (max-width: 850px) {
+}
