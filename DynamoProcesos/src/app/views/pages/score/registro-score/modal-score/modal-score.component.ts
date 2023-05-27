@@ -96,7 +96,6 @@ export class ModalStoreComponent implements OnInit {
         version                : [''],
         importar               : [''],
         actualiza              : [''],
-
         fecha_ini_prueba       : ['', Validators.required],
         fecha_fin_prueba       : ['', Validators.required],
         hora_ini_prueba        : ['', Validators.required],
@@ -105,7 +104,7 @@ export class ModalStoreComponent implements OnInit {
         nombre_proy            : [''],
         casoScore              : [''],
         tipoScore              : [''],
-
+        req_validacion         : [''],
         fechaIniPrueba         : [null],
         fechaFinPrueba         : [null],
         fechaEnvioPrueba       : [null]
@@ -387,9 +386,7 @@ export class ModalStoreComponent implements OnInit {
             p_idScore   : this.DATA_SCORE.idScoreM,
             p_num_doc   : this.scoreForm.value.num_doc,
             p_id_estado : this.scoreForm.value.id_estado_d,
-            // p_fecha_proc: this.scoreForm.value.fecha_proceso,
-            // inicio      : this.datePipe.transform(this.scoreForm.value.fecha_solicitud_ini,"yyyy/MM/dd"),
-            // fin         : this.datePipe.transform(this.scoreForm.value.fecha_solicitud_fin,"yyyy/MM/dd"),
+            p_req_validacion : this.scoreForm.value.req_validacion,
         }
       }];
       this.scoreService.cargarOBuscarScoreDetalle(parametro[0]).subscribe((resp: any) => {
@@ -412,7 +409,6 @@ export class ModalStoreComponent implements OnInit {
       //    this.listScoreDetalleCorp  = resp.list;
       //   }
       //  }
-
 
        if((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado == 'Enviado') {
         this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 6 ) && score.caso_score == 'General');
@@ -541,7 +537,7 @@ export class ModalStoreComponent implements OnInit {
   //         p_idScore : this.DATA_SCORE.idScoreM,
   //     }
   //   }];
-  //   this.scoreService.exportScoreDetalleIndividual(parametro[0]).subscribe((resp: any) => {
+  //   this.scoreService.exportScoreDetalleDiurno(parametro[0]).subscribe((resp: any) => {
   //     this.excellIndividualService.dowloadExcel(resp.list);
   //   });
   // };
@@ -553,7 +549,7 @@ export class ModalStoreComponent implements OnInit {
           p_idScore : this.DATA_SCORE.idScoreM,
       }
     }];
-    this.scoreService.exportScoreDetalleIndividual(parametro[0]).subscribe((resp: any) => {
+    this.scoreService.exportScoreDetalleDiurno(parametro[0]).subscribe((resp: any) => {
       this.excellDiurnoService.dowloadExcel(resp.list);
     });
   }
@@ -561,7 +557,7 @@ export class ModalStoreComponent implements OnInit {
 
   enviarRegistroTDPX(casoScore? : string){
     let parametro: any[] = [{
-      "queryId": 34,
+      "queryId": 35,
       "mapValue": {
           p_idScore  : this.DATA_SCORE.idScoreM,
           // p_casoScore: this.DATA_SCORE.caso_score
@@ -599,7 +595,7 @@ export class ModalStoreComponent implements OnInit {
 
 
   enviarRegistroTDP(){
-    if (this.DATA_SCORE.estado == 'Solicitado' ) {
+    if (this.DATA_SCORE.estado == 'Solicitado' || this.DATA_SCORE.estado == 'Aprobado' ) {
       Swal.fire({
         title: 'Enviar Registro score?',
         text: `¿Estas seguro que desea enviar el registro y cambiar el estado a enviado? `,
@@ -644,12 +640,12 @@ export class ModalStoreComponent implements OnInit {
 
   exportScoreDetalleDiurno(id_score: number){
     let parametro: any[] = [{
-      "queryId": 27,
+      "queryId": 34,
       "mapValue": {
           p_idScore : id_score,
       }
     }];
-    this.scoreService.exportScoreDetalleIndividual(parametro[0]).subscribe((resp: any) => {
+    this.scoreService.exportScoreDetalleDiurno(parametro[0]).subscribe((resp: any) => {
 
       this.excellDiurnoService.generarExcell(resp.list, ).then((file: any) => {
         const blob = new Blob([file]);
@@ -660,14 +656,14 @@ export class ModalStoreComponent implements OnInit {
 
   exportScoreDetalleB2B(id_score: number){
     let parametro: any[] = [{
-      "queryId": 28,
+      "queryId": 35,
       "mapValue": {
           p_idScore : id_score,
       }
     }];
-    this.scoreService.exportScoreDetalleExcepcion(parametro[0]).subscribe((resp: any) => {
+    this.scoreService.exportScoreDetalleB2B(parametro[0]).subscribe((resp: any) => {
 
-      this.excellDiurnoService.generarExcell(resp.list,).then( file => {
+      this.excellB2BService.generarExcell(resp.list,).then( file => {
         const blob = new Blob([file]);
         this.listadoCorreosTDP(blob);
       });
@@ -698,35 +694,36 @@ export class ModalStoreComponent implements OnInit {
       data.append("From","procesosqa@indratools.net");
       data.append("ToEmail", listaCorreo.join(';'));
       data.append("Cc", correoCopia.join(';'));
-      data.append("Subject","Formato_Solicitud_Score_B2C_"+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -MASIVA");
+      data.append("Subject","F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -MASIVA-QA v2");
       data.append("Body","Buen día, Se realizaron las modificaciones solicitadas. Las modificaciones se visualizan en el archivo adjunto.");
-      data.append("Attachments", file, "Formato_Solicitud_Score_B2C_"+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -MASIVA" + '.xlsx');
+      data.append("Attachments", file, "F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -MASIVA-QA v2" + '.xlsx');
     } if (this.scoreForm.controls['tipoScore'].value == 'Diurno') {
       data.append("From","procesosqa@indratools.net");
       data.append("ToEmail", listaCorreo.join(';'));
       data.append("Cc", correoCopia.join(';'));
-      data.append("Subject","Formato_Solicitud_Score_B2C_"+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -DIURNO");
+      data.append("Subject","F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -DIURNA-QA");
       data.append("Body","Buen día, Se realizaron las modificaciones solicitadas. Las modificaciones se visualizan en el archivo adjunto.");
-      data.append("Attachments", file, "Formato_Solicitud_Score_B2C_"+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -DIURNO" + '.xlsx');
-    } else {
+      data.append("Attachments", file, "F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -DIURNA-QA" + '.xlsx');
+    }
+    else {
       data.append("From","procesosqa@indratools.net");
       data.append("ToEmail", listaCorreo.join(';'));
       data.append("Cc", correoCopia.join(';'));
-      data.append("Subject","Formato_Solicitud_Score_B2C_"+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+"-B2B");
+      data.append("Subject","F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+"-B2B");
       data.append("Body","Buen día, Se realizaron las modificaciones solicitadas. Las modificaciones se visualizan en el archivo adjunto.");
-      data.append("Attachments", file, "Formato_Solicitud_Score_B2C_"+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+"-B2B" + '.xlsx');
+      data.append("Attachments", file, "F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+"-B2B-QA" + '.xlsx');
     }
 
     this.sendMailService.SendDataByEmail(data).then((response) => {
       if (response && response.ok) {
         Swal.fire({
-          title: 'Enviar mensaje!',
-          text : `El mensaje fue enviado con éxito`,
+          title: 'Enviar formato!',
+          text : `El formato fue enviado con éxito`,
           icon : 'success',
           confirmButtonText: 'Ok',
         });
-        // this.cambiarEstadoScoreM('ENVIADO');
-        // this.cambiarEstadoDetalleAenviado();
+        this.cambiarEstadoScoreM('ENVIADO');
+        this.cambiarEstadoDetalleAenviado();
         this.close(true);
       }
       console.log(response);
@@ -1030,16 +1027,6 @@ export class ModalStoreComponent implements OnInit {
       // console.log('ESTADOS', resp.list);
     });
   }
-
-  // listEstadoDetalle: any[] = [];
-  // getListEstadoDetalle(){
-  //   let parametro: any[] = [{ queryId: 7 }];
-
-  //   this.scoreService.getListEstadoDetalle(parametro[0]).subscribe((resp: any) => {
-  //     this.listEstadoDetalle = resp.list;
-  //     // console.log('ESTADOS_DETALLE', resp.list);
-  //   });
-  // }
 
   listFormEnvio: any[] = [];
   getListFormatoEnvio(){

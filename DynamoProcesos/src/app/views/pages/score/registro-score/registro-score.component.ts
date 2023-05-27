@@ -126,7 +126,7 @@ export class RegistroScoreComponent implements OnInit {
 
 
     if (f_envio.formato_envio == 1) {
-      this.exportScoreDetalleIndividual(id);
+      this.exportScoreDetalleB2B(id);
     }else{
       this.exportScoreDetalleMasivo(id)
     }
@@ -145,14 +145,14 @@ export class RegistroScoreComponent implements OnInit {
   }
 
 
-  exportScoreDetalleIndividual(id_score: number){
+  exportScoreDetalleB2B(id_score: number){
     let parametro: any[] = [{
       "queryId": 26,
       "mapValue": {
           p_idScore : id_score,
       }
     }];
-    this.scoreService.exportScoreDetalleIndividual(parametro[0]).subscribe((resp: any) => {
+    this.scoreService.exportScoreDetalleB2B(parametro[0]).subscribe((resp: any) => {
       console.log('EXPORT_INDIVIDUAL', resp.list);
 
     // this.exportExcellIndividualService.exportarExcelDetalleIndividual(resp.list, 'Individual');

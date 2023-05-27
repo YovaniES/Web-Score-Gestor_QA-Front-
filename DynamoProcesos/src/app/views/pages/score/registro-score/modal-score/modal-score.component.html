@@ -129,6 +129,15 @@
                         </select>
                       </div>
 
+                      <div class="col-sm-2 cli-form-element">
+                        <label>Req. Validación</label>
+                        <select class="cli-input-white" formControlName="req_validacion">
+                          <option [value]="10" disabled>- Seleccione -</option>
+                          <option [value]="0">SI</option>
+                          <option [value]="1">NO</option>
+                        </select>
+                      </div>
+
                       <div class="col-sm-2">
                         <div style="margin-top: 27px; display: flex">
                           <button
@@ -295,6 +304,15 @@
                           <select class="cli-input-white" formControlName="id_estado_d">
                             <option [value]="0" disabled>- Seleccione -</option>
                             <option [value]="estado.idEstado"*ngFor="let estado of listEstado">{{ estado.cNombre }}</option>
+                          </select>
+                        </div>
+
+                        <div class="col-sm-2 cli-form-element">
+                          <label>Req. Validación</label>
+                          <select class="cli-input-white" formControlName="req_validacion">
+                            <option [value]="10" disabled>- Seleccione -</option>
+                            <option [value]="1">NO</option>
+                            <option [value]="0">SI</option>
                           </select>
                         </div>
 
@@ -466,6 +484,15 @@
                           </select>
                         </div>
 
+                        <div class="col-sm-2 cli-form-element">
+                          <label>Req. Validación</label>
+                          <select class="cli-input-white" formControlName="req_validacion">
+                            <option [value]="10" disabled>- Seleccione -</option>
+                            <option [value]="0">SI</option>
+                            <option [value]="1">NO</option>
+                          </select>
+                        </div>
+
                         <div class="col-sm-2">
                           <div style="margin-top: 27px; display: flex">
                             <button
@@ -509,7 +536,6 @@
                                 <th style="min-width: 65px;" >Estado</th>
                                 <th style="min-width: 130px;">Observ. Gestor QA.</th>
                                 <th style="min-width: 108px;">Req. Validación</th>
-
                                 <th style="min-width: 85px;" >Cuota Inicial</th>
                                 <th style="min-width: 65px;" >Gama</th>
                                 <th style="min-width: 63px;" >Tipo Doc</th>
@@ -552,7 +578,7 @@
                                       style="margin: 0"
                                       type="button"
                                       (click)="asignarObservacion(score)"
-                                      matTooltip="Observar o Aprobar registro E"
+                                      matTooltip="Observar o Aprobar registro"
                                       ><mat-icon class="icon-13">loupe</mat-icon>
                                     </button>{{ score.observacion_gestor }}
                                 </div>
@@ -701,7 +727,7 @@
         <button
            class="cli-btn btn-m btn-mail"
            type="submit"
-           (click)="enviarRegistroTDPX()">
+           (click)="enviarRegistroTDP()">
            <mat-icon class="icon-18">forward_to_inbox</mat-icon> Enviar
           </button>
       </ng-container>

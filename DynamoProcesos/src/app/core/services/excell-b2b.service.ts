@@ -8,7 +8,7 @@ export class ExcellB2BService {
   private wb!: Workbook;
 
    dowloadExcel(dataExcel: any[]): any{
-    console.log('export-data', dataExcel);
+    console.log('export-data-B2B', dataExcel);
     this.wb = new Workbook();
 
      this.createFormato(dataExcel);
@@ -24,7 +24,7 @@ export class ExcellB2BService {
   };
 
   generarExcell(dataExcel: any[]): Promise<any>{
-    console.log('export-data', dataExcel);
+    console.log('export-data-b2b', dataExcel);
      this.wb = new Workbook();
 
      this.createFormato(dataExcel);
@@ -56,7 +56,7 @@ export class ExcellB2BService {
     sheet.getColumn('M').width = 24;
     sheet.getColumn('N').width = 18;
     sheet.getColumn('O').width = 25;
-    sheet.getColumn('P').width = 95;
+    sheet.getColumn('P').width = 75;
 
     this.aplicarMergeTitle(sheet, [
       { value: 'FECHA DE SOLICITUD', cell: 'B4'},
@@ -66,11 +66,12 @@ export class ExcellB2BService {
       { value: 'FECHA FIN DE PRUEBAS', cell: 'B8'},
 
       // Data  colum D
-      { value: scoreTable[0].fecha_envio, cell: 'F4'},
-      { value: 'PQA-10837 ', cell: 'F5'},
-      { value: 'RQ-008314', cell: 'F6'},
+      { value: scoreTable[0].fecha_solicitud, cell: 'F4'},
+      { value: scoreTable[0].codigo_proyecto, cell: 'F5'},
+      { value: scoreTable[0].nombre_proyecto, cell: 'F6'},
       { value: scoreTable[0].fecha_ini_prueba, cell: 'F7' },
-      { value: scoreTable[0].fecha_ini_prueba +' a ' + scoreTable[0].fecha_fin_prueba , cell: 'F8'},
+      { value: scoreTable[0].fecha_fin_prueba, cell: 'F8' },
+      // { value: scoreTable[0].fecha_ini_prueba +' a ' + scoreTable[0].fecha_fin_prueba , cell: 'F8'},
     ]);
 
     sheet.getRow(2).height = 82;
@@ -117,8 +118,7 @@ export class ExcellB2BService {
     };
 
     const textMotivo = sheet.getCell('O4');
-    textMotivo.value = 'Modificar la lógica de cobro del costo de instalación B2B';
-    // textMotivo.value = scoreTable[0].motivo_solicitud;  //OJO CAMBIAR A DATA DINAMICO
+    textMotivo.value = scoreTable[0].motivo_solicitud;
     textMotivo.style.font = { size: 11 };
 
     // Agregamos el LOGO Telefonica y lo posicionamos
@@ -128,7 +128,7 @@ export class ExcellB2BService {
     });
 
     const posicionLogo: ImagePosition = {
-      tl : { col: 4.5, row: 1.85 },
+      tl : { col: 4.5, row: 1.05 },
       ext: { width: 175, height: 60 },
     };
 
@@ -214,11 +214,14 @@ export class ExcellB2BService {
       sheet.getCell('B8').style = {font: {bold: true}, alignment:{vertical: 'middle'}, fill: {type:'pattern', pattern:'solid', fgColor: {argb: 'FFFFDAB9'}}};
 
       sheet.getCell('L4').value = {
-        'richText': [{'font': {'bold': true,'size': 11,'color': {'theme': 1},'name': 'Calibri','family': 2,'scheme': 'minor'}, 'text': 'MOTIVO DE SOLICITUD'}]
+        'richText': [{'font': {'bold': true,'size': 11,'color': {'theme': 1},'name': 'Calibri','family': 2,'scheme': 'minor'}, 'text': 'MOTIVO DE SOLICITUD'}],
       };
       sheet.getCell('L4').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'DEDEDE'}};
       sheet.getCell('G2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'DEDEDE'}};
 
+      // CENTRAMOS LAS CELDAS TITULO Y MOTIVO SOLICITUD - REVISAR ***********
+      // sheet.getCell('G2').style = {alignment: { horizontal: 'center', vertical: 'middle'}}
+      // sheet.getCell('L4').style = {alignment: { horizontal: 'center', vertical: 'middle'}}
 
       headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };

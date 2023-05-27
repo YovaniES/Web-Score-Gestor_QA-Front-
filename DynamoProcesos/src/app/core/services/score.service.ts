@@ -64,12 +64,12 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   }
 
-  exportScoreDetalleIndividual(obj: any){
+  exportScoreDetalleDiurno(obj: any){
     return this.http.post(API_SCORE, obj);
   }
 
 
-  exportScoreDetalleExcepcion(obj: any){
+  exportScoreDetalleB2B(obj: any){
     return this.http.post(API_SCORE, obj);
   }
 }
