@@ -34,7 +34,7 @@ export class RegistroScoreComponent implements OnInit {
   constructor(
     private scoreService: ScoreService,
     public authService: AuthService,
-    private exportExcellIndividualService: ExportExcellIndividualService,
+    // private exportExcellIndividualService: ExportExcellIndividualService,
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
     public datepipe: DatePipe,
@@ -140,7 +140,7 @@ export class RegistroScoreComponent implements OnInit {
       }
     }];
     this.scoreService.exportScoreDetalleMasivo(parametro[0]).subscribe((resp: any) => {
-    this.exportExcellIndividualService.exportarExcelDetalleMasivo(resp.list, 'Masivo');
+    // this.exportExcellIndividualService.exportarExcelDetalleMasivo(resp.list, 'Masivo');
     });
   }
 
@@ -155,7 +155,7 @@ export class RegistroScoreComponent implements OnInit {
     this.scoreService.exportScoreDetalleIndividual(parametro[0]).subscribe((resp: any) => {
       console.log('EXPORT_INDIVIDUAL', resp.list);
 
-    this.exportExcellIndividualService.exportarExcelDetalleIndividual(resp.list, 'Individual');
+    // this.exportExcellIndividualService.exportarExcelDetalleIndividual(resp.list, 'Individual');
     });
   }
 

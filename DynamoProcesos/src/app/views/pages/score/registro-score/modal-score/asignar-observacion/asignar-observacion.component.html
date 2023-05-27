@@ -29,11 +29,11 @@
               <label>Estado</label>
               <select class="cli-input-white" formControlName="id_estado_d">
                 <option [value]="0" disabled>- Seleccione -</option>
-                <option [value]="estado.id_correlativo"*ngFor="let estado of listEstadoDetalle">{{ estado.valor_texto_1 }}</option>
+                <option [value]="estado.idEstado"*ngFor="let estado of listEstadoDetalle">{{ estado.cNombre }}</option>
               </select>
             </div>
 
-            <div class="cli-form-element mb-2" *ngIf="asigObservacionForm.controls['id_estado_d'].value == 5 || asigObservacionForm.controls['id_estado_d'].value == 10">
+            <div class="cli-form-element mb-2" *ngIf="asigObservacionForm.controls['id_estado_d'].value == 4 || asigObservacionForm.controls['id_estado_d'].value == 5">
               <label>Nota Gestor QA*</label>
               <textarea
                 class="form-control"

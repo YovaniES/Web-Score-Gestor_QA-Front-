@@ -3,10 +3,11 @@ import { Workbook, Worksheet } from 'exceljs';
 import * as fs from 'file-saver';
 
 @Injectable({ providedIn: 'root' })
-export class ExcellMasivaService {
+export class ExcellDiurnoService {
   private wb!: Workbook;
 
    dowloadExcel(dataExcel: any[]): any{
+    // console.log('export-data_masivo', dataExcel);
     this.wb = new Workbook();
 
      this.createListaTX(dataExcel);
@@ -56,79 +57,74 @@ export class ExcellMasivaService {
     sheet.getColumn('J').width = 13;
     sheet.getColumn('K').width = 22;
     sheet.getColumn('L').width = 25;
-    sheet.getColumn('M').width = 25;
 
 
     // DATA SCORE - TABLA DINAMICA
     sheet.columns.forEach((name_col) => {
       name_col.alignment = {vertical: 'middle', wrapText: true };
-      name_col.fill = {type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF' },}; //Pintamos toda la hoja
+      // name_col.fill = {type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF' },}; //Pintamos toda la hoja
 
       // CABECERA DE LA TABLA CON ESTILOS
-      const headerFila = sheet.getRow(1);
+      const headerFila = sheet.getRow(2);
       headerFila.values = [
-        'LLAVE',            //A
-        'REVISION WL',      //B
-        'NEGOCIO',          //C
-        'TIPO DE TRAN',     //D
-        'TIPO DE VENTA',    //E
-        'GAMA',             //F
-        'CUOTA INICIAL',    //G
-        'CUOTAS',           //H
-        'LIMITE DE CREDITO',//I
-        'CAP FINAN',        //J
-        'SCORE (4DIG)',     //K
-        'NRO DE LINEAS',    //L
-        'CODIGO FINAN'      //M
+        'LLAVE',
+        'NEGOCIO',
+        'TIPO DE TRAN',
+        'TIPO DE VENTA',
+        'GAMA',
+        'CUOTA INICIAL',
+        'CUOTAS',
+        'LIMITE DE CREDITO',
+        'CAP FINAN',
+        'SCORE (4DIG)',
+        'NRO DE LINEAS',
+        'CODIGO FINAN',
       ];
 
-
-      headerFila.font = { bold: true, size: 12 };
+      headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-      headerFila.height = 35;
+      headerFila.height = 30;
 
 
       // Bauground fila 1 - Tabla
-      sheet.getCell('A1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
-      sheet.getCell('B1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
-      sheet.getCell('C1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
-      sheet.getCell('D1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
-      sheet.getCell('E1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
-      sheet.getCell('F1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
-      sheet.getCell('G1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
+      sheet.getCell('A2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF32CD32'}}
+      sheet.getCell('B2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF32CD32'}}
+      sheet.getCell('C2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF32CD32'}}
+      sheet.getCell('D2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF32CD32'}}
+      sheet.getCell('E2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF32CD32'}}
+      sheet.getCell('F2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF32CD32'}}
+      sheet.getCell('G2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF32CD32'}}
 
-      sheet.getCell('H1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
-      sheet.getCell('I1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
-      sheet.getCell('J1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
-      sheet.getCell('K1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
-      sheet.getCell('L1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
-      sheet.getCell('M1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
+      sheet.getCell('H2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
+      sheet.getCell('I2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
+      sheet.getCell('J2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
+      sheet.getCell('K2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
+      sheet.getCell('L2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
 
       // Insertamos la data en las respectivas Columnas.
-      const insertarFila = sheet.getRows(2, scoreTable.length)!;
+      const insertarFila = sheet.getRows(3, scoreTable.length)!;
       for (let i = 0; i < insertarFila.length; i++) {
         const fila = insertarFila[i];
 
         fila.values = [
-          'FIJA-ALTA-ALTA-NO-APLICA-FINANCIADO--', //A
-          'NO',                                    //B
-          'FIJA',                                  //C
-          'MIGRACION',                             //D
-          scoreTable[i].Num_Lin_Disp,              //E
-          scoreTable[i].Usuario,                   //F
-          scoreTable[i].Fecha_APP,                 //G
-          scoreTable[i].Capacidad_Financiamiento,  //H
-          scoreTable[i].Codigo_Financiamiento,     //I
-          scoreTable[i].SCORE,                     //J
-          scoreTable[i].CARGOFIJOMAXIMO,           //K
-          scoreTable[i].NEGOCIOYSEGMENTO,          //L
-          scoreTable[i].Segmento,                  //M
+          'MOVISTAR TOTAL-TOTALIZACIÓN MT-PORTA FINANCIADO - FIJA UPFRONT-BAJA-CI MINIMA 35%-12',
+          'MOVISTAR TOTAL',
+          scoreTable[i].Codigo_Financiamiento,
+          scoreTable[i].Segmento,
+          scoreTable[i].Num_Lin_Disp,
+          scoreTable[i].Usuario,
+          scoreTable[i].Fecha_APP,
+          scoreTable[i].Capacidad_Financiamiento,
+          scoreTable[i].Codigo_Financiamiento,
+          scoreTable[i].SCORE,
+          scoreTable[i].CARGOFIJOMAXIMO,
+          scoreTable[i].NEGOCIOYSEGMENTO,
         ];
         fila.font = { size: 11}
         fila.alignment = { horizontal: 'center', vertical: 'middle'}
       }
 
-    //  this.borderTable(sheet, scoreTable);
+     this.borderTable(sheet, scoreTable);
     });
   }
 
@@ -160,7 +156,6 @@ export class ExcellMasivaService {
     sheet.getColumn('T').width = 20;
     sheet.getColumn('U').width = 20;
     sheet.getColumn('V').width = 20;
-    sheet.getColumn('W').width = 20;
 
 
     // DATA SCORE - TABLA DINAMICA
@@ -183,23 +178,22 @@ export class ExcellMasivaService {
         'CuotaInicial',                   //J
         'Cuotas',                         //K
         'Cap_Finan_2',                    //L
-        'LLAVE',                          //M
-        'CASO FINAN',                     //N
-        'VALID. WL',                      //O
-        'LLAVE_2',                        //P
-        'VALID. LLAVE',                   //Q
-        'Usuario',                        //R
-        'CargoFijoMaximo',                //S
-        'Capacidad_Financiamiento_Prev',  //T
-        'Score',                          //U
-        'Num_Lin_Disp',                   //V
-        'Codigo_Financiamiento',          //W
+        'VALID. WL',                      //M
+        'VALID. GAMA',                    //N
+        'LLAVE',                          //O
+        'VALID. LLAVE',                   //P
+        'Usuario',                        //Q
+        'CargoFijoMaximo',                //R
+        'Capacidad_Financiamiento_Prev',  //S
+        'Score',                          //T
+        'Num_Lin_Disp',                   //U
+        'Codigo_Financiamiento',          //V
       ];
 
 
-      headerFila.font = { bold: true, size: 12 };
+      headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-      headerFila.height = 35;
+      headerFila.height = 28;
 
 
       // Bauground fila 1 - Tabla
@@ -228,7 +222,6 @@ export class ExcellMasivaService {
       sheet.getCell('T1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
       sheet.getCell('U1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
       sheet.getCell('V1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
-      sheet.getCell('W1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
 
       // Insertamos la data en las respectivas Columnas.
       const insertarFila = sheet.getRows(2, scoreTable.length)!;
@@ -237,22 +230,22 @@ export class ExcellMasivaService {
 
         fila.values = [
           'LUIS CHAMPA',                            //A
-          'RQ-008411 Actualizacion de Datos(OutOfDrop)',//B
+          'RQ-008241_Pruebas Movil DITO',           //B
           '20230413',                               //C
-          3,                                        //D
+          1,                                        //D
           '44447581',                               //E
           'MOVIL B2C',                              //F
-          'CAEQ+CASI',                              //G
+          'TOTALIZACIÓN MT',                        //G
           'CAEQ/ALTA FINANCIADO - FIJA FINANCIADO', //H
           scoreTable[i].Segmento,                   //I
           scoreTable[i].Num_Lin_Disp,               //J
           scoreTable[i].Usuario,                    //K
           scoreTable[i].Fecha_APP,                  //L
-          'MOVIL B2C+CASI-CONTADO-MEDIA-NO APLICA--',//M
+          scoreTable[i].Capacidad_Financiamiento,   //M
           scoreTable[i].Codigo_Financiamiento,      //N
           scoreTable[i].SCORE,                      //O
-          'VALIDO MOVISTAR TOTAL - TOTALIZACION MT-CAEQ/ALTA FINANCIADO-FIJA FINANCIADO-MEDIA-CI X GAMA-12',//P
-          'PROCEDE',                                //Q
+          scoreTable[i].CARGOFIJOMAXIMO,            //P
+          'MT-QA-LC',                               //Q
           260,                                      //R
           100,                                      //S
           1707,                                     //T
@@ -265,7 +258,7 @@ export class ExcellMasivaService {
       }
 
      this.borderTableForExcepGeneral(sheet, scoreTable);
-    //  this.fontUsuarioMasivo(sheet, scoreTable)
+     this.fontUsuarioMasivo(sheet, scoreTable)
     });
   }
 
@@ -334,9 +327,9 @@ export class ExcellMasivaService {
       ];
 
 
-      headerFila.font = { bold: true, size: 12 };
+      headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-      headerFila.height = 35;
+      headerFila.height = 20;
 
 
       // Insertamos la data en las respectivas Columnas.
@@ -401,7 +394,6 @@ export class ExcellMasivaService {
     sheet.getColumn('J').width = 18;
     sheet.getColumn('K').width = 22;
     sheet.getColumn('L').width = 60;
-    sheet.getColumn('M').width = 15;
 
     // DATA SCORE - TABLA DINAMICA
     sheet.columns.forEach((name_col) => {
@@ -423,12 +415,11 @@ export class ExcellMasivaService {
         'CAP FIN',          //J
         'COD DIN',          //K
         'LLAVE',            //L
-        'REVISION WL',      //M
       ];
 
-      headerFila.font = { bold: true, size: 12, color: {argb: 'FF4169E1'} };
+      headerFila.font = { bold: true, size: 11, color: {argb: 'FF4169E1'} };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-      headerFila.height = 35;
+      headerFila.height = 25;
 
       // Insertamos la data en las respectivas Columnas.
       const insertarFila = sheet.getRows(2, scoreTable.length)!;
@@ -448,7 +439,6 @@ export class ExcellMasivaService {
           scoreTable[i].Num_Lin_Disp,   //J
           scoreTable[i].Usuario,        //K
           '8241-DITO-STD ALONE-FINANCIADO-1701-100-0-0-1', //L
-          'NO'
         ];
         fila.font = { size: 11}
         fila.alignment = { horizontal: 'center', vertical: 'middle'}
@@ -478,11 +468,10 @@ export class ExcellMasivaService {
     sheet.getColumn('N').width = 20;
     sheet.getColumn('O').width = 18;
     sheet.getColumn('P').width = 18;
-    sheet.getColumn('Q').width = 55;
+    sheet.getColumn('Q').width = 20;
     sheet.getColumn('R').width = 20;
-    sheet.getColumn('S').width = 20;
-    sheet.getColumn('T').width = 60;
-    sheet.getColumn('U').width = 20;
+    sheet.getColumn('S').width = 60;
+    sheet.getColumn('T').width = 20;
 
 
     // DATA SCORE - TABLA DINAMICA
@@ -509,17 +498,17 @@ export class ExcellMasivaService {
         'Codigo_Financiamiento',        //N
         'Cap_Finan_2',                  //O
         'Usuario',                      //P
-        'LLAVE',                        //Q
-        'CASO FINAN',                   //R
-        'VALID. WL',                    //S
-        'LLAVE_2',                      //T
-        'VALID. LLAVE'                  //U
+        'VALID. WL',                    //Q
+        'VALID. GAMA',                  //R
+        'LLAVE',                        //S
+        'VALID. LLAVE',                 //T
       ];
 
 
-      headerFila.font = { bold: true, size: 12 };
+      headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
       headerFila.height = 35;
+
 
       // Bauground fila 1 - Tabla
       sheet.getCell('A1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'DEDEDE'}}
@@ -545,7 +534,6 @@ export class ExcellMasivaService {
       sheet.getCell('S1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF32CD32'}}
 
       sheet.getCell('T1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFFFFF00'}}
-      sheet.getCell('U1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFFFFF00'}}
 
       // Insertamos la data en las respectivas Columnas.
       const insertarFila = sheet.getRows(2, scoreTable.length)!;
@@ -568,12 +556,11 @@ export class ExcellMasivaService {
           scoreTable[i].Capacidad_Financiamiento,   //M
           scoreTable[i].Codigo_Financiamiento,      //N
           scoreTable[i].SCORE,                      //O
-          'M_QA_LC',                                //P
-          '8242-DITO-STD ALONE-FINANCIADO-1608-90-1-250-1',//Q
-          'ERROR EN LLAVE',                         //R
-          'NO VÁILDO',//S
-          '8241-DITO-STD ALONE-FINANCIADO-1506-80-1-100-1',//T
-          'NO PROCEDE'                              //U
+          'FALSO',                                  //P
+          'MT-QA-LC',                               //Q
+          'VALIDO',                                 //R
+          '8241-DITO-STD ALONE-FINANCIADO-1506-80-1-100-1',//S
+          'NO PROCEDE',                                    //T
 
         ];
         fila.font = { size: 11}
@@ -588,7 +575,7 @@ export class ExcellMasivaService {
     const sheet = this.wb.addWorksheet('WL');
 
     // Establecemos el ancho y estilo de las columnas de la Tabla
-    sheet.getColumn('A').width = 26;
+    sheet.getColumn('A').width = 22;
     sheet.getColumn('B').width = 15;
     sheet.getColumn('C').width = 22;
     sheet.getColumn('D').width = 20;
@@ -601,16 +588,16 @@ export class ExcellMasivaService {
       // CABECERA DE LA TABLA CON ESTILOS
       const headerFila = sheet.getRow(1);
       headerFila.values = [
-        'TIPO_DOC',        //A
-        'NUM_DOC',         //B
-        'TX',              //C
-        'NUM_DOC-TEXTO',   //D
+        'TIPO_DOC',             //A
+        'NUM_DOC',              //B
+        'TX',                   //C
+        'NUM_DOC-TEXTO',        //D
       ];
 
 
       headerFila.font = { bold: true, size: 12, color:{argb: 'FFFFFFFF'} };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-      headerFila.height = 35;
+      headerFila.height = 25;
 
 
       // Bauground fila 1 - Tabla
@@ -638,7 +625,6 @@ export class ExcellMasivaService {
     });
   }
 
-
   private fontUsuarioMasivo(sheet: Worksheet, scoreTable: any){
     for (let i = 1; i < 1 + scoreTable.length; i++) {
       [`F${i + 1}`,
@@ -655,7 +641,7 @@ export class ExcellMasivaService {
   }
 
   private borderTable(sheet: Worksheet, scoreTable: any) {
-    for (let i = 0; i < 1 + scoreTable.length; i++) {
+    for (let i = 1; i < 1 + scoreTable.length; i++) {
       [`A${i + 1}`,
        `B${i + 1}`,
        `C${i + 1}`,
@@ -706,7 +692,6 @@ export class ExcellMasivaService {
        `T${i + 1}`,
        `U${i + 1}`,
        `V${i + 1}`,
-       `W${i + 1}`,
 
       ].forEach((key) => {
         // sheet.getCell(key).style = { alignment: { horizontal: 'center', vertical: 'middle'} ,fill: {type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFB0C4DE' },}};
@@ -742,7 +727,6 @@ export class ExcellMasivaService {
        `R${i + 1}`,
        `S${i + 1}`,
        `T${i + 1}`,
-       `U${i + 1}`,
       ].forEach((key) => {
         // sheet.getCell(key).style = { alignment: { horizontal: 'center', vertical: 'middle'} ,fill: {type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFB0C4DE' },}};
         sheet.getCell(key).border = {

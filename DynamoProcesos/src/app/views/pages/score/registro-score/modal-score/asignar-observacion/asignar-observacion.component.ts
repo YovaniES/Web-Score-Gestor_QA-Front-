@@ -44,7 +44,7 @@ export class AsignarObservacionComponent implements OnInit {
       numero_documento   : [''],
       score              : [''],
       observacion_gestor : ['', Validators.required],
-      observacion       : [''], // obs sistema o excell
+      observacion        : [''], // obs sistema o excell
     })
    }
 
@@ -101,11 +101,11 @@ export class AsignarObservacionComponent implements OnInit {
 
   listEstadoDetalle: any[] = [];
   getListEstadoDetalle(){
-    let parametro: any[] = [{ queryId: 7 }];
+    let parametro: any[] = [{ queryId: 3 }];
 
     this.scoreService.getListEstadoDetalle(parametro[0]).subscribe((resp: any) => {
-      this.listEstadoDetalle = resp.list.filter((x: any) => x.id_correlativo == 1 || x.id_correlativo == 5 || x.id_correlativo == 10);
-      // console.log('ESTADOS_DETALLE', resp.list);
+      this.listEstadoDetalle = resp.list.filter((x: any) => x.idEstado == 2 || x.idEstado == 4 || x.idEstado == 5 || x.idEstado == 7 || x.idEstado == 8 );
+      console.log('ESTADOS_DETALLE', resp.list);
     });
   }
 

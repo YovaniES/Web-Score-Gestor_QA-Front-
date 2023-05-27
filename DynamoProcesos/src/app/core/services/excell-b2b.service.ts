@@ -4,7 +4,7 @@ import * as fs from 'file-saver';
 import { LOGO } from '../models/logo';
 
 @Injectable({ providedIn: 'root' })
-export class ExcellIndividualService {
+export class ExcellB2BService {
   private wb!: Workbook;
 
    dowloadExcel(dataExcel: any[]): any{
@@ -36,7 +36,7 @@ export class ExcellIndividualService {
   };
 
   private createFormato(scoreTable: any): void {
-    console.log('DATA-EXCELL',scoreTable, scoreTable[0].GAMADEEQUIPO, scoreTable[0].Fecha_APP);
+    console.log('EXPORT-B2B',scoreTable, scoreTable[0].observacion, scoreTable[0].cod_evaluacion);
 
     const sheet = this.wb.addWorksheet('FORMATO'); //Nombre de la Hoja
 
@@ -161,7 +161,34 @@ export class ExcellIndividualService {
         'OBSERVACIONES',                        //P
       ];
 
-      // Bauground fila 11 - Tabla
+      // Insertamos la data en las respectivas Columnas.
+      const insertarFila = sheet.getRows(11, scoreTable.length)!;
+      for (let i = 0; i < insertarFila.length; i++) {
+        const fila = insertarFila[i];
+
+        fila.values = [
+          '',                             //A
+          i + 1,                          //B
+          scoreTable[i].caso_score,       //C
+          scoreTable[i].segmento,         //D
+          scoreTable[i].tipoTransaccion,  //E
+          scoreTable[i].tipoVenta,        //F
+          scoreTable[i].gama,             //G
+          scoreTable[i].tipo_documento,   //H
+          scoreTable[i].numero_documento, //I
+          scoreTable[i].nombres_apell,    //J
+          scoreTable[i].num_lin_disp,     //K
+          scoreTable[i].score,            //L
+          scoreTable[i].cf_disponible,    //M
+          scoreTable[i].cap_financ_prev,  //N
+          scoreTable[i].cod_evaluacion,   //O
+          scoreTable[i].observacion       //P
+        ];
+        fila.font = { size: 11}
+        fila.alignment = { horizontal: 'center', vertical: 'middle'}
+      }
+
+        // Bauground fila 11 - Tabla
       sheet.getCell('B10').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'DEDEDE'}};
       sheet.getCell('C10').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'DEDEDE'}};
       sheet.getCell('D10').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'DEDEDE'}};
@@ -196,34 +223,6 @@ export class ExcellIndividualService {
       headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
       headerFila.height = 45;
-
-
-      // Insertamos la data en las respectivas Columnas.
-      const insertarFila = sheet.getRows(11, scoreTable.length)!;
-      for (let i = 0; i < insertarFila.length; i++) {
-        const fila = insertarFila[i];
-
-        fila.values = [
-          '',                                       //A
-          i + 1,                                    //B
-          scoreTable[i].NEGOCIOYSEGMENTO,           //C
-          scoreTable[i].TIPOTRANSACCION,            //D
-          scoreTable[i].TIPOVENTA,                  //E
-          scoreTable[i].GAMADEEQUIPO,               //F
-          scoreTable[i].CUOTAINICIAL,               //G
-          scoreTable[i].TIPODOCUMENTO,              //H
-          scoreTable[i].NUMDOCUMENTO,               //I
-          scoreTable[i].NOMBRESYAPELLIDOSDELCLIENTE,//J
-          scoreTable[i].QLINEAS,                    //K
-          scoreTable[i].SCORE,                      //L
-          scoreTable[i].CODFINANCIAMIENTO,          //M
-          scoreTable[i].FECHAPROCESO,               //N
-          'S62304040045353',                        //O
-          'RUC para pruebas debido a la modalidad de campaña y score' //P
-        ];
-        fila.font = { size: 11}
-        fila.alignment = { horizontal: 'center', vertical: 'middle'}
-      }
 
      this.borderTableFormato(sheet, scoreTable);
      this.backgroundItemTabla(sheet, scoreTable);

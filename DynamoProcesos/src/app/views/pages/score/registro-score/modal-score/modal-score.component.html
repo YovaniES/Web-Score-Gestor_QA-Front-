@@ -54,24 +54,6 @@
                   formControlName="tipoScore"/>
               </div>
 
-              <!-- <div class="col-sm-3 cli-form-element">
-                <label>Formato de Envío</label>
-                <select class="cli-input-white" formControlName="formato_envio">
-                    <option [value]="0" disabled>- Seleccione -</option>
-                    <option [value]="f.id_correlativo" *ngFor="let f of listFormEnvio">{{ f.valor_texto_1 }}</option>
-                </select>
-                <small class="form-text text-alert" *ngIf="campoNoValido('formato_envio')">* Selecione el Formato de Envío es obligatorio</small>
-              </div> -->
-
-              <!-- <div class="col-sm-3 cli-form-element">
-                <label>Horario de Envío</label>
-                <select class="cli-input-white" formControlName="item_horario_envio">
-                  <option [value]="0" disabled>- Seleccione -</option>
-                  <option [value]="carga.id_correlativo" *ngFor="let carga of listHorarioEnvio">{{ carga.valor_texto_1 }}</option>
-                </select>
-                <small class="form-text text-alert" *ngIf="campoNoValido('item_horario_envio')">* Selecione el Horario de Envío es obligatorio</small>
-              </div> -->
-
               <div class="col-sm-3 cli-form-element" *ngIf="DATA_SCORE" >
                 <label>Estado Solicitud</label>
                 <select class="cli-input-white" formControlName="id_estado_m">
@@ -79,16 +61,6 @@
                   <option [value]="estado.idEstado"*ngFor="let estado of listEstado">{{ estado.cNombre }}</option>
                 </select>
               </div>
-
-              <!-- <div class="col-sm-3 cli-form-element">
-              <label class="form-label">Fecha Solicitud</label>
-              <mat-form-field appearance="outline">
-                <input matInput [matDatepicker]="picker_fe" formControlName="fecha_envio" [min]="minDate">
-                <mat-datepicker-toggle matSuffix [for]="picker_fe"></mat-datepicker-toggle>
-                <mat-datepicker #picker_fe></mat-datepicker>
-              </mat-form-field>
-              <small class="form-text text-alert" *ngIf="campoNoValido('fecha_envio')">* Indique la fecha de Solicitud es obligatorio</small>
-              </div> -->
 
               <div class="col-sm-3 cli-form-element">
                 <label class="form-label">Fecha de pruebas (Rango)</label>
@@ -101,22 +73,6 @@
                   <mat-date-range-picker #picker_ind></mat-date-range-picker>
                 </mat-form-field>
               </div>
-
-              <!-- <div class="col-sm-3 cli-form-element">
-                <label>Hora Inicio pruebas</label>
-                <input type="time"
-                    class="form-control"
-                    formControlName="hora_ini_prueba"/>
-                <small class="text-alert" *ngIf="campoNoValido('hora_ini_prueba')">* Ingrese la Hora es obligatorio</small>
-              </div>
-
-              <div class="col-sm-3 cli-form-element">
-                <label>Hora Fin pruebas</label>
-                <input type="time"
-                    class="form-control"
-                    formControlName="hora_fin_prueba"/>
-                <small class="text-alert" *ngIf="campoNoValido('hora_fin_prueba')">* Ingrese la Hora es obligatorio</small>
-              </div> -->
 
               <ng-container *ngIf="this.DATA_SCORE.casoScore == 'Corporativo'">
                 <div class="col-sm-12 cli-form-element">
@@ -165,14 +121,6 @@
                           formControlName="num_doc"/>
                       </div>
 
-                      <!-- <div class="col-sm-2 cli-form-element">
-                        <label>Estado</label>
-                        <select class="cli-input-white" formControlName="id_estado_d">
-                          <option [value]="0" disabled>- Seleccione -</option>
-                          <option [value]="estado.id_correlativo"*ngFor="let estado of listEstadoDetalle">{{ estado.valor_texto_1 }}</option>
-                        </select>
-                      </div> -->
-
                       <div class="col-sm-2 cli-form-element">
                         <label>Estado</label>
                         <select class="cli-input-white" formControlName="id_estado_d">
@@ -180,15 +128,6 @@
                           <option [value]="estado.idEstado"*ngFor="let estado of listEstado">{{ estado.cNombre }}</option>
                         </select>
                       </div>
-
-                      <!-- <div class="col-sm-3 cli-form-element">
-                        <label class="form-label">Fecha Proceso</label>
-                        <mat-form-field appearance="outline">
-                          <input matInput [matDatepicker]="picker_p" formControlName="fecha_proceso" >
-                          <mat-datepicker-toggle matSuffix [for]="picker_p"></mat-datepicker-toggle>
-                          <mat-datepicker #picker_p></mat-datepicker>
-                        </mat-form-field>
-                      </div> -->
 
                       <div class="col-sm-2">
                         <div style="margin-top: 27px; display: flex">
@@ -212,8 +151,6 @@
                       </div>
 
                       <div style="display: flex">
-                        <!-- <div class="version">Versión : <span  class="id-version">{{scoreForm.controls['version'].value }}</span></div> -->
-
                         <div class="flex-1"></div>
                         <div style="color: #0daef4">
                           Total :<span class="total">{{ listScoreDetalleCorp.length }} Score detalle</span>
@@ -227,23 +164,24 @@
                           <thead>
                             <tr class="bgc-turquey c-white">
                               <!-- <th>ID Score DET</th> -->
-                              <th style="min-width: 65px;">ID Score</th>
+                              <th style="min-width: 65px;" >ID Score</th>
                               <th style="min-width: 110px;">Tipo caso</th>
-                              <th style="min-width: 65px;">Segmento</th>
+                              <th style="min-width: 65px;" >Segmento</th>
                               <th style="min-width: 115px;">Tipo Transacción</th>
                               <th style="min-width: 100px;">Tipo Venta</th>
                               <th style="min-width: 115px;">Gama de Equipo</th>
-                              <th style="min-width: 65px;">Estado</th>
+                              <th style="min-width: 65px;" >Estado</th>
                               <th style="min-width: 130px;">Observ. Gestor QA.</th>
                               <th style="min-width: 110px;">Req. Validación</th>
-                              <th style="min-width: 65px;">Tipo Doc</th>
-                              <th style="min-width: 65px;">RUC</th>
+                              <th style="min-width: 65px;" >Tipo Doc</th>
+                              <th style="min-width: 65px;" >RUC</th>
                               <th style="min-width: 205px;">Nombres y Apellidos del Cliente</th>
-                              <th style="min-width: 72px;">Q líneas</th>
-                              <th style="min-width: 65px;">Score</th>
-                              <th style="min-width: 92px;">CF disponible</th>
+                              <th style="min-width: 72px;" >Q líneas</th>
+                              <th style="min-width: 65px;" >Score</th>
+                              <th style="min-width: 92px;" >CF disponible</th>
                               <th style="min-width: 140px;">Cap. Financiamiento</th>
                               <th style="min-width: 108px;">Cód. Evaluación</th>
+                              <th style="min-width: 130px;">Observación</th>
                             </tr>
                           </thead>
 
@@ -254,46 +192,48 @@
                                       id: 'score',
                                       currentPage: page,
                                       totalItems: totalScore }">
-                            <td style="min-width: 90px;"  >{{ score.idScored }}</td>
-                            <td style="min-width: 90px;"  >{{ score.tipoScore }}</td>
-                            <td style="min-width: 95px;"  >{{ score.segmento }}</td>
-                            <td style="min-width: 90px;"  >{{ score.tipoTransaccion }}</td>
-                            <td style="min-width: 248px;" >{{ score.tipoVenta }}</td>
-                            <td style="min-width: 90px;"  >{{ score.gama }}</td>
+                            <td style="min-width: 90px;" >{{ score.idScored }}</td>
+                            <td style="min-width: 90px;" >{{ score.caso_score }}</td>
+                            <td style="min-width: 95px;" >{{ score.segmento }}</td>
+                            <td style="min-width: 90px;" >{{ score.tipoTransaccion }}</td>
+                            <td style="min-width: 100px;">{{ score.tipoVenta }}</td>
+                            <td style="min-width: 90px;" >{{ score.gama }}</td>
                             <td style="min-width: 118px;">
-                              <span *ngIf="score.estado == 'Solicitado'"       class="label est-sol">          {{ score.estado | uppercase }}</span>
-                              <span *ngIf="score.estado == 'Observado'"        class="label est-observado ">   {{ score.estado | uppercase }}</span>
-                              <span *ngIf="score.estado == 'Enviado'"          class="label est-enviado ">     {{ score.estado | uppercase }}</span>
-                              <span *ngIf="score.estado == 'Finalizado'"       class="label est-finalizado ">  {{ score.estado | uppercase }}</span>
-                              <span *ngIf="score.estado == 'Aprobado'"         class="label est-aprobado">     {{ score.estado | uppercase }}</span>
-                              <span *ngIf="score.estado == 'Subsanado'"        class="label est-subsanado">    {{ score.estado | uppercase }}</span>
+                              <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">         {{ score.estado | uppercase }}</span>
+                              <span *ngIf="score.estado == 'Observado'"  class="label est-observado ">  {{ score.estado | uppercase }}</span>
+                              <span *ngIf="score.estado == 'Enviado'"    class="label est-enviado ">    {{ score.estado | uppercase }}</span>
+                              <span *ngIf="score.estado == 'Finalizado'" class="label est-finalizado "> {{ score.estado | uppercase }}</span>
+                              <span *ngIf="score.estado == 'Aprobado'"   class="label est-aprobado">    {{ score.estado | uppercase }}</span>
+                              <span *ngIf="score.estado == 'Subsanado'"  class="label est-subsanado">   {{ score.estado | uppercase }}</span>
                               <!-- <span style="align-items: center; display: flex" *ngIf="score.estado == 'Solicitado'"      ><mat-icon class="icon-13 icon-btn" style="margin-right: 5px; display: flex; color: #398bf7;">radio_button_checked</mat-icon>{{ score.estado | uppercase }}</span> -->
                             </td>
-
+                            <td class="obs-score">
                             <ng-container *ngIf="((authService.esUsuarioGestor() || authService.esUsuarioLider()) && ( score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
-                              <div style="display: flex; min-width: 335px; font-size: 11px;">
+                              <div style="display: flex; min-width: 175px; font-size: 11px;">
                                 <button *ngIf="!authService.esUsuarioLider()"
                                   class="btn-obs btn-obs"
                                   style="margin: 0"
                                   type="button"
                                   (click)="asignarObservacion(score)"
-                                  matTooltip="Observar registro"
+                                  matTooltip="Observar o Aprobar registro"
                                   ><mat-icon class="icon-13">loupe</mat-icon>
-                                </button>{{ score.observacion }}
+                                </button>{{ score.obs_registro }}
                             </div>
                             </ng-container>
+                            </td>
                             <td style="min-width: 145px;color: #4089ff;">
                               <span *ngIf="score.req_validacion == '0'"  style="color: #fd0d89">SI</span>
                               <span *ngIf="score.req_validacion == '1'"  style="color: #0daef4">NO</span>
                             </td>
-                            <td style="min-width: 80px;"  >{{ score.tipo_documento }}</td>
-                            <td style="min-width: 100px;" >{{ score.numero_documento }}</td>
-                            <td style="min-width: 250px;" >{{ score.nombres_apell }}</td>
+                            <td style="min-width: 80px;" >{{ score.tipo_documento }}</td>
+                            <td style="min-width: 100px;">{{ score.numero_documento }}</td>
+                            <td style="min-width: 250px;">{{ score.nombres_apell }}</td>
                             <td style="min-width: 95px;" >{{ score.num_lin_disp }}</td>
                             <td style="min-width: 95px;" >{{ score.score }}</td>
                             <td style="min-width: 95px;" >{{ score.cf_disponible }}</td>
                             <td style="min-width: 95px;" >{{ score.cap_financ_prev }}</td>
                             <td style="min-width: 95px;" >{{ score.cod_evaluacion }}</td>
+                            <td style="min-width: 335px;">{{ score.observacion }}</td>
                           </tr>
                           </tbody>
                         </table>
@@ -340,15 +280,6 @@
                     <!-- BUSCADOR POR FILTRO ---------------------------------------------------------------->
                     <div class="buscar">
                       <div class="row ">
-                         <!--
-                          <div class="col-sm-3 cli-form-element" *ngIf="DATA_SCORE
-                              &&  scoreForm.controls['id_estado_m'].value == 1
-                              ||  scoreForm.controls['id_estado_m'].value == 4">
-                            <label>Importar Arch.</label>
-                            <input type="file" class="cli-import"
-                            formControlName="importar"
-                            (change)="readExcell($event)">
-                          </div> -->
 
                         <div class="col-sm-2 cli-form-element">
                           <label class="form-label">N° Documento</label>
@@ -366,15 +297,6 @@
                             <option [value]="estado.idEstado"*ngFor="let estado of listEstado">{{ estado.cNombre }}</option>
                           </select>
                         </div>
-
-                        <!-- <div class="col-sm-3 cli-form-element">
-                          <label class="form-label">Fecha Proceso</label>
-                          <mat-form-field appearance="outline">
-                            <input matInput [matDatepicker]="picker_p" formControlName="fecha_proceso" >
-                            <mat-datepicker-toggle matSuffix [for]="picker_p"></mat-datepicker-toggle>
-                            <mat-datepicker #picker_p></mat-datepicker>
-                          </mat-form-field>
-                        </div> -->
 
                         <div class="col-sm-2">
                           <div style="margin-top: 27px; display: flex">
@@ -398,11 +320,9 @@
                         </div>
 
                         <div style="display: flex">
-                          <!-- <div class="version">Versión : <span  class="id-version">{{scoreForm.controls['version'].value }}</span></div> -->
-
                           <div class="flex-1"></div>
                           <div style="color: #0daef4">
-                            Total :<span class="total">{{ listScoreDetalle.length }} Score detalle</span>
+                            Total :<span class="total">{{ listScoreDetalleGen.length }} Score detalle</span>
                           </div>
                         </div>
 
@@ -412,28 +332,28 @@
                           <table class="cli-table stripedtable underlinedtable">
                             <thead>
                               <tr class="bgc-turquey c-white">
-                                <th style="min-width: 65px;">ID Score</th>
-                                <th style="min-width: 65px;">Solicitante</th>
+                                <th style="min-width: 65px;" >ID Score</th>
+                                <th style="min-width: 65px;" >Solicitante</th>
                                 <th style="min-width: 165px;">RQ-Nombre del proyecto</th>
                                 <th style="min-width: 110px;">Fecha APP</th>
-                                <th style="min-width: 65px;">TIpo Doc</th>
-                                <th style="min-width: 67px;">Num Doc</th>
-                                <th style="min-width: 65px;">Estado</th>
+                                <th style="min-width: 65px;" >TIpo Doc</th>
+                                <th style="min-width: 67px;" >Num Doc</th>
+                                <th style="min-width: 65px;" >Estado</th>
                                 <th style="min-width: 130px;">Observ. Gestor QA.</th>
                                 <th style="min-width: 110px;">Req. Validación</th>
-                                <th style="min-width: 65px;">Segmento</th>
+                                <th style="min-width: 65px;" >Segmento</th>
                                 <th style="min-width: 115px;">Tipo Transacción</th>
                                 <th style="min-width: 100px;">Tipo Venta</th>
-                                <th style="min-width: 65px;">Gama</th>
-                                <th style="min-width: 85px;">Cuota Inicial</th>
-                                <th style="min-width: 65px;">Cuotas</th>
-                                <th style="min-width: 95px;">Cap. Financ. 2</th>
+                                <th style="min-width: 65px;" >Gama</th>
+                                <th style="min-width: 85px;" >Cuota Inicial</th>
+                                <th style="min-width: 65px;" >Cuotas</th>
+                                <th style="min-width: 95px;" >Cap. Financ. 2</th>
                               </tr>
                             </thead>
 
                             <tbody>
                             <tr
-                              *ngFor="let score of listScoreDetalle | paginate: {
+                              *ngFor="let score of listScoreDetalleGen | paginate: {
                                         itemsPerPage: pageSize,
                                         id: 'score',
                                         currentPage: page,
@@ -446,27 +366,25 @@
                               <td style="min-width: 100px;" >{{ score.numero_documento }}</td>
 
                               <td style="min-width: 118px;">
-                                <span *ngIf="score.estado == 'Solicitado'"       class="label est-sol">          {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Usuario Ináctivo'" class="label est-usu-inac">     {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Observado'"        class="label est-observado ">   {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Enviado'"          class="label est-enviado ">     {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Finalizado'"       class="label est-finalizado ">  {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Aprobado'"         class="label est-aprobado">     {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Subsanado'"        class="label est-subsanado">    {{ score.estado | uppercase }}</span>
-                                <!-- <span style="align-items: center; display: flex" *ngIf="score.estado == 'Solicitado'"      ><mat-icon class="icon-13 icon-btn" style="margin-right: 5px; display: flex; color: #398bf7;">radio_button_checked</mat-icon>{{ score.estado | uppercase }}</span> -->
+                                <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">        {{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Observado'"  class="label est-observado "> {{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Enviado'"    class="label est-enviado ">   {{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Finalizado'" class="label est-finalizado ">{{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Aprobado'"   class="label est-aprobado">   {{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Subsanado'"  class="label est-subsanado">  {{ score.estado | uppercase }}</span>
                               </td>
                               <td class="obs-score">
-                                <!-- <ng-container *ngIf="((authService.esUsuarioGestor() || authService.esUsuarioLider()) && score.estado != 'Enviado') ||score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado'"> -->
-                                <ng-container *ngIf="((authService.esUsuarioGestor() || authService.esUsuarioLider()) && ( score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
+                                <!-- <ng-container *ngIf="((authService.esUsuarioGestor() && score.estado == 'Finalizado') || authService.esUsuarioLider()) && (score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')"> -->
+                                <ng-container *ngIf="((authService.esUsuarioGestor() || (authService.esUsuarioLider() && score.estado != 'Finalizado')) && (score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
                                   <div style="display: flex">
-                                    <button *ngIf="!authService.esUsuarioLider()"
+                                    <button
                                       class="btn-obs btn-obs"
                                       style="margin: 0"
                                       type="button"
                                       (click)="asignarObservacion(score)"
-                                      matTooltip="Observar registro"
+                                      matTooltip="Observar o Aprobar registro G"
                                       ><mat-icon class="icon-13">loupe</mat-icon>
-                                    </button>{{ score.observacion_gestor }}
+                                    </button>{{ score.obs_registro }}
                                 </div>
                                 </ng-container>
                               </td>
@@ -494,7 +412,7 @@
                           </div>
 
                           <div
-                            *ngIf="!loadingItem && listScoreDetalle.length == 0"
+                            *ngIf="!loadingItem && listScoreDetalleGen.length == 0"
                             class="cli-loader mt-5"
                             style="color: #f83434">
                             No hay Score disponible para mostrar
@@ -548,15 +466,6 @@
                           </select>
                         </div>
 
-                        <!-- <div class="col-sm-3 cli-form-element">
-                          <label class="form-label">Fecha Proceso</label>
-                          <mat-form-field appearance="outline">
-                            <input matInput [matDatepicker]="picker_p" formControlName="fecha_proceso" >
-                            <mat-datepicker-toggle matSuffix [for]="picker_p"></mat-datepicker-toggle>
-                            <mat-datepicker #picker_p></mat-datepicker>
-                          </mat-form-field>
-                        </div> -->
-
                         <div class="col-sm-2">
                           <div style="margin-top: 27px; display: flex">
                             <button
@@ -579,8 +488,6 @@
                         </div>
 
                         <div style="display: flex">
-                          <!-- <div class="version">Versión : <span  class="id-version">{{scoreForm.controls['version'].value }}</span></div> -->
-
                           <div class="flex-1"></div>
                           <div style="color: #0daef4">
                             Total :<span class="total">{{ listScoreDetalleExcep.length }} Score detalle</span>
@@ -594,26 +501,26 @@
                             <thead>
                               <tr class="bgc-green c-white">
                                 <!-- <th>ID Score DET</th> -->
-                                <th style="min-width: 65px;">ID Score</th>
-                                <th style="min-width: 65px;">Solicitante</th>
-                                <th style="min-width: 80px;">Rq</th>
+                                <th style="min-width: 65px;" >ID Score</th>
+                                <th style="min-width: 65px;" >Solicitante</th>
+                                <th style="min-width: 80px;" >Rq</th>
                                 <th style="min-width: 135px;">Proyecto</th>
-                                <th style="min-width: 65px;">Casos</th>
-                                <th style="min-width: 65px;">Estado</th>
+                                <th style="min-width: 65px;" >Casos</th>
+                                <th style="min-width: 65px;" >Estado</th>
                                 <th style="min-width: 130px;">Observ. Gestor QA.</th>
                                 <th style="min-width: 108px;">Req. Validación</th>
 
-                                <th style="min-width: 85px;">Cuota Inicial</th>
-                                <th style="min-width: 65px;">Gama</th>
-                                <th style="min-width: 63px;">Tipo Doc</th>
-                                <th style="min-width: 66px;">Num Doc</th>
+                                <th style="min-width: 85px;" >Cuota Inicial</th>
+                                <th style="min-width: 65px;" >Gama</th>
+                                <th style="min-width: 63px;" >Tipo Doc</th>
+                                <th style="min-width: 66px;" >Num Doc</th>
                                 <th style="min-width: 100px;">Fecha APP</th>
-                                <th style="min-width: 65px;">Score</th>
+                                <th style="min-width: 65px;" >Score</th>
                                 <th style="min-width: 105px;">Cargo Fijo Máx</th>
                                 <th style="min-width: 116px;">Núm Lineas Disp.</th>
                                 <th style="min-width: 118px;">Cap. Financ. Prev.</th>
                                 <th style="min-width: 116px;">Código Financ.</th>
-                                <th style="min-width: 95px;">Cap. Financ. 2</th>
+                                <th style="min-width: 95px;" >Cap. Financ. 2</th>
                               </tr>
                             </thead>
 
@@ -630,24 +537,22 @@
                               <td style="min-width: 70px;">  {{ score.proyecto }}</td>
                               <td style="min-width: 120px;"> {{ score.casos }}</td>
                               <td style="min-width: 118px;">
-                                <span *ngIf="score.estado == 'Solicitado'"       class="label est-sol">          {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Usuario Ináctivo'" class="label est-usu-inac">     {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Observado'"        class="label est-observado ">   {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Enviado'"          class="label est-enviado ">     {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Finalizado'"       class="label est-finalizado ">  {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Aprobado'"         class="label est-aprobado">     {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Subsanado'"        class="label est-subsanado">    {{ score.estado | uppercase }}</span>
-                                <!-- <span style="align-items: center; display: flex" *ngIf="score.estado == 'Solicitado'"      ><mat-icon class="icon-13 icon-btn" style="margin-right: 5px; display: flex; color: #398bf7;">radio_button_checked</mat-icon>{{ score.estado | uppercase }}</span> -->
+                                <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">        {{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Observado'"  class="label est-observado "> {{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Enviado'"    class="label est-enviado ">   {{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Finalizado'" class="label est-finalizado ">{{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Aprobado'"   class="label est-aprobado">   {{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Subsanado'"  class="label est-subsanado">  {{ score.estado | uppercase }}</span>
                               </td>
                               <td class="obs-score">
-                                <ng-container *ngIf="((authService.esUsuarioGestor() || authService.esUsuarioLider()) && ( score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
+                                <ng-container *ngIf="((authService.esUsuarioGestor() || (authService.esUsuarioLider() && score.estado != 'Finalizado')) && ( score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
                                   <div style="display: flex">
                                     <button
                                       class="btn-obs btn-obs"
                                       style="margin: 0"
                                       type="button"
                                       (click)="asignarObservacion(score)"
-                                      matTooltip="Observar registro"
+                                      matTooltip="Observar o Aprobar registro E"
                                       ><mat-icon class="icon-13">loupe</mat-icon>
                                     </button>{{ score.observacion_gestor }}
                                 </div>
@@ -680,7 +585,7 @@
                           </div>
 
                           <div
-                            *ngIf="!loadingItem && listScoreDetalle.length == 0"
+                            *ngIf="!loadingItem && listScoreDetalleExcep.length == 0"
                             class="cli-loader mt-5"
                             style="color: #f83434">
                             No hay Score disponible para mostrar
@@ -707,27 +612,6 @@
           </div>
         </div>
       </ng-container>
-
-
-      <!-- COMENTARIOS U OBSERVACION ------------------------------------------------------------------------->
-      <!-- <ng-container *ngIf="DATA_SCORE">
-        <div class="pr-subtitle mt-1">Comentarios</div>
-        <div class="pr-section mb-3">
-          <div class="pr-module-container">
-            <div class="row">
-              <div class="col-sm-12 cli-form-element">
-                <textarea
-                  class="form-control"
-                  style="background-image: none;border-color: #a5a4a4;font-size: 12px;"
-                  rows="2"
-                  placeholder="Describa algún comentario del Score"
-                  formControlName="observacion">
-                </textarea>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ng-container> -->
 
       <!-- HISTORICO DE SCORE ------------------------------------------------------------------------->
       <div *ngIf="DATA_SCORE">
@@ -773,7 +657,7 @@
 
     <!----------------------------------------------BOTONES ------------------------------------------>
     <div class="cli-form-buttons">
-      <button *ngIf="(authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 2))
+      <button *ngIf="(authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 6))
              || (authService.esUsuarioLider() && (scoreForm.controls['id_estado_m'].value == 1 || scoreForm.controls['id_estado_m'].value == 4 || scoreForm.controls['id_estado_m'].value != 3 || scoreForm.controls['id_estado_m'].value == 2 ))"
          class="cli-btn btn-m btn-salir"
          type="submit" (click)="close()">
@@ -781,7 +665,7 @@
       </button>
 
       <ng-container *ngIf="DATA_SCORE">
-        <ng-container *ngIf="authService.esUsuarioLider()
+        <!-- <ng-container *ngIf="authService.esUsuarioLider()
                       && scoreForm.controls['id_estado_m'].value == 1 || scoreForm.controls['id_estado_m'].value == 4
                       && !authService.esUsuarioGestor()">
           <button
@@ -790,30 +674,30 @@
              type="submit" (click)="solicitarScore()">
             <mat-icon class="icon-18">credit_score</mat-icon> Solicitar Score
           </button>
-        </ng-container>
+        </ng-container> -->
 
-        <ng-container *ngIf="( authService.esUsuarioLider() )&& scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 8">
+        <ng-container *ngIf="( authService.esUsuarioLider() || authService.esUsuarioGestor()) && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 8)">
           <button
              class="cli-btn btn-m btn-aprobar"
              type="submit"
-             (click)="aprobarScoreRegistro()"
-             >
+             (click)="aprobarScoreRegistro()">
              <mat-icon class="icon-18">check_small</mat-icon> Aprobar
             </button>
         </ng-container>
 
-        <ng-container *ngIf="((authService.esUsuarioGestor() || authService.esUsuarioLider()) && (scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3))">
+        <ng-container *ngIf="((authService.esUsuarioGestor() || (authService.esUsuarioLider() && scoreForm.controls['id_estado_m'].value != 7 )) && ( scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 7))">
           <button
              class="cli-btn btn-m btn-observar"
              matTooltip="Al menos debe existir 1 observado"
-             type="submit" (click)="observarScoreRegistro();">
+             type="submit" (click)="observarScoreRegistro();"
+             [disabled]="!validarSiExiteRegistroObservado()"
+             >
              <mat-icon class="icon-18">rule</mat-icon> Observar
-             <!-- [disabled]="!validarSiExiteRegistroObservado()" -->
           </button>
         </ng-container>
       </ng-container>
 
-      <ng-container *ngIf="authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 2)">
+      <ng-container *ngIf="authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3)">
         <button
            class="cli-btn btn-m btn-mail"
            type="submit"
@@ -822,7 +706,7 @@
           </button>
       </ng-container>
 
-      <ng-container *ngIf="(authService.esUsuarioGestor() || authService.esUsuarioLider()) && scoreForm.controls['id_estado_m'].value == 6">
+      <ng-container *ngIf="authService.esUsuarioGestor()  && scoreForm.controls['id_estado_m'].value == 6">
         <button
            class="cli-btn btn-m btn-fin"
            type="submit"
@@ -842,6 +726,4 @@
     </div>
   </div>
 </form>
-
-
 
