@@ -6,22 +6,40 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 
 @Component({
   selector: 'app-enviar-correo',
-  templateUrl: './enviar-correo.component.html',
-  styleUrls: ['./enviar-correo.component.scss']
+  templateUrl: './importar-solicitud.component.html',
+  styleUrls: ['./importar-solicitud.component.scss']
 })
-export class EnviarCorreoComponent implements OnInit {
+export class ImportarSolicitudComponent implements OnInit {
 
   @BlockUI() blockUI!: NgBlockUI;
   loadingItem: boolean = false;
-  mailForm!: FormGroup;
+  importForm!: FormGroup;
+  activeTab:string = 'continuar'
 
   constructor(
+    private fb: FormBuilder,
     public datePipe: DatePipe,
-    private dialogRef: MatDialogRef<EnviarCorreoComponent>,
+    private dialogRef: MatDialogRef<ImportarSolicitudComponent>,
     @Inject(MAT_DIALOG_DATA) public DATA_SCORE: any
   ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.newFilfroForm();
+  }
+
+  newFilfroForm(){
+    this.importForm = this.fb.group({
+      importar            : [''],
+    })
+  }
+
+  onTabClick(tab: string){
+    this.activeTab = tab
+  }
+
+  actualizarObservacion(){
+
+  }
 
 
   close(succes?: any) {

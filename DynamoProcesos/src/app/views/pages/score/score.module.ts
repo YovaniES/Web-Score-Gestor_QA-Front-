@@ -9,8 +9,8 @@ import { CoreModule } from 'src/app/core/core.module';
 import { MaterialModule } from 'src/app/material/material.module';
 import { RegistroScoreComponent } from './registro-score/registro-score.component';
 import { AsignarObservacionComponent } from './registro-score/modal-score/asignar-observacion/asignar-observacion.component';
-import { EnviarCorreoComponent } from './registro-score/modal-score/enviar-correo/enviar-correo.component';
 import { ModalStoreComponent } from './registro-score/modal-score/modal-score.component';
+import { ImportarSolicitudComponent } from './registro-score/modal-score/Importar-archivo/importar-solicitud.component';
 
 
 @NgModule({
@@ -18,7 +18,7 @@ import { ModalStoreComponent } from './registro-score/modal-score/modal-score.co
     RegistroScoreComponent,
     ModalStoreComponent,
     AsignarObservacionComponent,
-    EnviarCorreoComponent
+    ImportarSolicitudComponent
   ],
   imports: [
     CommonModule,

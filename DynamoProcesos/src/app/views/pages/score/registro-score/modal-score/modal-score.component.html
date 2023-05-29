@@ -219,7 +219,7 @@
                             <td class="obs-score">
                             <ng-container *ngIf="((authService.esUsuarioGestor() || authService.esUsuarioLider()) && ( score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
                               <div style="display: flex; min-width: 175px; font-size: 11px;">
-                                <button *ngIf="!authService.esUsuarioLider()"
+                                <button
                                   class="btn-obs btn-obs"
                                   style="margin: 0"
                                   type="button"
@@ -366,6 +366,13 @@
                                 <th style="min-width: 85px;" >Cuota Inicial</th>
                                 <th style="min-width: 65px;" >Cuotas</th>
                                 <th style="min-width: 95px;" >Cap. Financ. 2</th>
+                                <th style="min-width: 65px;" >Usuario</th>
+                                <th style="min-width: 98px;" >Cargo fijo máx</th>
+                                <th style="min-width: 155px;" >Capacidad financ. prev</th>
+                                <th style="min-width: 66px;" >Score</th>
+                                <th style="min-width: 166px;" >Num. lineas disponibleth</th>
+                                <th style="min-width: 98px;" >Código finan.</th>
+
                               </tr>
                             </thead>
 
@@ -418,6 +425,14 @@
 
                               <td class="w100">{{ score.cuotas }}</td>
                               <td class="w100">{{ score.cap_finan_2 }}</td>
+
+                              <td class="w100">{{ score.usuario }}</td>
+                              <td class="w100">{{ score.cargo_fijo_max }}</td>
+                              <td class="w100">{{ score.cap_financ_prev }}</td>
+                              <td class="w100">{{ score.score }}</td>
+                              <td class="w100">{{ score.num_lin_disp }}</td>
+                              <td class="w100">{{ score.cod_finan }}</td>
+
                             </tr>
                             </tbody>
                           </table>

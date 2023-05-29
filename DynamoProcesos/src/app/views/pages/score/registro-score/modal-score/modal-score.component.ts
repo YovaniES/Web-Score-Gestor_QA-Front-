@@ -14,10 +14,10 @@ import { ScoreDetalle } from 'src/app/core/models/scored.models';
 import { mapearListadoDetalleScore } from 'src/app/core/mapper/detalle-score.mapper';
 import { concatMap, of } from 'rxjs';
 import { SendMailService } from 'src/app/core/services/send-mail.service';
-import { EnviarCorreoComponent } from './enviar-correo/enviar-correo.component';
 import { ExcellDiurnoService } from 'src/app/core/services/excell-diurno.service';
 import { ExcellMasivoService } from 'src/app/core/services/excell-masivo.service';
 import { ExcellB2BService } from 'src/app/core/services/excell-b2b.service';
+import { ImportarSolicitudComponent } from './Importar-archivo/importar-solicitud.component';
 
 @Component({
   selector: 'app-modal-evento',
@@ -68,8 +68,6 @@ export class ModalStoreComponent implements OnInit {
     this.getUserID();
     this.getListEstado();
     // this.getListEstadoDetalle();
-    this.getListFormatoEnvio();
-    this.getListHorarioEnvio();
     if (this.DATA_SCORE && this.DATA_SCORE.idScoreM){
         this.score_Id = this.DATA_SCORE.idScore_M
         this.cargarOBuscarScoreDetalle();
@@ -115,38 +113,6 @@ export class ModalStoreComponent implements OnInit {
       this.activeTab = tab
     }
 
-    setearFormatoEnvioIndividual(): boolean{
-      let esFormatoIndividual = false;
-
-      const f_envio = this.listFormEnvio.find(f => f.valor_texto_1.toUpperCase() == 'INDIVIDUAL');
-      if (f_envio ) {
-        esFormatoIndividual = f_envio.id_correlativo == this.scoreForm.controls['formato_envio'].value;
-      }
-      // console.log('TIPO:INC', f_envio, esFormatoIndividual);
-      return esFormatoIndividual;
-     }
-
-     setearFormatoEnvioMasivo(){
-      let esFormatoMasivo = false;
-
-      const f_envio = this.listFormEnvio.find(f => f.valor_texto_1.toUpperCase() == 'MASIVO');
-      if (f_envio ) {
-        esFormatoMasivo = f_envio.id_correlativo == this.scoreForm.controls['formato_envio'].value;
-      }
-      // console.log('TIPO:INC', f_envio, esFormatoMasivo);
-      return esFormatoMasivo;
-     }
-
-     setearFormatoEnvioExcepcion(){
-      let esFormatoExcepcion = false;
-
-      const f_envio = this.listFormEnvio.find(f => f.valor_texto_1.toUpperCase() == 'EXCEPCION');
-      if (f_envio ) {
-        esFormatoExcepcion = f_envio.id_correlativo == this.scoreForm.controls['formato_envio'].value;
-      }
-      console.log('FORM:EXC', f_envio, esFormatoExcepcion);
-      return esFormatoExcepcion;
-     }
 
     validarImportacionExcell(): boolean{
       let importacionCorrecta: boolean = true;
@@ -395,8 +361,8 @@ export class ModalStoreComponent implements OnInit {
        console.log('D A T A - score_D', resp, resp.list.length,);
 
        if((this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && (this.DATA_SCORE.estado == 'En Validación' || this.DATA_SCORE.estado == 'Observado' || this.DATA_SCORE.estado == 'Solicitado' || this.DATA_SCORE.estado == 'Aprobado')) {
-        this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 2 || score.id_estado == 5) && score.caso_score == 'General');
-        this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 2 || score.id_estado == 5) && score.caso_score == 'Excepcion')
+        this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 2 || score.id_estado == 5) && score.caso_score.toUpperCase() == 'GENERAL');
+        this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 2 || score.id_estado == 5) && score.caso_score.toUpperCase() == 'EXCEPCION')
         this.listScoreDetalleCorp  = resp.list;
        }
 
@@ -736,7 +702,7 @@ export class ModalStoreComponent implements OnInit {
 
     if (!this.DATA_SCORE) {
       if (this.scoreForm.valid) {
-        this.crearScoreM()
+        // this.crearScoreM()
       }
     } else {
       this.actualizarScore();
@@ -855,45 +821,45 @@ export class ModalStoreComponent implements OnInit {
       }});
     }
 
- crearScoreM(){
-    const formValues = this.scoreForm.getRawValue();
-    let parametro: any =  {
-        queryId: 6,
-        mapValue: {
-          p_solicitante             : this.userName, //Username: usuario logueado a la web
-          p_fecha_solicitud         : formValues.fecha_solicitud,
-          p_fecha_envio             : formValues.fecha_envio,
-          p_idEstado                : 1, //ESTADO REGISTRADO,
-          p_crea_solic              : this.userName,
-          p_f_crea                  : formValues.f_crea,
-          p_formato_envio           : formValues.formato_envio,
-          p_item_version            : '',
-          p_item_hora_envio         : formValues.item_horario_envio,
-          p_nombre_proy             : formValues.nombre_proy ,
-          p_fecha_ini_prueba        : formValues.fecha_ini_prueba,
-          p_fecha_fin_prueba        : formValues.fecha_fin_prueba,
-          p_hora_ini_prueba         : formValues.hora_ini_prueba,
-          p_hora_fin_prueba         : formValues.hora_fin_prueba,
-          p_motivo_solicitud        : formValues.motivo_solicitud,
-          CONFIG_USER_NAME          : this.userName,
-          CONFIG_OUT_MSG_ERROR      : '',
-          CONFIG_OUT_MSG_EXITO      : ''
-        },
-      };
+//  crearScoreM(){
+//     const formValues = this.scoreForm.getRawValue();
+//     let parametro: any =  {
+//         queryId: 6,
+//         mapValue: {
+//           p_solicitante             : this.userName, //Username: usuario logueado a la web
+//           p_fecha_solicitud         : formValues.fecha_solicitud,
+//           p_fecha_envio             : formValues.fecha_envio,
+//           p_idEstado                : 1, //ESTADO REGISTRADO,
+//           p_crea_solic              : this.userName,
+//           p_f_crea                  : formValues.f_crea,
+//           p_formato_envio           : formValues.formato_envio,
+//           p_item_version            : '',
+//           p_item_hora_envio         : formValues.item_horario_envio,
+//           p_nombre_proy             : formValues.nombre_proy ,
+//           p_fecha_ini_prueba        : formValues.fecha_ini_prueba,
+//           p_fecha_fin_prueba        : formValues.fecha_fin_prueba,
+//           p_hora_ini_prueba         : formValues.hora_ini_prueba,
+//           p_hora_fin_prueba         : formValues.hora_fin_prueba,
+//           p_motivo_solicitud        : formValues.motivo_solicitud,
+//           CONFIG_USER_NAME          : this.userName,
+//           CONFIG_OUT_MSG_ERROR      : '',
+//           CONFIG_OUT_MSG_EXITO      : ''
+//         },
+//       };
 
-      console.log('VAOR', this.scoreForm.value , parametro);
-      this.scoreService.crearScore(parametro).subscribe((resp: any) => {
-        console.log('INSERT_SCORE_M', resp);
+//       console.log('VAOR', this.scoreForm.value , parametro);
+//       this.scoreService.crearScore(parametro).subscribe((resp: any) => {
+//         console.log('INSERT_SCORE_M', resp);
 
-        Swal.fire({
-          title: 'Crear Score!',
-          text: `Score, creado con éxito`,
-          icon: 'success',
-          confirmButtonText: 'Ok',
-        });
-        this.close(true);
-      });
-    }
+//         Swal.fire({
+//           title: 'Crear Score!',
+//           text: `Score, creado con éxito`,
+//           icon: 'success',
+//           confirmButtonText: 'Ok',
+//         });
+//         this.close(true);
+//       });
+//     }
 
   actionBtn: string = 'Agregar';
   cargarSCoreByID(){
@@ -1028,26 +994,6 @@ export class ModalStoreComponent implements OnInit {
     });
   }
 
-  listFormEnvio: any[] = [];
-  getListFormatoEnvio(){
-    let parametro: any[] = [{ queryId: 16 }];
-
-    this.scoreService.getListFormatoEnvio(parametro[0]).subscribe((resp: any) => {
-      this.listFormEnvio = resp.list;
-      // console.log('FORMATO_ENVIO', resp.list);
-    });
-  }
-
-  listHorarioEnvio: any[] = [];
-  getListHorarioEnvio(){
-    let parametro: any[] = [{ queryId: 15 }];
-
-    this.scoreService.getListHorarioEnvio(parametro[0]).subscribe((resp: any) => {
-      this.listHorarioEnvio = resp.list;
-      console.log('HORARIO_ENVIO', resp.list);
-    });
-  }
-
   getUserID(){
     this.authService.getCurrentUser().subscribe( resp => {
       this.userID   = resp.user.userId;
@@ -1107,7 +1053,7 @@ export class ModalStoreComponent implements OnInit {
   };
 
   finalizarSolicitud() {
-    const dialogRef = this.dialog.open(EnviarCorreoComponent, { width: '30%', data: {scoreMailForm: this.scoreForm.getRawValue(), isCreation: true}});
+    const dialogRef = this.dialog.open(ImportarSolicitudComponent, { width: '30%', data: {scoreMailForm: this.scoreForm.getRawValue(), isCreation: true}});
     dialogRef.afterClosed().subscribe((resp) => {
       if (resp) {
         // this.cargarOBuscarEvento();
