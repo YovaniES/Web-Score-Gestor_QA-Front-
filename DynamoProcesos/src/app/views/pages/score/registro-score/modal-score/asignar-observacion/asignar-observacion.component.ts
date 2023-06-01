@@ -34,7 +34,7 @@ export class AsignarObservacionComponent implements OnInit {
     this.cargarObservacionByID();
     console.log('DATA_SCORE_DETALLE_OBS', this.DATA_SCORE_DET, this.DATA_SCORE_DET);
     console.log('DATA_SCORE_DET_OBS', this.DATA_SCORE_DET.observacion_solic);
-    console.log('DATA_SCORE_OBS_GEST', this.DATA_SCORE_DET.observacion_gestor);
+    console.log('DATA_SCORE_OBS_GEST', this.DATA_SCORE_DET.obs_registro);
   }
 
   newForm(){
@@ -43,8 +43,7 @@ export class AsignarObservacionComponent implements OnInit {
       tipo_documento     : [''],
       numero_documento   : [''],
       score              : [''],
-      observacion_gestor : ['', Validators.required],
-      observacion        : [''], // obs sistema o excell
+      observacion_usu    : ['', Validators.required],
     })
    }
 
@@ -58,8 +57,8 @@ export class AsignarObservacionComponent implements OnInit {
           p_idscored               : this.DATA_SCORE_DET.idScored,
           p_id_estado              : formValues.id_estado_d,
           p_actualiza              : this.userName,
-          p_f_actualiza            :'',
-          p_observacion_gestor     : formValues.observacion_gestor ,
+          p_f_actualiza            : '',
+          p_obs_registro           : formValues.observacion_usu ,
           CONFIG_USER_ID           : this.userID,
           CONFIG_OUT_MSG_ERROR     : '',
           CONFIG_OUT_MSG_EXITO     : ''
@@ -90,12 +89,11 @@ export class AsignarObservacionComponent implements OnInit {
   }
 
   cargarObservacionByID(){
-      this.asigObservacionForm.controls['observacion_gestor'].setValue(this.DATA_SCORE_DET.observacion_gestor);
-      // this.asigObservacionForm.controls['observacion_solic' ].setValue(this.DATA_SCORE_DET.observacion_solic); //OBS EXCELL IMPORT
-      this.asigObservacionForm.controls['id_estado_d'       ].setValue(this.DATA_SCORE_DET.id_estado);
-      this.asigObservacionForm.controls['tipo_documento'    ].setValue(this.DATA_SCORE_DET.tipo_documento);
-      this.asigObservacionForm.controls['numero_documento'  ].setValue(this.DATA_SCORE_DET.numero_documento);
-      this.asigObservacionForm.controls['score'             ].setValue(this.DATA_SCORE_DET.score);
+      this.asigObservacionForm.controls['observacion_usu' ].setValue(this.DATA_SCORE_DET.obs_registro);
+      this.asigObservacionForm.controls['id_estado_d'     ].setValue(this.DATA_SCORE_DET.id_estado);
+      this.asigObservacionForm.controls['tipo_documento'  ].setValue(this.DATA_SCORE_DET.tipo_documento);
+      this.asigObservacionForm.controls['numero_documento'].setValue(this.DATA_SCORE_DET.numero_documento);
+      this.asigObservacionForm.controls['score'           ].setValue(this.DATA_SCORE_DET.score);
        console.log('OBSERV_BY_ID', this.asigObservacionForm.value);
   }
 

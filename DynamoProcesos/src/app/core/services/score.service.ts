@@ -60,16 +60,15 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   }
 
-  exportScoreDetalleMasivo(obj: any){
+  exportScoreDetalleMasivoOdiurno(obj: any){
     return this.http.post(API_SCORE, obj);
   }
-
-  exportScoreDetalleDiurno(obj: any){
-    return this.http.post(API_SCORE, obj);
-  }
-
 
   exportScoreDetalleB2B(obj: any){
+    return this.http.post(API_SCORE, obj);
+  };
+
+  crearObservacionMasiva(obj: any){
     return this.http.post(API_SCORE, obj);
   }
 }

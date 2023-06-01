@@ -1,0 +1,37 @@
+  <div style="display: flex">
+    <div class="flex-1"></div>
+    <div class="modal-title" style="color: #676767">Observar masivamente?</div>
+    <div class="flex-1"></div>
+  </div>
+
+  <form class="row g-3" [formGroup]="importForm">
+    <div class="cli-form newvac-wrapper">
+      <div class="row g-2">
+        <div class="col-sm-12 cli-form-element" style="margin-top: 10%;">
+          <textarea
+            class="form-control"
+            style="background-image: none; border-color: #a5a4a4; font-size: 12px"
+            rows="4"
+            placeholder="Ingrese la observación de la Solicitud para que pueda Observar masivamente la solicitud"
+            formControlName="obs_solicitud_m">
+          </textarea>
+          <small class="form-text text-alert" *ngIf="campoNoValido('obs_solicitud_m')">* La Observación es obligatorio</small>
+          <small class="form-text text-alert" *ngIf="campoNoValido('obs_solicitud_m')">* Carácteres mímino 25</small>
+        </div>
+      </div>
+
+      <div class="score-form-buttons" style="margin-top: 12%;">
+        <button class="cli-btn btn-m btn-grey" (click)="close()">
+          <div style="display: flex">
+            <mat-icon class="icon-18">undo</mat-icon> Regresar
+          </div>
+        </button>
+        <button
+          class="cli-btn-red btn-m btn-red"
+          (click)="actualizarComentarioScore_materiales()"
+          [disabled]="importForm.invalid"
+        ><mat-icon class="icon-18">unpublished</mat-icon> Si, Observar
+        </button>
+      </div>
+    </div>
+  </form>

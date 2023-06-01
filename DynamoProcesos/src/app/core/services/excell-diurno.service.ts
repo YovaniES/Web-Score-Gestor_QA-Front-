@@ -10,28 +10,39 @@ export class ExcellDiurnoService {
     // console.log('export-data_masivo', dataExcel);
     this.wb = new Workbook();
 
+    const casoGeneral   = this.buscarPorCasoScore(dataExcel, 'GENERAL')
+    const casoExcepcion = this.buscarPorCasoScore(dataExcel, 'EXCEPCION')
+
      this.createListaTX(dataExcel);
-     this.createForExcepGeneral(dataExcel);
+     this.createForExcepGeneral(casoGeneral);
      this.createTablas(dataExcel);
      this.createCasosEspeciales(dataExcel);
-     this.createForExcepEscen(dataExcel);
+     this.createForExcepEscen(casoExcepcion);
      this.createWL(dataExcel);
 
     this.wb.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data]);
-      fs.saveAs(blob, 'F-EXCEP-'+ dataExcel[0].fechaIniPrueba +  " AL "+dataExcel[0].fechaFinPrueba+'-DIURNA-QA.xlsx')
+      fs.saveAs(blob, 'F-EXCEP-'+ dataExcel[0].fechaIniPrueba +'-DIURNA-QA.xlsx')
     });
   };
 
+  buscarPorCasoScore(dataExcel: any[], caso: string){
+    return dataExcel.filter(registro => registro.caso_score.toUpperCase() == caso)
+  }
+
   generarExcell(dataExcel: any[]): Promise<any>{
+    const casoGeneral   = this.buscarPorCasoScore(dataExcel, 'GENERAL')
+    const casoExcepcion = this.buscarPorCasoScore(dataExcel, 'EXCEPCION')
+
+    console.log('DIURNO(G-E)', casoGeneral, casoExcepcion);
     console.log('export-data', dataExcel);
      this.wb = new Workbook();
 
      this.createListaTX(dataExcel);
-     this.createForExcepGeneral(dataExcel);
+     this.createForExcepGeneral(casoGeneral);
      this.createTablas(dataExcel);
      this.createCasosEspeciales(dataExcel);
-     this.createForExcepEscen(dataExcel);
+     this.createForExcepEscen(casoExcepcion);
      this.createWL(dataExcel);
 
      return this.wb.xlsx.writeBuffer()
@@ -190,6 +201,39 @@ export class ExcellDiurnoService {
         'Codigo_Financiamiento',          //V
       ];
 
+      // Insertamos la data en las respectivas Columnas.
+      const insertarFila = sheet.getRows(2, scoreTable.length)!;
+      for (let i = 0; i < insertarFila.length; i++) {
+        const fila = insertarFila[i];
+
+        fila.values = [
+          scoreTable[i].solicitante,               //A
+          scoreTable[i].rq,                        //B
+          scoreTable[i].fecha_score,               //C
+          scoreTable[i].tipo_documento,            //D
+          scoreTable[i].numero_documento,          //E
+          scoreTable[i].segmento,                  //F
+          scoreTable[i].tipoTransaccion,           //G
+          scoreTable[i].tipoVenta,                 //H
+          scoreTable[i].gama,                      //I
+          scoreTable[i].cuota_inicial,             //J
+          scoreTable[i].cuotas,                    //K
+          scoreTable[i].cap_finan_2,               //L
+          'VALIDO',                                //M
+          'VÁLIDO',                                //N
+          'VÁLIDO B2C-CAEQ-CONTADO-TODAS-NO APLICA--',//O
+          'NO PROCEDE',                            //P
+          scoreTable[i].usuario,                   //Q
+          scoreTable[i].cargo_fijo_max,            //R
+          scoreTable[i].cap_financ_prev,           //S
+          scoreTable[i].score,                     //T
+          scoreTable[i].num_lin_disp,              //U
+          scoreTable[i].cod_finan                  //V
+
+        ];
+        fila.font = { size: 11}
+        fila.alignment = { horizontal: 'center', vertical: 'middle'}
+      }
 
       headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
@@ -223,39 +267,6 @@ export class ExcellDiurnoService {
       sheet.getCell('U1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
       sheet.getCell('V1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
 
-      // Insertamos la data en las respectivas Columnas.
-      const insertarFila = sheet.getRows(2, scoreTable.length)!;
-      for (let i = 0; i < insertarFila.length; i++) {
-        const fila = insertarFila[i];
-
-        fila.values = [
-          'LUIS CHAMPA',                            //A
-          'RQ-008241_Pruebas Movil DITO',           //B
-          '20230413',                               //C
-          1,                                        //D
-          '44447581',                               //E
-          'MOVIL B2C',                              //F
-          'TOTALIZACIÓN MT',                        //G
-          'CAEQ/ALTA FINANCIADO - FIJA FINANCIADO', //H
-          scoreTable[i].Segmento,                   //I
-          scoreTable[i].Num_Lin_Disp,               //J
-          scoreTable[i].Usuario,                    //K
-          scoreTable[i].Fecha_APP,                  //L
-          scoreTable[i].Capacidad_Financiamiento,   //M
-          scoreTable[i].Codigo_Financiamiento,      //N
-          scoreTable[i].SCORE,                      //O
-          scoreTable[i].CARGOFIJOMAXIMO,            //P
-          'MT-QA-LC',                               //Q
-          260,                                      //R
-          100,                                      //S
-          1707,                                     //T
-          1,                                        //U
-          3,                                        //V
-
-        ];
-        fila.font = { size: 11}
-        fila.alignment = { horizontal: 'center', vertical: 'middle'}
-      }
 
      this.borderTableForExcepGeneral(sheet, scoreTable);
      this.fontUsuarioMasivo(sheet, scoreTable)
@@ -504,6 +515,38 @@ export class ExcellDiurnoService {
         'VALID. LLAVE',                 //T
       ];
 
+      // Insertamos la data en las respectivas Columnas.
+      const insertarFila = sheet.getRows(2, scoreTable.length)!;
+      for (let i = 0; i < insertarFila.length; i++) {
+        const fila = insertarFila[i];
+
+        fila.values = [
+          scoreTable[i].solicitante,     //A
+          scoreTable[i].score,           //B
+          scoreTable[i].rq,              //C
+          scoreTable[i].idProyecto,      //D
+          scoreTable[i].casos,           //E
+          scoreTable[i].gama,            //F
+          scoreTable[i].tipo_documento,  //G
+          scoreTable[i].numero_documento,//H
+          scoreTable[i].fecha_score,     //I
+          scoreTable[i].score,           //J
+          scoreTable[i].cargo_fijo_max,  //K
+          scoreTable[i].num_lin_disp,    //L
+          scoreTable[i].cap_financ_prev, //M
+          scoreTable[i].cod_finan,       //N
+          scoreTable[i].cap_finan_2,     //O
+          scoreTable[i].usuario,         //P
+          'MT-QA-LC',                    //Q
+          'VALIDO',                      //R
+          '8241-DITO-STD ALONE-FINANCIADO-1506-80-1-100-1',//S
+          'NO PROCEDE',                                    //T
+
+        ];
+        fila.font = { size: 11}
+        fila.alignment = { horizontal: 'center', vertical: 'middle'}
+      }
+
 
       headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
@@ -534,39 +577,6 @@ export class ExcellDiurnoService {
       sheet.getCell('S1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF32CD32'}}
 
       sheet.getCell('T1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFFFFF00'}}
-
-      // Insertamos la data en las respectivas Columnas.
-      const insertarFila = sheet.getRows(2, scoreTable.length)!;
-      for (let i = 0; i < insertarFila.length; i++) {
-        const fila = insertarFila[i];
-
-        fila.values = [
-          'LUIS CHAMPA',                            //A
-          '8241',                                   //B
-          'DITO',                                   //C
-          'STD ALONE',                              //D
-          'FIANCIAD0',                              //E
-          'MEDIA',                                  //F
-          1,                                        //G
-          '44160111',                               //H
-          scoreTable[i].Segmento,                   //I
-          scoreTable[i].Num_Lin_Disp,               //J
-          scoreTable[i].Usuario,                    //K
-          scoreTable[i].Fecha_APP,                  //L
-          scoreTable[i].Capacidad_Financiamiento,   //M
-          scoreTable[i].Codigo_Financiamiento,      //N
-          scoreTable[i].SCORE,                      //O
-          'FALSO',                                  //P
-          'MT-QA-LC',                               //Q
-          'VALIDO',                                 //R
-          '8241-DITO-STD ALONE-FINANCIADO-1506-80-1-100-1',//S
-          'NO PROCEDE',                                    //T
-
-        ];
-        fila.font = { size: 11}
-        fila.alignment = { horizontal: 'center', vertical: 'middle'}
-      }
-
      this.borderTableForExcepEscen(sheet, scoreTable);
     });
   }

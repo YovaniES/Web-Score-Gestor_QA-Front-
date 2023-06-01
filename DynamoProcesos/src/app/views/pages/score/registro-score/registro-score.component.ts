@@ -5,7 +5,6 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { ScoreService } from 'src/app/core/services/score.service';
 import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
-import { ExportExcellIndividualService } from 'src/app/core/services/export-excell.service';
 import { ModalStoreComponent } from './modal-score/modal-score.component';
 import { AuthService } from 'src/app/core/services/auth.service';
 
@@ -34,7 +33,6 @@ export class RegistroScoreComponent implements OnInit {
   constructor(
     private scoreService: ScoreService,
     public authService: AuthService,
-    // private exportExcellIndividualService: ExportExcellIndividualService,
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
     public datepipe: DatePipe,
@@ -67,13 +65,11 @@ export class RegistroScoreComponent implements OnInit {
     }
   }
 
-  listScore: any[] = [];
   cargarOBuscarScoreMXXX(){
     this.blockUI.start("Cargando Score...");
     let parametro: any[] = [{
       "queryId": 2,
       "mapValue": {
-          // p_solicitante  : this.filtroForm.value.solicitante,
           p_solicitante  : this.authService.getUserNameByRol(this.filtroForm.value.lider), // this.filtroForm.value.lider,
           p_actualiza_por: this.filtroForm.value.actualiza_por,
           p_id_estado    : this.filtroForm.value.id_estado,
@@ -83,8 +79,6 @@ export class RegistroScoreComponent implements OnInit {
     }];
     this.scoreService.cargarOBuscarScoreM(parametro[0]).subscribe((resp: any) => {
     this.blockUI.stop();
-    //  console.log('DATA_SCORE_M**', resp.list.filter((x: any) => x.idEstado != 1) );
-    //  console.log('FORMATO_ENVIO', resp.list.find((f: any) => f.formato_envio == 1) );
 
      if (this.authService.esUsuarioGestor()) {
        this.listScore = [];
@@ -98,6 +92,7 @@ export class RegistroScoreComponent implements OnInit {
     });
   };
 
+  listScore: any[] = [];
   cargarOBuscarScoreM(){
     this.blockUI.start("Cargando Score...");
     let parametro: any[] = [{
@@ -106,8 +101,6 @@ export class RegistroScoreComponent implements OnInit {
           // p_solicitante  : this.authService.getUserNameByRol(this.filtroForm.value.lider),
           // p_actualiza_por: this.filtroForm.value.actualiza_por,
           p_id_estado    : this.filtroForm.value.id_estado,
-          // inicio         : this.datepipe.transform(this.filtroForm.value.fecha_envio_ini,"yyyy/MM/dd"),
-          // fin            : this.datepipe.transform(this.filtroForm.value.fecha_envio_fin,"yyyy/MM/dd"),
       }
     }];
     this.scoreService.cargarOBuscarScoreM(parametro[0]).subscribe((resp: any) => {
@@ -139,7 +132,7 @@ export class RegistroScoreComponent implements OnInit {
           p_idScore : id_score,
       }
     }];
-    this.scoreService.exportScoreDetalleMasivo(parametro[0]).subscribe((resp: any) => {
+    this.scoreService.exportScoreDetalleMasivoOdiurno(parametro[0]).subscribe((resp: any) => {
     // this.exportExcellIndividualService.exportarExcelDetalleMasivo(resp.list, 'Masivo');
     });
   }

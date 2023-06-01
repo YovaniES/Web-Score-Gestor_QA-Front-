@@ -86,14 +86,11 @@
             <tr class="bgc-blue-light c-white">
               <th>Acción</th>
               <th>ID Score</th>
-              <!-- <th>Solicitante</th> -->
               <th>Fecha Solicitud</th>
               <th>Solicitante</th>
               <th>Caso Score</th>
               <th>Tipo Score</th>
               <th>Fecha Prueba</th>
-              <!-- <th>Formato Envío</th> -->
-              <!-- <th>Carga </th> -->
               <th>Estado</th>
               <th>Fecha Creación</th>
               <th>Actualizado Por:</th>
@@ -142,7 +139,7 @@
               <!-- <td><div matBadgeSize="small" [matBadge] = 15 matBadgeOverlap="false" class="demo-section" matBadgePosition="after" matBadgeColor="accent">{{ score.solicitante}}</div></td> -->
 
               <!-- <td class="w100">{{ score.carga }}</td> -->
-              <td >
+              <td>
                 <span *ngIf="score.estado == 'Registrado'"    class="label est-reg">       {{ score.estado | uppercase }}</span>
                 <span *ngIf="score.estado == 'En Validación'" class="label est-valid">     {{ score.estado | uppercase }}</span>
                 <span *ngIf="score.estado == 'Solicitado'"    class="label est-sol ">      {{ score.estado | uppercase }}</span>

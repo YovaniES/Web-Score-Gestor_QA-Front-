@@ -7,6 +7,12 @@
   text-align: center;
 }
 
+.text-alert {
+  font-size: 10px;
+  color: #f66d7a;
+  margin-top: 0;
+}
+
 .form-select {
   font-size: 12px;
 }
@@ -15,6 +21,23 @@
   font-size: 10px;
 }
 
+.cli-btn-red {
+  border: none;
+  border-radius: 3px;
+  margin: 0 5px;
+  height: 30px;
+  padding: 0 10px;
+  font-family: "Webapp-Bold" !important;
+  display: flex;
+  align-items: center;
+  & mat-icon {
+    margin: 0 5px;
+  }
+  &:disabled {
+    background-color: #fbd1d5;
+    color: #fff;
+  }
+}
 
 .tabs-container{
   background: #eee;

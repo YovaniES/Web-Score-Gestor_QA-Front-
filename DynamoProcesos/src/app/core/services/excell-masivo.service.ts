@@ -22,15 +22,25 @@ export class ExcellMasivoService {
     });
   };
 
+  buscarPorCasoScore(dataExcel: any[], caso: string){
+    return dataExcel.filter(registro => registro.caso_score.toUpperCase() == caso)
+  }
+
   generarExcell(dataExcel: any[]): Promise<any>{
+    const casoGeneral   = this.buscarPorCasoScore(dataExcel, 'GENERAL')
+    const casoExcepcion = this.buscarPorCasoScore(dataExcel, 'EXCEPCION')
+    console.log('MASIVO(G-E)', casoGeneral, casoExcepcion);
+
+
+
     console.log('export-data', dataExcel);
      this.wb = new Workbook();
 
      this.createListaTX(dataExcel);
-     this.createForExcepGeneral(dataExcel);
+     this.createForExcepGeneral(casoGeneral); // <=====
      this.createTablas(dataExcel);
      this.createCasosEspeciales(dataExcel);
-     this.createForExcepEscen(dataExcel);
+     this.createForExcepEscen(casoExcepcion); // <=====
      this.createWL(dataExcel);
 
      return this.wb.xlsx.writeBuffer()
@@ -133,7 +143,7 @@ export class ExcellMasivoService {
   }
 
   private createForExcepGeneral(scoreTable: any): void {
-    console.log('GENERAL-MASIVO =>', scoreTable, scoreTable[0].gama, scoreTable[0].Fecha_score);
+      console.log('GENERAL-MASIVO =>', scoreTable, scoreTable[0].gama, scoreTable[0].Fecha_score);
 
     const sheet = this.wb.addWorksheet('FOR EXCEP V1-GENERAL'); //Nombre de la Hoja
 

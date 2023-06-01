@@ -33,16 +33,16 @@
               </select>
             </div>
 
-            <div class="cli-form-element mb-2" *ngIf="asigObservacionForm.controls['id_estado_d'].value == 4 || asigObservacionForm.controls['id_estado_d'].value == 5">
-              <label>Nota Gestor QA*</label>
+            <div class="cli-form-element mb-2" *ngIf="asigObservacionForm.controls['id_estado_d'].value == 2 || asigObservacionForm.controls['id_estado_d'].value == 4 || asigObservacionForm.controls['id_estado_d'].value == 5 || asigObservacionForm.controls['id_estado_d'].value == 7">
+              <label>Comentario <small style="color: red;">*</small></label>
               <textarea
                 class="form-control"
                 style="background-image: none; border-color: #bdbdbd; font-size: 12px;"
                 rows="3"
-                placeholder="Escriba alguna Nota del registro para el Solicitante del score..."
-                formControlName="observacion_gestor">
+                placeholder="Describa alguna Nota sobre el cambio que realizó en el registro..."
+                formControlName="observacion_usu">
               </textarea>
-              <small class="form-text text-alert" *ngIf="campoNoValido('observacion_gestor')">* Describa un comentario es obligatorio</small>
+              <small class="form-text text-alert" *ngIf="campoNoValido('observacion_usu')">* Describa un comentario es obligatorio</small>
             </div>
           </div>
         </div>

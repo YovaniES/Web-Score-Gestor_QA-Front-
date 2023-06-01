@@ -73,7 +73,7 @@
   margin: 0 3px;
   height: 25px;
   padding: 0 3px;
-  font-family: "Webapp-Bold" !important;
+  // font-family: "Webapp-Bold" !important;
   display: flex;
   align-items: center;
   & mat-icon {
@@ -87,6 +87,30 @@
     background-color: #888888;
   }
 }
+
+
+.cli-btn-pdf {
+  background-color: #0000001f;
+  color: #6c757d;
+  transition: ease 0.3s;
+  border: none;
+  margin: 0 3px;
+  height: 25px;
+  padding: 0 3px;
+  display: flex;
+  align-items: center;
+  & mat-icon {
+    margin: 0 3px;
+  }
+  &:hover:enabled {
+    background-color: #e0dada;
+    color: #606060;
+  }
+  &:hover:enabled:active {
+    background-color: #888888;
+  }
+}
+
 .btn-salir {
   background-color: #ececec;
   color: #2b2a2a;
@@ -287,6 +311,19 @@
     background-color: $color-yellow-d;
   }
 }
+
+.btn-red {
+  background-color: #ff727f;
+  color: #fff;
+  transition: ease 0.3s;
+  &:hover:enabled {
+    background-color: #f7cfd3;
+  }
+  &:hover:enabled:active {
+    background-color: #ff3a4d;
+  }
+}
+
 .btn-orange {
   background-color: $color-orange;
   color: #fff;

@@ -17,7 +17,8 @@ import { SendMailService } from 'src/app/core/services/send-mail.service';
 import { ExcellDiurnoService } from 'src/app/core/services/excell-diurno.service';
 import { ExcellMasivoService } from 'src/app/core/services/excell-masivo.service';
 import { ExcellB2BService } from 'src/app/core/services/excell-b2b.service';
-import { ImportarSolicitudComponent } from './Importar-archivo/importar-solicitud.component';
+import { ObservarMasivamenteComponent } from './observar-masivamente/observar-masivamente.component';
+import { AprobarImportarComponent } from './Aprobar-importar/aprobar-importar.component';
 
 @Component({
   selector: 'app-modal-evento',
@@ -33,7 +34,6 @@ export class ModalStoreComponent implements OnInit {
   scoreForm!: FormGroup;
   score_Id!: number;
   page = 1;
-  totalScore: number = 0;
   pageSize = 10;
 
   usuario: any;
@@ -74,7 +74,7 @@ export class ModalStoreComponent implements OnInit {
         this.ListaHistoricoCambios(this.DATA_SCORE);
         this.cargarSCoreByID();
     }
-    console.log('DATA_SCORE', this.DATA_SCORE);
+    console.log('DATA_SCORE_M', this.DATA_SCORE);
     console.log('DATA_SCORE_ID', this.DATA_SCORE.idScoreM);
     }
 
@@ -83,26 +83,16 @@ export class ModalStoreComponent implements OnInit {
         solicitante            : [''],
         id_estado_m            : [{value: '', disabled: true}],
         id_score               : [''],
-        fecha_envio            : ['', Validators.required],
-        fecha_solicitud        : [''],
-        formato_envio          : ['', Validators.required],
-        item_horario_envio     : ['', Validators.required],
-        observacion            : [''],
-        fecha_proceso          : [''],
         num_doc                : [''],
         id_estado_d            : [''],
-        version                : [''],
         importar               : [''],
-        actualiza              : [''],
         fecha_ini_prueba       : ['', Validators.required],
         fecha_fin_prueba       : ['', Validators.required],
-        hora_ini_prueba        : ['', Validators.required],
-        hora_fin_prueba        : ['', Validators.required],
         motivo_solicitud       : [''],
-        nombre_proy            : [''],
         casoScore              : [''],
         tipoScore              : [''],
         req_validacion         : [''],
+        obs_score              : [''],
         fechaIniPrueba         : [null],
         fechaFinPrueba         : [null],
         fechaEnvioPrueba       : [null]
@@ -111,107 +101,6 @@ export class ModalStoreComponent implements OnInit {
 
     onTabClick(tab: string){
       this.activeTab = tab
-    }
-
-
-    validarImportacionExcell(): boolean{
-      let importacionCorrecta: boolean = true;
-
-      this.scoreDataImport.map((data, indice)=> {
-        console.log('FORMATO_ENVIO', this.scoreForm.controls['formato_envio'].value);
-
-        console.log('==>',data, indice, data.TIPODOCUMENTO, data.NUMDOCUMENTO.length, data.TIPODEVENTA, data.Segmento, data.FECHAPROCESO.length)
-
-        if (data.TIPODOCUMENTO != 'DNI'  && data.TIPODOCUMENTO != 'CEX') {
-          importacionCorrecta = false;
-          Swal.fire({
-            icon: 'error',
-            title: 'ERROR sólo se permiten "DNI" o "CEX", corregir en',
-            text: `La columna: 'TIPODOCUMENTO' vs fila: ${(indice+2)}`
-          }
-          );
-        }
-
-        if (data.Segmento != 'MOVIL'  && data.Segmento != 'FIJA' && data.Segmento != 'MOVISTAR TOTAL') { // SOLO EN MAYUSCULA
-          importacionCorrecta = false;
-
-          Swal.fire({
-            icon:'error',
-            title:'ERROR, sólo se permiten MOVIL, FIJA o MOVISTAR TOTAL. Corregir en',
-            text:`La columna: 'Segmento' vs fila: ${(indice+2)}`
-            });
-        }
-
-        // if (data.TIPOTRANSACCION != 'CAEQ' && data.TIPOTRANSACCION != 'ALTA' && data.TIPOTRANSACCION != 'CAEQ MOVIL'&& data.TIPOTRANSACCION != 'CAPL'&& data.TIPOTRANSACCION != 'CASI + CAEQ') {
-        //   importacionCorrecta = false;
-
-        //   Swal.fire({
-        //     icon:'error',
-        //     title:'ERROR, sólo se permiten "CAEQ", "ALTA" O "CAEQ MOVIL" corregir en',
-        //     text:`La columna: 'TIPOTRANSACCION' vs fila: ${(indice + 2)}`
-        //     });
-        // }
-
-        if (data.NEGOCIOYSEGMENTO != 'MOVIL B2C' && data.NEGOCIOYSEGMENTO != 'FIJA B2C'&& data.NEGOCIOYSEGMENTO != 'MOVISTAR TOTAL B2C') {
-          importacionCorrecta = false;
-
-          Swal.fire({
-            icon:'error',
-            title:'ERROR, sólo se permiten "MOVIL B2C", "FIJA B2C" O "MOVISTAR TOTAL B2C" corregir en',
-            text:`La columna: 'NEGOCIOYSEGMENTO' vs fila: ${(indice+2)}`
-            });
-        }
-
-        // if (data.TIPODEVENTA != 'FINANCIADO' && data.TIPODEVENTA != 'CONTADO'&& data.TIPODEVENTA != 'FIJA FINANCIADO + MOVIL FINANCIADO'&& data.TIPODEVENTA != 'FIJA FINANCIADO + MOVIL CONTADO' && data.TIPODEVENTA != 'FINANCIADO MOVIL Y FINANCIADO FIJA') {
-        //   importacionCorrecta = false;
-
-        //   Swal.fire({
-        //     icon:'error',
-        //     title:'ERROR, sólo se permiten "FINANCIADO", "CONTADO", "FIJA FINANCIADO + MOVIL FINANCIADO", "FINANCIADO MOVIL Y FINANCIADO FIJA" o "FIJA FINANCIADO + MOVIL CONTADO" corregir en',
-        //     text:`La columna: 'TIPODEVENTA' vs fila: ${(indice+2)}`
-        //     });
-        // }
-
-        if (data.GAMADEEQUIPO != 'NO APLICA' && data.GAMADEEQUIPO != 'APLICA' && data.GAMADEEQUIPO != 'TODAS'&& data.GAMADEEQUIPO != 'MEDIA'&& data.GAMADEEQUIPO != 'PREMIUM'&& data.GAMADEEQUIPO != 'BAJA') {
-          importacionCorrecta = false;
-
-          Swal.fire({
-            icon:'error',
-            title:'ERROR, sólo se permiten "APLICA", "NO APLICA", "MEDIA", "PREMIUM", "BAJA" O "TODAS" corregir en',
-            text:`La columna: 'GAMADEEQUIPO' vs fila: ${(indice+2)}`
-            });
-        }
-
-        //     // if (data.FECHAPROCESO.length == 8) {
-        //   importacionCorrecta = false;
-
-        //   Swal.fire({
-        //     icon:'error',
-        //     title:'ERROR, La fecha de proceso solo acepta un total de 8 dígitos y en formato YYYYMMDD',
-        //     text:`La columna: 'FECHAPROCESO' vs fila: ${(indice + 2)}`
-        //     });
-        // }
-
-        // if ((data.NUMDOCUMENTO.length >= 8 ||  data.NUMDOCUMENTO.length < 9) && data.TIPODOCUMENTO == 'DNI') {
-
-        //   Swal.fire({
-        //     icon:'error',
-        //     title:'Algo salio mal, Corregir en',
-        //     text:`La columna: 'NUMDOCUMENTO' y fila: ${(indice+2)}`
-        //   });
-        // }
-
-        // if ((data.NUMDOCUMENTO.length < 8 || data.NUMDOCUMENTO.length > 10  ) && data.TIPODOCUMENTO == 'CEX') {
-        //   importacionCorrecta = false;
-
-        //   Swal.fire({
-        //     icon:'error',
-        //     title:'Algo salio mal, Corregir en',
-        //     text:`La columna: 'NUMDOCUMENTO' vs fila: ${(indice+2)}`
-        //   });
-        // }
-      })
-      return importacionCorrecta;
     }
 
     importacion = 0;
@@ -239,7 +128,7 @@ export class ModalStoreComponent implements OnInit {
         this.scoreForm.controls['importar'].reset()
         this.scoreForm.controls['importar'].setValue(null)
 
-        this.validarImportacionExcell();
+        // this.validarImportacionExcell();
         this.insertarListadoDetalleScore();
 
         this.blockUI.stop();
@@ -277,74 +166,12 @@ export class ModalStoreComponent implements OnInit {
         }
       )}
 
-    // listScoreDetalle: any[] = [];
-    // cargarOBuscarScoreDetalle(){
-    //   this.listScoreDetalle = [];
-
-    //   this.blockUI.start("Cargando Score detalle...");
-    //   let parametro: any[] = [{
-    //     "queryId": 30,
-    //     // "queryId": 1,
-    //     "mapValue": {
-    //         p_idScore   : this.DATA_SCORE.idScoreM,
-    //         p_num_doc   : this.scoreForm.value.num_doc,
-    //         p_id_estado : this.scoreForm.value.id_estado_d,
-    //         p_fecha_proc: this.scoreForm.value.fecha_proceso,
-    //         inicio      : this.datePipe.transform(this.scoreForm.value.fecha_solicitud_ini,"yyyy/MM/dd"),
-    //         fin         : this.datePipe.transform(this.scoreForm.value.fecha_solicitud_fin,"yyyy/MM/dd"),
-    //     }
-    //   }];
-    //   this.scoreService.cargarOBuscarScoreDetalle(parametro[0]).subscribe((resp: any) => {
-    //   this.blockUI.stop();
-
-    //    console.log('D A T A - score_D', resp, resp.list.length);
-
-    //    if (this.authService.esUsuarioLider()) {
-    //      this.listScoreDetalle = resp.list;
-    //    }
-
-
-    //    if(this.authService.esUsuarioGestor() && (this.DATA_SCORE.estado == 'En Validación' || this.DATA_SCORE.estado == 'Observado')) {
-    //     this.listScoreDetalle = resp.list.filter((score: any) => (score.id_estado == 1 || score.id_estado == 5));
-    //     console.log('IDX', this.listScoreDetalle);
-    //    }
-
-    //    if(this.authService.esUsuarioGestor() && this.DATA_SCORE.estado == 'Enviado') {
-    //     this.listScoreDetalle = resp.list.filter((score: any) => (score.id_estado == 6));
-    //     console.log('ENVIADOS_DATA', this.listScoreDetalle);
-    //    }
-
-    //    if(this.authService.esUsuarioGestor() && this.DATA_SCORE.estado == 'Subsanado') {
-    //     this.listScoreDetalle = resp.list.filter((score: any) => (score.id_estado == 5 || score.id_estado == 6));
-    //     console.log('ENVIADOS_DATA', this.listScoreDetalle);
-    //    }
-
-    //    if(this.authService.esUsuarioGestor() && this.DATA_SCORE.estado == 'Finalizado') {
-    //     this.listScoreDetalle = resp.list.filter((score: any) => (score.id_estado == 7));
-    //     console.log('FINALIZADOS-DATA', this.listScoreDetalle);
-    //    }
-
-    //    if(this.authService.esUsuarioGestor() && this.DATA_SCORE.estado == 'Aprobado') {
-    //     this.listScoreDetalle = resp.list.filter((score: any) => (score.id_estado == 10 || score.id_estado == 1));
-    //     console.log('APROBADOS-DATA', this.listScoreDetalle);
-    //    }
-
-    //    if (this.authService.esUsuarioGestor() && this.DATA_SCORE.estado == 'Solicitado') {
-    //     this.listScoreDetalle = resp.list.filter((score: any) => score.id_estado == 1);
-    //   }
-
-    //     this.spinner.hide();
-    //   });
-    // }
-
-
     listScoreDetalle: any[] = [];
     listScoreDetalleExcep: any[] = [];
     listScoreDetalleGen: any[] = [];
     listScoreDetalleCorp: any[] = [];
     cargarOBuscarScoreDetalle(){
       this.listScoreDetalle = [];
-
       this.blockUI.start("Cargando Score detalle...");
       let parametro: any[] = [{
         "queryId": 33,
@@ -360,36 +187,40 @@ export class ModalStoreComponent implements OnInit {
 
        console.log('D A T A - score_D', resp, resp.list.length,);
 
-       if((this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && (this.DATA_SCORE.estado == 'En Validación' || this.DATA_SCORE.estado == 'Observado' || this.DATA_SCORE.estado == 'Solicitado' || this.DATA_SCORE.estado == 'Aprobado')) {
+       if((this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && (this.DATA_SCORE.estado.toUpperCase() == 'OBSERVADO' || this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO' || this.DATA_SCORE.estado.toUpperCase() == 'APROBADO')) {
         this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 2 || score.id_estado == 5) && score.caso_score.toUpperCase() == 'GENERAL');
         this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 2 || score.id_estado == 5) && score.caso_score.toUpperCase() == 'EXCEPCION')
         this.listScoreDetalleCorp  = resp.list;
        }
 
+      // ESTADO MAESTRA EN VALIDACION
+       if((this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && (this.DATA_SCORE.estado.toUpperCase() == 'EN VALIDACIÓN')) {
+        this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 2 || score.id_estado == 4 || score.id_estado == 5 || score.id_estado == 7) && score.caso_score.toUpperCase() == 'GENERAL');
+        this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 2 || score.id_estado == 4 || score.id_estado == 5 || score.id_estado == 7) && score.caso_score.toUpperCase() == 'EXCEPCION')
+        this.listScoreDetalleCorp  = resp.list;
+       };
 
-      //  if (resp.list[2].req_validacion == '1') {
-      //   if(this.authService.esUsuarioGestor() && this.DATA_SCORE.estado == 'Solicitado') {
-      //   //  this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.req_validacion == 1) && score.caso_score == 'General');
-      //    this.listScoreDetalleGen   = resp.list.filter((score: any) => score.caso_score == 'General');
-      //    this.listScoreDetalleExcep = resp.list.filter((score: any) => score.caso_score == 'Excepcion')
-      //    this.listScoreDetalleCorp  = resp.list;
-      //   }
-      //  }
-
-       if((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado == 'Enviado') {
-        this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 6 ) && score.caso_score == 'General');
-        this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 6 ) && score.caso_score == 'Excepcion')
+       // ESTADO MAESTRA EN OBSERVACION
+       if((this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && (this.DATA_SCORE.estado.toUpperCase() == 'OBSERVADO')) {
+        this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 4) && score.caso_score.toUpperCase() == 'GENERAL');
+        this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 4) && score.caso_score.toUpperCase() == 'EXCEPCION')
         this.listScoreDetalleCorp  = resp.list;
        }
 
-       if(this.authService.esUsuarioGestor() && this.DATA_SCORE.estado == 'Subsanado') {
+       if((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado.toUpperCase() == 'ENVIADO') {
+        this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 6 ) && score.caso_score.toUpperCase() == 'GENERAL');
+        this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 6 ) && score.caso_score.toUpperCase() == 'EXCEPCION')
+        this.listScoreDetalleCorp  = resp.list;
+       }
+
+       if(this.authService.esUsuarioGestor() && this.DATA_SCORE.estado.toUpperCase() == 'SUBSANADO') {
         this.listScoreDetalle = resp.list.filter((score: any) => (score.id_estado == 5 || score.id_estado == 6));
         console.log('ENVIADOS_DATA', this.listScoreDetalle);
        }
 
-       if((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado == 'Finalizado') {
-        this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 7 ) && score.caso_score == 'General');
-        this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 7 ) && score.caso_score == 'Excepcion')
+       if((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado.toUpperCase() == 'FINALIZADO') {
+        this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 7 ) && score.caso_score.toUpperCase() == 'GENERAL');
+        this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 7 ) && score.caso_score.toUpperCase() == 'EXCEPCION')
         this.listScoreDetalleCorp  = resp.list.filter((score: any) => (score.id_estado == 7 ));
        }
 
@@ -401,7 +232,6 @@ export class ModalStoreComponent implements OnInit {
       });
     }
 
-
   get existeRegistros():boolean{
     return this.listScoreDetalle.length == 0;
   }
@@ -412,6 +242,18 @@ export class ModalStoreComponent implements OnInit {
 
   validarSiExiteRegistroObservado(): any{
     return this.listScoreDetalle.find( scoreDetalle => scoreDetalle.estado.toUpperCase() == 'OBSERVADO');
+  }
+
+  validarSiExiteReqValidacion(): any{
+    // console.log('**', this.listScoreDetalleCorp.find( score => score.req_validacion == 0), this.listScoreDetalleCorp)
+
+    if (this.DATA_SCORE.casoScore.toUpperCase() == 'RESIDENCIAL') {
+    const detalleGeneralEncontrado = this.listScoreDetalleGen.find(score => score.req_validacion == 0) //1:NO
+    const detalleExcepcionEncontrado = this.listScoreDetalleExcep.find(score => score.req_validacion == 0)
+      return detalleGeneralEncontrado || detalleExcepcionEncontrado
+    } else {
+    return this.listScoreDetalleCorp.find( score => score.req_validacion == 1);
+    }
   }
 
   cambiarEstadoScoreM(nombreEstado: string){
@@ -448,15 +290,26 @@ export class ModalStoreComponent implements OnInit {
         title: 'Observar estado?',
         text: `¿Estas seguro que desea cambiar de estado a Observado?`,
         icon: 'question',
+        // input: 'textarea',
+        // inputPlaceholder:'Ingrese la observación de la Solicitud',
         confirmButtonColor: '#20c997',
         cancelButtonColor : '#9da7b1',
         confirmButtonText : 'Si, Cambiar!',
         showCancelButton  : true,
         cancelButtonText  : 'Cancelar',
+        // html:
+        // '<div>'+
+        // '<ul>'+
+        // '  <li>'+
+        //   'observar'+
+        // '  </li>'+
+        // '</ul>'+
+        // '</div>',
       }).then((resp) => {
         if (resp.value) {
           this.cambiarEstadoScoreM('OBSERVADO');
           this.cambiarEstadoDetalleAobservado();
+          this.cargarOBuscarScoreDetalle();
         }
       });
     }
@@ -473,92 +326,29 @@ export class ModalStoreComponent implements OnInit {
         confirmButtonText : 'Si, Aprobar!',
         showCancelButton  : true,
         cancelButtonText  : 'Cancelar',
+
       }).then((resp) => {
         if (resp.value) {
           this.cambiarEstadoScoreM('APROBADO');
           this.cambiarEstadoDetalleAaprobado();
+          this.cargarOBuscarScoreDetalle();
         }
       });
     }
   }
 
-  // enviarRegistroTDPPRUEBAMASIVA(){
-  //   let parametro: any[] = [{
-  //     "queryId": 23,
-  //     "mapValue": {
-  //         p_idScore : this.DATA_SCORE.idScoreM,
-  //     }
-  //   }];
-  //   this.scoreService.exportScoreDetalleMasivo(parametro[0]).subscribe((resp: any) => {
-
-  //     this.excellIndividualService.dowloadExcel(resp.list);
-  //     // this.listadoCorreosTDP(file);
-  //   });
-  // }
-
-  // enviarRegistroTDPZ(){
-  //   let parametro: any[] = [{
-  //     "queryId": 34,
-  //     "mapValue": {
-  //         p_idScore : this.DATA_SCORE.idScoreM,
-  //     }
-  //   }];
-  //   this.scoreService.exportScoreDetalleDiurno(parametro[0]).subscribe((resp: any) => {
-  //     this.excellIndividualService.dowloadExcel(resp.list);
-  //   });
-  // };
-
-  enviarRegistroTDPY(){
-    let parametro: any[] = [{
-      "queryId": 27,
-      "mapValue": {
-          p_idScore : this.DATA_SCORE.idScoreM,
-      }
-    }];
-    this.scoreService.exportScoreDetalleDiurno(parametro[0]).subscribe((resp: any) => {
-      this.excellDiurnoService.dowloadExcel(resp.list);
-    });
-  }
-
-
-  enviarRegistroTDPX(casoScore? : string){
+  enviarRegistroTDPX(){
     let parametro: any[] = [{
       "queryId": 35,
       "mapValue": {
           p_idScore  : this.DATA_SCORE.idScoreM,
-          // p_casoScore: this.DATA_SCORE.caso_score
       }
     }];
-    this.scoreService.exportScoreDetalleMasivo(parametro[0]).subscribe((resp: any) => {
+    this.scoreService.exportScoreDetalleMasivoOdiurno(parametro[0]).subscribe((resp: any) => {
 
-      // const casoGeneral   = resp.list.filter((x: any) => x.caso_score == 'General')
-      // const casoExcepcion = resp.list.filter((x: any) => x.caso_score == 'Excepcion')
-      // console.log('C-GEN', casoGeneral, casoExcepcion);
-      // console.log('=>', resp.list);
-
-      // this.excellMasivaService.dowloadExcel(resp.list.filter((x:any) => x.caso_score == 'General'));
-      // this.excellMasivoService.dowloadExcel(resp.list);
       this.excellB2BService.dowloadExcel(resp.list);
-
-
-      // if (casoScore == 'General') {
-      //   const DataGeneral = resp.list.filter((x:any) => x.caso_score == 'General')
-      //   console.log('DATA-MASIVO-GEN', DataGeneral);
-
-      //   this.excellMasivaService.dowloadExcel(DataGeneral);
-      // }
-
-      // if (casoScore == 'Excepcion') {
-      //   const DataExcepcion = resp.list.filter((x:any) => x.caso_score == 'Excepcion')
-      //   console.log('DATA-MASIVO-EXC', DataExcepcion);
-
-      //   this.excellMasivaService.dowloadExcel(DataExcepcion);
-      // }
-
-      // this.excellMasivaService.dowloadExcel(resp.list);
     });
   }
-
 
   enviarRegistroTDP(){
     if (this.DATA_SCORE.estado == 'Solicitado' || this.DATA_SCORE.estado == 'Aprobado' ) {
@@ -575,50 +365,43 @@ export class ModalStoreComponent implements OnInit {
         console.log('123', resp);
 
         if (resp.value ) {
-          if (this.scoreForm.controls['tipoScore'].value == 'Masivo') {
-            this.exportScoreDetalleMasivo(this.DATA_SCORE.idScoreM);
-          } if (this.scoreForm.controls['tipoScore'].value == 'Diurno') {
-            this.exportScoreDetalleDiurno(this.DATA_SCORE.idScoreM);
-          }else{
-            console.log('EXCEP-I', resp);
-            this.exportScoreDetalleB2B(this.DATA_SCORE.idScoreM);
-          }
+
+          if (this.scoreForm.controls['tipoScore'].value == 'Masivo' || this.scoreForm.controls['tipoScore'].value == 'Diurno') { // CASO: GENERAL | EXCEP
+                this.exportScoreDetalleMasivoOdiurno(this.DATA_SCORE.idScoreM);
+              } else  {
+                this.exportScoreDetalleB2B(this.DATA_SCORE.idScoreM);
+              }
         }
       });
     }
   };
 
-  exportScoreDetalleMasivo(id_score: number){
+  exportScoreDetalleMasivoOdiurno(id_score: number){
     let parametro: any[] = [{
       "queryId": 34,
       "mapValue": {
           p_idScore : id_score,
       }
     }];
-    this.scoreService.exportScoreDetalleMasivo(parametro[0]).subscribe((resp: any) => {
+    this.scoreService.exportScoreDetalleMasivoOdiurno(parametro[0]).subscribe((resp: any) => {
+      console.log('TIPO-SCORE', resp.list);
 
-      this.excellMasivoService.generarExcell(resp.list,).then( (file: any) => {
-        const blob = new Blob([file]);
-        this.listadoCorreosTDP(blob);
-      });
+      const tipoScoreMasivo = resp.list.filter((x:any)=>x.tipo_score.toUpperCase() == 'MASIVO');
+      // const tipoScoreDiurno = resp.list.filter((x:any)=>x.tipo_score.toUpperCase() == 'DIURNO');
+
+      if (tipoScoreMasivo) {
+        this.excellMasivoService.generarExcell(resp.list,).then( (file: any) => {
+          const blob = new Blob([file]);
+          this.listadoCorreosTDP(blob);
+        });
+        }else{
+         this.excellDiurnoService.generarExcell(resp.list,).then( (file: any) => {
+          const blob = new Blob([file]);
+          this.listadoCorreosTDP(blob);
+        });
+      }
     });
   }
-
-  exportScoreDetalleDiurno(id_score: number){
-    let parametro: any[] = [{
-      "queryId": 34,
-      "mapValue": {
-          p_idScore : id_score,
-      }
-    }];
-    this.scoreService.exportScoreDetalleDiurno(parametro[0]).subscribe((resp: any) => {
-
-      this.excellDiurnoService.generarExcell(resp.list, ).then((file: any) => {
-        const blob = new Blob([file]);
-        this.listadoCorreosTDP(blob);
-      })
-    });
-  };
 
   exportScoreDetalleB2B(id_score: number){
     let parametro: any[] = [{
@@ -628,6 +411,7 @@ export class ModalStoreComponent implements OnInit {
       }
     }];
     this.scoreService.exportScoreDetalleB2B(parametro[0]).subscribe((resp: any) => {
+      console.log('TIPO-SCORE-B2B', resp.list);
 
       this.excellB2BService.generarExcell(resp.list,).then( file => {
         const blob = new Blob([file]);
@@ -652,7 +436,7 @@ export class ModalStoreComponent implements OnInit {
   fechaIniPrueba: any = ''
   fechaFinPrueba: any = ''
   enviarCorreo(file: Blob, listaCorreo: string[], correoCopia: string[]){
-    console.log('|==>', file);
+    console.log('|==>', file, this.scoreForm.value);
     this.blockUI.start("Enviando Data al correo del TDP") ;
     const data = new FormData();
 
@@ -663,21 +447,25 @@ export class ModalStoreComponent implements OnInit {
       data.append("Subject","F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -MASIVA-QA v2");
       data.append("Body","Buen día, Se realizaron las modificaciones solicitadas. Las modificaciones se visualizan en el archivo adjunto.");
       data.append("Attachments", file, "F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -MASIVA-QA v2" + '.xlsx');
-    } if (this.scoreForm.controls['tipoScore'].value == 'Diurno') {
+    }
+
+    if (this.scoreForm.controls['tipoScore'].value == 'Diurno') {
       data.append("From","procesosqa@indratools.net");
       data.append("ToEmail", listaCorreo.join(';'));
       data.append("Cc", correoCopia.join(';'));
-      data.append("Subject","F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -DIURNA-QA");
+      data.append("Subject","F-EXCEP- "+this.fechaIniPrueba +" -DIURNA-QA");
       data.append("Body","Buen día, Se realizaron las modificaciones solicitadas. Las modificaciones se visualizan en el archivo adjunto.");
-      data.append("Attachments", file, "F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -DIURNA-QA" + '.xlsx');
+      data.append("Attachments", file, "F-EXCEP- "+this.fechaIniPrueba+" -DIURNA-QA" + '.xlsx');
     }
-    else {
+    if(this.scoreForm.controls['tipoScore'].value == 'B2B') {
       data.append("From","procesosqa@indratools.net");
       data.append("ToEmail", listaCorreo.join(';'));
       data.append("Cc", correoCopia.join(';'));
       data.append("Subject","F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+"-B2B");
       data.append("Body","Buen día, Se realizaron las modificaciones solicitadas. Las modificaciones se visualizan en el archivo adjunto.");
       data.append("Attachments", file, "F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+"-B2B-QA" + '.xlsx');
+
+      // Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación. ==> B2B
     }
 
     this.sendMailService.SendDataByEmail(data).then((response) => {
@@ -688,8 +476,8 @@ export class ModalStoreComponent implements OnInit {
           icon : 'success',
           confirmButtonText: 'Ok',
         });
-        this.cambiarEstadoScoreM('ENVIADO');
-        this.cambiarEstadoDetalleAenviado();
+        // this.cambiarEstadoScoreM('ENVIADO');
+        // this.cambiarEstadoDetalleAenviado();
         this.close(true);
       }
       console.log(response);
@@ -821,66 +609,18 @@ export class ModalStoreComponent implements OnInit {
       }});
     }
 
-//  crearScoreM(){
-//     const formValues = this.scoreForm.getRawValue();
-//     let parametro: any =  {
-//         queryId: 6,
-//         mapValue: {
-//           p_solicitante             : this.userName, //Username: usuario logueado a la web
-//           p_fecha_solicitud         : formValues.fecha_solicitud,
-//           p_fecha_envio             : formValues.fecha_envio,
-//           p_idEstado                : 1, //ESTADO REGISTRADO,
-//           p_crea_solic              : this.userName,
-//           p_f_crea                  : formValues.f_crea,
-//           p_formato_envio           : formValues.formato_envio,
-//           p_item_version            : '',
-//           p_item_hora_envio         : formValues.item_horario_envio,
-//           p_nombre_proy             : formValues.nombre_proy ,
-//           p_fecha_ini_prueba        : formValues.fecha_ini_prueba,
-//           p_fecha_fin_prueba        : formValues.fecha_fin_prueba,
-//           p_hora_ini_prueba         : formValues.hora_ini_prueba,
-//           p_hora_fin_prueba         : formValues.hora_fin_prueba,
-//           p_motivo_solicitud        : formValues.motivo_solicitud,
-//           CONFIG_USER_NAME          : this.userName,
-//           CONFIG_OUT_MSG_ERROR      : '',
-//           CONFIG_OUT_MSG_EXITO      : ''
-//         },
-//       };
-
-//       console.log('VAOR', this.scoreForm.value , parametro);
-//       this.scoreService.crearScore(parametro).subscribe((resp: any) => {
-//         console.log('INSERT_SCORE_M', resp);
-
-//         Swal.fire({
-//           title: 'Crear Score!',
-//           text: `Score, creado con éxito`,
-//           icon: 'success',
-//           confirmButtonText: 'Ok',
-//         });
-//         this.close(true);
-//       });
-//     }
-
   actionBtn: string = 'Agregar';
   cargarSCoreByID(){
     this.actionBtn = 'Actualizar'
-      this.scoreForm.controls['id_score'          ].setValue(this.DATA_SCORE.idScoreM );
-      this.scoreForm.controls['solicitante'       ].setValue(this.DATA_SCORE.solicitante);
-      this.scoreForm.controls['id_estado_m'       ].setValue(this.DATA_SCORE.idEstado);
-      this.scoreForm.controls['observacion'       ].setValue(this.DATA_SCORE.observacion);
-      this.scoreForm.controls['item_horario_envio'].setValue(this.DATA_SCORE.item_hora_envio)
-      this.scoreForm.controls['actualiza'         ].setValue(this.DATA_SCORE.actualiza);
-      this.scoreForm.controls['formato_envio'     ].setValue(this.DATA_SCORE.formato_envio); //individual:1 | masivo:2
-      this.scoreForm.controls['version'           ].setValue(this.DATA_SCORE.version);
-      this.scoreForm.controls['motivo_solicitud'  ].setValue(this.DATA_SCORE.motivo_solicitud);
-      this.scoreForm.controls['hora_ini_prueba'   ].setValue(this.DATA_SCORE.hora_ini_prueba);
-      this.scoreForm.controls['hora_fin_prueba'   ].setValue(this.DATA_SCORE.hora_fin_prueba);
-      this.scoreForm.controls['nombre_proy'       ].setValue(this.DATA_SCORE.nombre_proy);
-      this.scoreForm.controls['casoScore'         ].setValue(this.DATA_SCORE.casoScore);
-      this.scoreForm.controls['tipoScore'         ].setValue(this.DATA_SCORE.tipoScore);
-      this.scoreForm.controls['fecha_ini_prueba'  ].setValue(this.DATA_SCORE.fecha_ini_prueba);
-      this.scoreForm.controls['fecha_fin_prueba'  ].setValue(this.DATA_SCORE.fecha_fin_prueba);
-
+      this.scoreForm.controls['id_score'        ].setValue(this.DATA_SCORE.idScoreM );
+      this.scoreForm.controls['solicitante'     ].setValue(this.DATA_SCORE.solicitante);
+      this.scoreForm.controls['id_estado_m'     ].setValue(this.DATA_SCORE.idEstado);
+      this.scoreForm.controls['motivo_solicitud'].setValue(this.DATA_SCORE.motivo_solicitud);
+      this.scoreForm.controls['casoScore'       ].setValue(this.DATA_SCORE.casoScore);
+      this.scoreForm.controls['tipoScore'       ].setValue(this.DATA_SCORE.tipoScore);
+      this.scoreForm.controls['fecha_ini_prueba'].setValue(this.DATA_SCORE.fecha_ini_prueba);
+      this.scoreForm.controls['fecha_fin_prueba'].setValue(this.DATA_SCORE.fecha_fin_prueba);
+      this.scoreForm.controls['obs_score'       ].setValue(this.DATA_SCORE.obs_score);
 
       if (this.DATA_SCORE.fecha_ini_prueba) {
         let fecha_x = this.DATA_SCORE.fecha_ini_prueba
@@ -908,25 +648,6 @@ export class ModalStoreComponent implements OnInit {
         this.fechaFinPrueba = this.datePipe.transform(new Date(year, month-1, date), 'ddMMyyyy');
       }
 
-      if (this.DATA_SCORE.fecha_solicitud) {
-        let fecha_x = this.DATA_SCORE.fecha_solicitud
-        const str   = fecha_x.split('/');
-        const year  = Number(str[2]);
-        const month = Number(str[1]);
-        const date  = Number(str[0]);
-        this.scoreForm.controls['fecha_solicitud'].setValue(this.datePipe.transform(new Date(year, month-1, date), 'yyyy-MM-dd'))
-      }
-
-      if (this.DATA_SCORE.fecha_envio) {
-        let fecha_x = this.DATA_SCORE.fecha_envio
-        const str   = fecha_x.split('/');
-        const year  = Number(str[2]);
-        const month = Number(str[1]);
-        const date  = Number(str[0]);
-        this.scoreForm.controls['fecha_envio'     ].setValue(this.datePipe.transform(new Date(year, month-1, date), 'yyyy-MM-dd'))
-        this.scoreForm.controls['fechaEnvioPrueba'].setValue(this.datePipe.transform(new Date(year, month-1, date), 'dd/MM/yyyy'))
-      }
-
       this.validateIfIsLider();
 
       if (this.scoreForm.controls['id_estado_m'].value != 1) {
@@ -942,16 +663,10 @@ export class ModalStoreComponent implements OnInit {
 
 
   disabledControls(){
-      this.scoreForm.controls['item_horario_envio'].disable()
-      this.scoreForm.controls['formato_envio'     ].disable()
-      this.scoreForm.controls['fecha_envio'       ].disable()
-
-      this.scoreForm.controls['fecha_ini_prueba'  ].disable()
-      this.scoreForm.controls['fecha_fin_prueba'  ].disable()
-      this.scoreForm.controls['hora_ini_prueba'   ].disable()
-      this.scoreForm.controls['hora_fin_prueba'   ].disable()
-      this.scoreForm.controls['motivo_solicitud'  ].disable()
-      this.scoreForm.controls['nombre_proy'       ].disable()
+      this.scoreForm.controls['fecha_ini_prueba'].disable()
+      this.scoreForm.controls['fecha_fin_prueba'].disable()
+      this.scoreForm.controls['motivo_solicitud'].disable()
+      this.scoreForm.controls['obs_score'       ].disable()
   }
 
   validarIfIsGestor(){
@@ -1018,13 +733,15 @@ export class ModalStoreComponent implements OnInit {
    };
 
    totalfiltro = 0;
+   totalScore: number = 0;
    cambiarPagina(event: number) {
      let offset = event*10;
      this.spinner.show();
 
      if (this.totalfiltro != this.totalScore) {
        this.scoreService.cargarOBuscarScoreDetalle(offset.toString()).subscribe( (resp: any) => {
-             this.listScoreDetalle = resp.list;
+            //  this.listScoreDetalleGen = resp.list.filter((x: any)=> x.caso_score == 'General');
+             this.listScoreDetalleGen = resp.list;
              this.spinner.hide();
            });
      } else {
@@ -1034,8 +751,22 @@ export class ModalStoreComponent implements OnInit {
    }
 
    validarCambioScoreM(resp: any ){
+    // console.log('DATA_SCOR_DETALLE', this.listScoreDetalle, this.listScoreDetalleCorp);
+
     if (resp.exitoMessage == "Actualización exitosa") {
         this.cambiarEstadoScoreM('EN VALIDACIÓN');
+    }
+   }
+
+   estadoObservadoMaestra(resp: any ){
+    if (resp.exitoMessage == "Actualización exitosa") {
+        this.cambiarEstadoScoreM('OBSERVADO');
+    }
+   }
+
+   estadoSolicitadoMaestra(resp: any ){
+    if (resp.exitoMessage == "Actualización exitosa") {
+        this.cambiarEstadoScoreM('SOLICITADO');
     }
    }
 
@@ -1044,19 +775,52 @@ export class ModalStoreComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(resp => {
       console.log('CLOSE', resp);
+      // console.log('DATA_SCOR_DETALLE', this.DATA_SCORE, this.DATA_SCORE.tipoScore, this.listScoreDetalleCorp);
+      // console.log('DATA_SCOR_MAESTRA', this.listScoreDetalleCorp.find(x=>x.tipo_score == 'B2B'));
 
       if (resp) {
+        if (this.DATA_SCORE.tipoScore == 'B2B' || this.DATA_SCORE.tipoScore == 'Masivo' || this.DATA_SCORE.tipoScore == 'Diurno') {
+          this.estadoSolicitadoMaestra(resp)
+          this.cargarOBuscarScoreDetalle()
+        }
         this.validarCambioScoreM(resp)
         this.cargarOBuscarScoreDetalle()
       }
     })
   };
 
-  finalizarSolicitud() {
-    const dialogRef = this.dialog.open(ImportarSolicitudComponent, { width: '30%', data: {scoreMailForm: this.scoreForm.getRawValue(), isCreation: true}});
+  aprobarObservarMasivamenteSolicitud() {
+    const dialogRef = this.dialog.open(ObservarMasivamenteComponent, { width: '25%', data: {scoreObsForm: this.scoreForm.getRawValue(), isCreation: true}});
     dialogRef.afterClosed().subscribe((resp) => {
       if (resp) {
         // this.cargarOBuscarEvento();
+
+        if (this.DATA_SCORE.tipoScore == 'B2B' || this.DATA_SCORE.tipoScore == 'Masivo' || this.DATA_SCORE.tipoScore == 'Diurno') {
+          this.estadoObservadoMaestra(resp)
+          this.cambiarEstadoDetalleAobservado();
+          this.cargarOBuscarScoreDetalle()
+        }
+          this.cambiarEstadoDetalleAobservado();
+          this.estadoObservadoMaestra(resp);
+        this.cargarOBuscarScoreDetalle()
+      }
+    });
+  }
+
+  importarAprobarSolicitud() {
+    const dialogRef = this.dialog.open(AprobarImportarComponent, { width: '25%', data: {scoreObsForm: this.scoreForm.getRawValue(), isCreation: true}});
+    dialogRef.afterClosed().subscribe((resp) => {
+      if (resp) {
+        // this.cargarOBuscarEvento();
+
+        if (this.DATA_SCORE.tipoScore == 'B2B' || this.DATA_SCORE.tipoScore == 'Masivo' || this.DATA_SCORE.tipoScore == 'Diurno') {
+          this.estadoObservadoMaestra(resp)
+          this.cambiarEstadoDetalleAobservado();
+          this.cargarOBuscarScoreDetalle()
+        }
+          this.cambiarEstadoDetalleAobservado();
+          this.estadoObservadoMaestra(resp);
+        this.cargarOBuscarScoreDetalle()
       }
     });
   }

@@ -1,0 +1,75 @@
+  <div style="display: flex">
+    <div class="flex-1"></div>
+    <div class="modal-title c-male">Importar detalle y Finalizar</div>
+    <div class="flex-1"></div>
+
+    <button (click)="close()" class="icon-btn btn-trans c-orange moda-close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <form class="row g-3" [formGroup]="importForm">
+    <div class="cli-form newvac-wrapper">
+      <div>
+        <ul class="tabs-container">
+          <li (click)="onTabClick('continuar')" [class.active]="activeTab == 'continuar'" class="tab-link">
+            <div class="score-form-buttons">
+              <button
+                class="cli-btn btn-m btn-skyblue"
+                ><mat-icon class="icon-18">arrow_right_alt</mat-icon> Continuar
+                <!-- (click)="actualizarObservacion()" -->
+              </button>
+            </div>
+          </li>
+
+          <li (click)="onTabClick('guardar')" [class.active]="activeTab == 'guardar'" class="tab-link">
+            <div class="score-form-buttons">
+              <button
+                class="cli-btn btn-m btn-grey"
+                (click)="actualizarObservacion()"
+              >
+                <div style="display: flex">
+                  <mat-icon class="icon-18">undo</mat-icon> Regresar
+                </div>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div *ngIf="activeTab == 'continuar'">
+        <div class="chart-draw">
+          <div class="col-sm-12 cli-form-element">
+            <label>Importar Archivo.</label>
+            <input type="file" class="cli-import" formControlName="importar" />
+            <!-- (change)="readExcell($event)" -->
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="activeTab == 'guardar'">
+        <div class="chart-draw">
+          <div class="col-sm-12 cli-form-element">
+            <label>Descargar PDF</label>
+            <small>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore necessitatibus corporis ea eos, placeat aliquid mollitia, dolores quod officiis adipisci hic incidunt cumque sapiente exercitationem eum nam reiciendis odit magnam.
+            Nihil sapiente doloremque sequi quasi distinctt autem vel voluptates nulla illo?
+            Libero rerum incidunt numquam accusamus, consectetur unde facere est blanditiis, eligendi iusto laboriosam quam nihil necessitatibus veniam, tempore id beatae. Aspernatur quidem doloremque, veritatis molestiae excepturi esse eos eveniet dolore.
+            Quod sit quia autem ad magnam ex, corrupti illum aspernatur consequuntur eligendi cupiditate ut quos laudantium itaque esse dolores quidem eos odio minus exercitationem deserunt unde veniam quam quis? Asperiores!</small>
+          </div>
+
+            <div class="flex-1"></div>
+
+            <button
+              class="cli-btn btn-m btn-lemon-green"
+              (click)="actualizarObservacion()">
+              <div style="display: flex">
+                <mat-icon class="icon-18">filter_list_off</mat-icon> Finalizar
+              </div>
+            </button>
+        </div>
+      </div>
+
+    </div>
+  </form>
+
+
