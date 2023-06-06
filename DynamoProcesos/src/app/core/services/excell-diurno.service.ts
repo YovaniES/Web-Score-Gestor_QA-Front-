@@ -144,29 +144,29 @@ export class ExcellDiurnoService {
 
     const sheet = this.wb.addWorksheet('FOR EXCEP V1-GENERAL'); //Nombre de la Hoja
 
-    // Establecemos el ancho y estilo de las columnas de la Tabla
-    sheet.getColumn('A').width = 75;
-    sheet.getColumn('B').width = 45;
-    sheet.getColumn('C').width = 18;
-    sheet.getColumn('D').width = 15;
-    sheet.getColumn('E').width = 20;
-    sheet.getColumn('F').width = 25;
-    sheet.getColumn('G').width = 30;
-    sheet.getColumn('H').width = 50;
-    sheet.getColumn('I').width = 15;
-    sheet.getColumn('J').width = 18;
-    sheet.getColumn('K').width = 22;
-    sheet.getColumn('L').width = 20;
-    sheet.getColumn('M').width = 20;
-    sheet.getColumn('N').width = 18;
-    sheet.getColumn('O').width = 18;
-    sheet.getColumn('P').width = 20;
-    sheet.getColumn('Q').width = 20;
-    sheet.getColumn('R').width = 20;
-    sheet.getColumn('S').width = 25;
-    sheet.getColumn('T').width = 20;
-    sheet.getColumn('U').width = 20;
-    sheet.getColumn('V').width = 20;
+      // Establecemos el ancho y estilo de las columnas de la Tabla
+      sheet.getColumn('A').width = 75;
+      sheet.getColumn('B').width = 45;
+      sheet.getColumn('C').width = 18;
+      sheet.getColumn('D').width = 15;
+      sheet.getColumn('E').width = 20;
+      sheet.getColumn('F').width = 25;
+      sheet.getColumn('G').width = 30;
+      sheet.getColumn('H').width = 50;
+      sheet.getColumn('I').width = 15;
+      sheet.getColumn('J').width = 18;
+      sheet.getColumn('K').width = 22;
+      sheet.getColumn('L').width = 20;
+      sheet.getColumn('M').width = 20;
+      sheet.getColumn('N').width = 18;
+      sheet.getColumn('O').width = 18;
+      sheet.getColumn('P').width = 20;
+      sheet.getColumn('Q').width = 20;
+      sheet.getColumn('R').width = 20;
+      sheet.getColumn('S').width = 25;
+      sheet.getColumn('T').width = 20;
+      sheet.getColumn('U').width = 20;
+      sheet.getColumn('V').width = 20;
 
 
     // DATA SCORE - TABLA DINAMICA
@@ -547,11 +547,9 @@ export class ExcellDiurnoService {
         fila.alignment = { horizontal: 'center', vertical: 'middle'}
       }
 
-
       headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
       headerFila.height = 35;
-
 
       // Bauground fila 1 - Tabla
       sheet.getCell('A1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'DEDEDE'}}

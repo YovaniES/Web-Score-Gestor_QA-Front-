@@ -70,5 +70,9 @@ export class ScoreService {
 
   crearObservacionMasiva(obj: any){
     return this.http.post(API_SCORE, obj);
+  };
+
+  importarAprobarSolicitud(obj: any){
+    return this.http.post(API_SCORE, obj);
   }
 }

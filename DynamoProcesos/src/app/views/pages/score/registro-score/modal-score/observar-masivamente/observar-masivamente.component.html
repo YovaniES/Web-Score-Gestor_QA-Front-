@@ -4,7 +4,7 @@
     <div class="flex-1"></div>
   </div>
 
-  <form class="row g-3" [formGroup]="importForm">
+  <form class="row g-3" [formGroup]="obs_mForm">
     <div class="cli-form newvac-wrapper">
       <div class="row g-2">
         <div class="col-sm-12 cli-form-element" style="margin-top: 10%;">
@@ -29,7 +29,7 @@
         <button
           class="cli-btn-red btn-m btn-red"
           (click)="actualizarComentarioScore_materiales()"
-          [disabled]="importForm.invalid"
+          [disabled]="obs_mForm.invalid"
         ><mat-icon class="icon-18">unpublished</mat-icon> Si, Observar
         </button>
       </div>

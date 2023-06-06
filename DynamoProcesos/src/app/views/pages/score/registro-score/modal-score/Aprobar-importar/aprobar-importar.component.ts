@@ -8,18 +8,16 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { ScoreService } from 'src/app/core/services/score.service';
 import Swal from 'sweetalert2';
 
-
 @Component({
   selector: 'app-enviar-correo',
   templateUrl: './aprobar-importar.component.html',
-  styleUrls: ['./aprobar-importar.component.scss']
+  styleUrls: ['./aprobar-importar.component.scss'],
 })
 export class AprobarImportarComponent implements OnInit {
-
   @BlockUI() blockUI!: NgBlockUI;
   loadingItem: boolean = false;
   importForm!: FormGroup;
-  activeTab:string = 'continuar'
+  activeTab: string = 'continuar';
 
   constructor(
     public authService: AuthService,
@@ -29,93 +27,62 @@ export class AprobarImportarComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private dialogRef: MatDialogRef<AprobarImportarComponent>,
     @Inject(MAT_DIALOG_DATA) public DATA_SCORE: any
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.newFilfroForm();
-    this.cargarObservacionByID();
+    // this.cargarObservacionByID();
   }
 
-  newFilfroForm(){
+  newFilfroForm() {
     this.importForm = this.fb.group({
-      importar        : [''],
-      obs_solicitud_m : ['', [Validators.required, Validators.minLength(25)]]
-    })
+      aprobar_solicitud_m: ['', [Validators.required]],
+    });
   }
 
-  onTabClick(tab: string){
-    this.activeTab = tab
+  guardarPdf_y_AprobarSolicitud() {
+    this.spinner.show();
+
+    const formValues = this.importForm.getRawValue();
+    console.log('O B S_IMPORT',this.importForm.value, this.DATA_SCORE.scoreObsForm.id_score);
+    console.log('ID_Score_IMPORT', this.DATA_SCORE.scoreObsForm.id_score);
+
+
+    let parametro: any[] = [
+      {
+        queryId: 28, //OJO Falta importar y guardar el pdf en la BD
+        mapValue: {
+          p_idScore       : this.DATA_SCORE.scoreObsForm.id_score,
+          // p_idscore_materiales       : this.DATA_SCORE.scoreObsForm.id_score,
+          // p_observacionScore_material: formValues.aprobar_solicitud_m,
+          // CONFIG_OUT_MSG_EXITO       : '',
+        },
+      },
+    ];
+    this.scoreService.importarAprobarSolicitud(parametro[0]).subscribe({
+      next: (resp: any) => {
+        this.spinner.hide();
+
+        this.close(resp);
+
+        Swal.fire({
+          title: 'Importar evidencia!',
+          text: `Se Importó con éxito la evidencia`,
+          icon: 'success',
+          confirmButtonText: 'Ok',
+        });
+      },
+      error: () => {
+        Swal.fire('ERROR', 'No se pudo Importar la evidencia', 'warning');
+      },
+    });
   }
-
-  actualizarObservacion(){
-
-  }
-
-    actualizarComentarioScore_materiales() {
-      this.spinner.show();
-      const formValues = this.importForm.getRawValue();
-      console.log('O B S_MAS', this.importForm.value, this.DATA_SCORE.scoreObsForm.id_score);
-      console.log('ESTA_M_IMPORT', this.importForm.value, this.DATA_SCORE.scoreObsForm);
-
-      let parametro: any[] = [{ queryId: 36,
-          mapValue: {
-            p_idscore_materiales        : this.DATA_SCORE.scoreObsForm.id_score,
-            p_observacionScore_material : formValues.obs_solicitud_m,
-            // CONFIG_USER_ID           : this.userID,
-          // CONFIG_OUT_MSG_ERROR     : '',
-            CONFIG_OUT_MSG_EXITO     : ''
-          },
-        }];
-       this.scoreService.actualizarObservacion(parametro[0]).subscribe({next: (resp: any) => {
-          this.spinner.hide();
-          console.log('OBS_NOTA_ACTUALIZADO', resp);
-
-          this.cargarObservacionByID();
-
-          this.close(resp)
-
-
-          Swal.fire({
-            title: 'Observar SOLICITUD!',
-            text : `Se Observó con éxito la Solicitud`,
-            icon : 'success',
-            confirmButtonText: 'Ok'
-            });
-
-            // Swal.fire({
-            //     title: 'Observar estado?',
-            //     text: `¿Estas seguro que desea cambiar de estado a Observado?`,
-            //     icon: 'question',
-            //     confirmButtonColor: '#20c997',
-            //     cancelButtonColor : '#9da7b1',
-            //     confirmButtonText : 'Si, Cambiar!',
-            //     showCancelButton  : true,
-            //     cancelButtonText  : 'Cancelar',
-            //   }).then((resp) => {
-            //     if (resp.value) {
-            //       // this.cambiarEstadoScoreM('OBSERVADO');
-            //       // this.cambiarEstadoDetalleAobservado();
-            //       // this.cargarOBuscarScoreDetalle();
-            //     }
-            //   });
-
-          }, error:()=>{
-            Swal.fire(
-              'ERROR',
-              'No se pudo Observar el registro',
-              'warning'
-            );
-          }
-       });
-    }
-
-    cargarObservacionByID(){
-        this.importForm.controls['obs_solicitud_m'].setValue(this.DATA_SCORE.scoreObsForm.obs_score);
-         console.log('OBSERV_BY_ID', this.importForm.value);
-    }
 
   campoNoValido(campo: string): boolean {
-    if (this.importForm.get(campo)?.invalid && this.importForm.get(campo)?.touched) {
+    if (
+      this.importForm.get(campo)?.invalid &&
+      this.importForm.get(campo)?.touched
+    ) {
       return true;
     } else {
       return false;

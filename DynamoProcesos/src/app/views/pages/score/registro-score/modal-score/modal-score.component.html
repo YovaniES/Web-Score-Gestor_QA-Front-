@@ -162,16 +162,15 @@
                       </div>
                       <div class="flex-1"></div>
 
-
-                      <div class="col-sm-2">
+                      <div class="col-sm-2" *ngIf="scoreForm.controls['id_estado_m'].value == 5">
                         <div style="margin-top: 27px; display: flex;">
                           <button
                             type="submit"
                             matTooltip="Ver PDF"
                             class="cli-btn-pdf"
                             style="border-radius: 2px;"
-                            (click)="limpiarFiltro()">
-                            <mat-icon class="icon-18" style="color: #f44336">picture_as_pdf</mat-icon>Descargar
+                            (click)="descargarPDF()">
+                            <mat-icon class="icon-18" style="color: #f44336">picture_as_pdf</mat-icon>Descargar D
                           </button>
                         </div>
                       </div>
@@ -197,7 +196,7 @@
                               <th style="min-width: 250px;">Tipo Venta</th>
                               <th style="min-width: 115px;">Gama de Equipo</th>
                               <th style="min-width: 65px;" >Estado</th>
-                              <th style="min-width: 130px;">Observ. Gestor QA.</th>
+                              <th style="min-width: 130px; font-size: 11px;">C O M E N T A R I O S</th>
                               <th style="min-width: 110px;">Req. Validación</th>
                               <th style="min-width: 65px;" >Tipo Doc</th>
                               <th style="min-width: 65px;" >RUC</th>
@@ -218,12 +217,12 @@
                                       id: 'b2b',
                                       currentPage: page,
                                       totalItems: totalScore }">
-                            <td>{{ score.idScored }}</td>
-                            <td>{{ score.caso_score }}</td>
-                            <td>{{ score.segmento }}</td>
+                            <td>{{ score.idScored        }}</td>
+                            <td>{{ score.caso_score      }}</td>
+                            <td>{{ score.segmento        }}</td>
                             <td>{{ score.tipoTransaccion }}</td>
-                            <td>{{ score.tipoVenta }}</td>
-                            <td>{{ score.gama }}</td>
+                            <td>{{ score.tipoVenta       }}</td>
+                            <td>{{ score.gama            }}</td>
                             <td style="min-width: 118px;">
                               <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">         {{ score.estado | uppercase }}</span>
                               <span *ngIf="score.estado == 'Observado'"  class="label est-observado ">  {{ score.estado | uppercase }}</span>
@@ -235,7 +234,7 @@
                             <td class="obs-score">
                             <ng-container *ngIf="((authService.esUsuarioGestor() || authService.esUsuarioLider()) && ( score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
                               <div style="display: flex; min-width: 175px; font-size: 11px;">
-                                <button *ngIf="score.req_validacion == '0'"
+                                <button
                                   class="btn-obs btn-obs"
                                   style="margin: 0"
                                   type="button"
@@ -250,15 +249,15 @@
                               <span *ngIf="score.req_validacion == '0'"  style="color: #fd0d89">SI</span>
                               <span *ngIf="score.req_validacion == '1'"  style="color: #0daef4">NO</span>
                             </td>
-                            <td>{{ score.tipo_documento }}</td>
+                            <td>{{ score.tipo_documento   }}</td>
                             <td>{{ score.numero_documento }}</td>
-                            <td>{{ score.nombres_apell }}</td>
-                            <td>{{ score.num_lin_disp }}</td>
-                            <td>{{ score.score }}</td>
-                            <td>{{ score.cf_disponible }}</td>
-                            <td>{{ score.cap_financ_prev }}</td>
-                            <td>{{ score.cod_evaluacion }}</td>
-                            <td>{{ score.observacion }}</td>
+                            <td>{{ score.nombres_apell    }}</td>
+                            <td>{{ score.num_lin_disp     }}</td>
+                            <td>{{ score.score            }}</td>
+                            <td>{{ score.cf_disponible    }}</td>
+                            <td>{{ score.cap_financ_prev  }}</td>
+                            <td>{{ score.cod_evaluacion   }}</td>
+                            <td>{{ score.observacion      }}</td>
                           </tr>
                           </tbody>
                         </table>
@@ -353,6 +352,21 @@
                           </div>
                         </div>
 
+                        <div class="flex-1"></div>
+
+                        <div class="col-sm-2" *ngIf="scoreForm.controls['id_estado_m'].value == 5">
+                          <div style="margin-top: 27px; display: flex;">
+                            <button
+                              type="submit"
+                              matTooltip="Ver PDF"
+                              class="cli-btn-pdf"
+                              style="border-radius: 2px;"
+                              (click)="descargarPDF()">
+                              <mat-icon class="icon-18" style="color: #f44336">picture_as_pdf</mat-icon>Descargar
+                            </button>
+                          </div>
+                        </div>
+
                         <div style="display: flex">
                           <div class="flex-1"></div>
                           <div style="color: #0daef4">
@@ -366,28 +380,28 @@
                           <table class="cli-table stripedtable underlinedtable">
                             <thead>
                               <tr class="bgc-turquey c-white">
-                                <th style="min-width: 65px;">ID Score</th>
-                                <th style="min-width: 125px;">Solicitante</th>
-                                <th style="min-width: 165px;">RQ-Nombre del proyecto</th>
-                                <th style="min-width: 110px;">Fecha APP</th>
-                                <th style="min-width: 65px;">TIpo Doc</th>
-                                <th style="min-width: 67px;">Num Doc</th>
-                                <th style="min-width: 65px;">Estado</th>
-                                <th style="min-width: 130px;">Observ. Gestor QA.</th>
-                                <th style="min-width: 110px;">Req. Validación</th>
-                                <th style="min-width: 115px;">Segmento</th>
-                                <th style="min-width: 118px;">Tipo Transacción</th>
-                                <th style="min-width: 250px;">Tipo Venta</th>
-                                <th style="min-width: 80px;">Gama</th>
-                                <th style="min-width: 100px;">Cuota Inicial</th>
-                                <th style="min-width: 65px;">Cuotas</th>
-                                <th style="min-width: 95px;">Cap. Financ. 2</th>
-                                <th style="min-width: 65px;">Usuario</th>
-                                <th style="min-width: 98px;">Cargo fijo máx</th>
-                                <th style="min-width: 155px;">Capacidad financ. prev</th>
-                                <th style="min-width: 66px;">Score</th>
-                                <th style="min-width: 166px;">Num. lineas disponible</th>
-                                <th style="min-width: 98px;">Código finan.</th>
+                                <th style="min-width: 65px;"  >ID Score</th>
+                                <th style="min-width: 125px;" >Solicitante</th>
+                                <th style="min-width: 165px;" >RQ-Nombre del proyecto</th>
+                                <th style="min-width: 110px;" >Fecha APP</th>
+                                <th style="min-width: 65px;"  >TIpo Doc</th>
+                                <th style="min-width: 67px;"  >Num Doc</th>
+                                <th style="min-width: 65px;"  >Estado</th>
+                                <th style="min-width: 130px; font-size: 11px;" >C O M E N T A R I O S</th>
+                                <th style="min-width: 110px;" >Req. Validación</th>
+                                <th style="min-width: 115px;" >Segmento</th>
+                                <th style="min-width: 118px;" >Tipo Transacción</th>
+                                <th style="min-width: 250px;" >Tipo Venta</th>
+                                <th style="min-width: 80px;"  >Gama</th>
+                                <th style="min-width: 100px;" >Cuota Inicial</th>
+                                <th style="min-width: 65px;"  >Cuotas</th>
+                                <th style="min-width: 95px;"  >Cap. Financ. 2</th>
+                                <th style="min-width: 65px;"  >Usuario</th>
+                                <th style="min-width: 98px;"  >Cargo fijo máx</th>
+                                <th style="min-width: 155px;" >Capacidad financ. prev</th>
+                                <th style="min-width: 66px;"  >Score</th>
+                                <th style="min-width: 166px;" >Num. lineas disponible</th>
+                                <th style="min-width: 98px;"  >Código finan.</th>
                               </tr>
                             </thead>
 
@@ -398,26 +412,25 @@
                                         id: 'general',
                                         currentPage: page,
                                         totalItems: totalScore }">
-                              <td>{{ score.idScored }}</td>
-                              <td>{{ score.solicitante }}</td>
-                              <td>{{ score.nombre_proy }}</td>
-                              <td>{{ score.fecha_score }}</td>
-                              <td>{{ score.tipo_documento }}</td>
+                              <td>{{ score.idScored         }}</td>
+                              <td>{{ score.solicitante      }}</td>
+                              <td>{{ score.nombre_proy      }}</td>
+                              <td>{{ score.fecha_score      }}</td>
+                              <td>{{ score.tipo_documento   }}</td>
                               <td>{{ score.numero_documento }}</td>
 
                               <td style="min-width: 118px;">
                                 <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">        {{ score.estado | uppercase }}</span>
                                 <span *ngIf="score.estado == 'Observado'"  class="label est-observado">  {{ score.estado | uppercase }}</span>
                                 <span *ngIf="score.estado == 'Enviado'"    class="label est-enviado">    {{ score.estado | uppercase }}</span>
-                                <span *ngIf="score.estado == 'Finalizado'" class="label est-finalizado ">{{ score.estado | uppercase }}</span>
+                                <span *ngIf="score.estado == 'Finalizado'" class="label est-finalizado"> {{ score.estado | uppercase }}</span>
                                 <span *ngIf="score.estado == 'Aprobado'"   class="label est-aprobado">   {{ score.estado | uppercase }}</span>
                                 <span *ngIf="score.estado == 'Subsanado'"  class="label est-subsanado">  {{ score.estado | uppercase }}</span>
                               </td>
                               <td class="obs-score">
-                                <!-- <ng-container *ngIf="((authService.esUsuarioGestor() && score.estado == 'Finalizado') || authService.esUsuarioLider()) && (score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')"> -->
                                 <ng-container *ngIf="((authService.esUsuarioGestor() || (authService.esUsuarioLider() && score.estado != 'Finalizado')) && (score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
                                   <div style="display: flex">
-                                    <button *ngIf="score.req_validacion == '0'"
+                                    <button
                                       class="btn-obs btn-obs"
                                       style="margin: 0"
                                       type="button"
@@ -432,20 +445,19 @@
                                 <span *ngIf="score.req_validacion == '0'" style="color: #fd0d89">SI</span>
                                 <span *ngIf="score.req_validacion == '1'" style="color: #0daef4">NO</span>
                               </td>
-                              <td>{{ score.segmento }}</td>
+                              <td>{{ score.segmento        }}</td>
                               <td>{{ score.tipoTransaccion }}</td>
-                              <td>{{ score.tipoVenta }}</td>
-                              <td>{{ score.gama }}</td>
-                              <td>{{ score.cuota_inicial }}</td>
-                              <td>{{ score.cuotas }}</td>
-                              <td>{{ score.cap_finan_2 }}</td>
-                              <td>{{ score.usuario }}</td>
-                              <td>{{ score.cargo_fijo_max }}</td>
+                              <td>{{ score.tipoVenta       }}</td>
+                              <td>{{ score.gama            }}</td>
+                              <td>{{ score.cuota_inicial   }}</td>
+                              <td>{{ score.cuotas          }}</td>
+                              <td>{{ score.cap_finan_2     }}</td>
+                              <td>{{ score.usuario         }}</td>
+                              <td>{{ score.cargo_fijo_max  }}</td>
                               <td>{{ score.cap_financ_prev }}</td>
-                              <td>{{ score.score }}</td>
-                              <td>{{ score.num_lin_disp }}</td>
-                              <td>{{ score.cod_finan }}</td>
-
+                              <td>{{ score.score           }}</td>
+                              <td>{{ score.num_lin_disp    }}</td>
+                              <td>{{ score.cod_finan       }}</td>
                             </tr>
                             </tbody>
                           </table>
@@ -531,6 +543,21 @@
                           </div>
                         </div>
 
+                        <div class="flex-1"></div>
+
+                        <div class="col-sm-2" *ngIf="scoreForm.controls['id_estado_m'].value == 5">
+                          <div style="margin-top: 27px; display: flex;">
+                            <button
+                              type="submit"
+                              matTooltip="Ver PDF"
+                              class="cli-btn-pdf"
+                              style="border-radius: 2px;"
+                              (click)="descargarPDF()">
+                              <mat-icon class="icon-18" style="color: #f44336">picture_as_pdf</mat-icon>Descargar
+                            </button>
+                          </div>
+                        </div>
+
                         <div style="display: flex">
                           <div class="flex-1"></div>
                           <div style="color: #0daef4">
@@ -545,25 +572,25 @@
                             <thead>
                               <tr class="bgc-green c-white">
                                 <!-- <th>ID Score DET</th> -->
-                                <th style="min-width: 65px;" >ID Score</th>
+                                <th style="min-width: 65px;"  >ID Score</th>
                                 <th style="min-width: 120px;" >Solicitante</th>
-                                <th style="min-width: 80px;" >Rq</th>
-                                <th style="min-width: 135px;">Proyecto</th>
-                                <th style="min-width: 80px;" >Casos</th>
-                                <th style="min-width: 65px;" >Estado</th>
-                                <th style="min-width: 130px;">Observ. Gestor QA.</th>
-                                <th style="min-width: 108px;">Req. Validación</th>
-                                <th style="min-width: 85px;" >Cuota Inicial</th>
-                                <th style="min-width: 65px;" >Gama</th>
-                                <th style="min-width: 63px;" >Tipo Doc</th>
-                                <th style="min-width: 66px;" >Num Doc</th>
-                                <th style="min-width: 100px;">Fecha APP</th>
-                                <th style="min-width: 65px;" >Score</th>
-                                <th style="min-width: 105px;">Cargo Fijo Máx</th>
-                                <th style="min-width: 116px;">Núm Lineas Disp.</th>
-                                <th style="min-width: 118px;">Cap. Financ. Prev.</th>
-                                <th style="min-width: 116px;">Código Financ.</th>
-                                <th style="min-width: 95px;" >Cap. Financ. 2</th>
+                                <th style="min-width: 80px;"  >Rq</th>
+                                <th style="min-width: 135px;" >Proyecto</th>
+                                <th style="min-width: 80px;"  >Casos</th>
+                                <th style="min-width: 65px;"  >Estado</th>
+                                <th style="min-width: 130px; font-size: 11px;" >C O M E N T A R I O S</th>
+                                <th style="min-width: 108px;" >Req. Validación</th>
+                                <th style="min-width: 85px;"  >Cuota Inicial</th>
+                                <th style="min-width: 65px;"  >Gama</th>
+                                <th style="min-width: 63px;"  >Tipo Doc</th>
+                                <th style="min-width: 66px;"  >Num Doc</th>
+                                <th style="min-width: 100px;" >Fecha APP</th>
+                                <th style="min-width: 65px;"  >Score</th>
+                                <th style="min-width: 105px;" >Cargo Fijo Máx</th>
+                                <th style="min-width: 116px;" >Núm Lineas Disp.</th>
+                                <th style="min-width: 118px;" >Cap. Financ. Prev.</th>
+                                <th style="min-width: 116px;" >Código Financ.</th>
+                                <th style="min-width: 95px;"  >Cap. Financ. 2</th>
                               </tr>
                             </thead>
 
@@ -574,11 +601,11 @@
                                         id: 'excepcion',
                                         currentPage: page,
                                         totalItems: totalScore }">
-                              <td>{{ score.idScored }}</td>
+                              <td>{{ score.idScored    }}</td>
                               <td>{{ score.solicitante }}</td>
-                              <td>{{ score.Rq }}</td>
-                              <td>{{ score.proyecto }}</td>
-                              <td>{{ score.casos }}</td>
+                              <td>{{ score.Rq          }}</td>
+                              <td>{{ score.proyecto    }}</td>
+                              <td>{{ score.casos       }}</td>
                               <td>
                                 <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">        {{ score.estado | uppercase }}</span>
                                 <span *ngIf="score.estado == 'Observado'"  class="label est-observado "> {{ score.estado | uppercase }}</span>
@@ -590,7 +617,7 @@
                               <td class="obs-score">
                                 <ng-container *ngIf="((authService.esUsuarioGestor() || (authService.esUsuarioLider() && score.estado != 'Finalizado')) && ( score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
                                   <div style="display: flex">
-                                    <button *ngIf="score.req_validacion == '0'"
+                                    <button
                                       class="btn-obs btn-obs"
                                       style="margin: 0"
                                       type="button"
@@ -606,16 +633,16 @@
                                 <span *ngIf="score.req_validacion == '1'"  style="color: #0daef4">NO</span>
                               </td>
                               <td><div>{{ score.cuota_inicial }}</div></td>
-                              <td>{{ score.gama }}</td>
-                              <td>{{ score.tipo_documento }}</td>
+                              <td>{{ score.gama             }}</td>
+                              <td>{{ score.tipo_documento   }}</td>
                               <td>{{ score.numero_documento }}</td>
-                              <td>{{ score.fecha_score }}</td>
-                              <td>{{ score.score }}</td>
-                              <td>{{ score.cargo_fijo_max }}</td>
-                              <td>{{ score.num_lineas_disp }}</td>
-                              <td>{{ score.cap_financ_prev }}</td>
-                              <td>{{ score.cod_finan }}</td>
-                              <td>{{ score.cap_finan_2 }}</td>
+                              <td>{{ score.fecha_score      }}</td>
+                              <td>{{ score.score            }}</td>
+                              <td>{{ score.cargo_fijo_max   }}</td>
+                              <td>{{ score.num_lineas_disp  }}</td>
+                              <td>{{ score.cap_financ_prev  }}</td>
+                              <td>{{ score.cod_finan        }}</td>
+                              <td>{{ score.cap_finan_2      }}</td>
                             </tr>
                             </tbody>
                           </table>
@@ -708,16 +735,6 @@
       </button>
 
       <ng-container *ngIf="DATA_SCORE">
-        <!-- <ng-container *ngIf="authService.esUsuarioLider()
-                      && scoreForm.controls['id_estado_m'].value == 1 || scoreForm.controls['id_estado_m'].value == 4
-                      && !authService.esUsuarioGestor()">
-          <button
-             [disabled]="existeRegistros"
-             class="cli-btn btn-m btn-sol-score"
-             type="submit" (click)="solicitarScore()">
-            <mat-icon class="icon-18">credit_score</mat-icon> Solicitar Score
-          </button>
-        </ng-container> -->
 
         <ng-container *ngIf="(authService.esUsuarioLider() && validarSiExiteReqValidacion() || scoreForm.controls['id_estado_m'].value == 2) && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 8)">
           <button
@@ -735,7 +752,7 @@
              class="cli-btn btn-m btn-observar"
              matTooltip="Al menos debe existir 1 observado"
              type="submit"
-             (click)="aprobarObservarMasivamenteSolicitud()"
+             (click)="observarMasivamenteSolicitud()"
              [disabled]="validarSiExiteRegistroObservado()"
              >
              <!-- (click)="observarScoreRegistro();" -->
@@ -757,7 +774,7 @@
         <button
            class="cli-btn btn-m btn-fin"
            type="submit"
-           (click)="aprobarObservarMasivamenteSolicitud()">
+           (click)="observarMasivamenteSolicitud()">
            <mat-icon class="icon-18">forward_to_inbox</mat-icon> Finalizar
           </button>
       </ng-container>

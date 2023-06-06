@@ -207,17 +207,22 @@ export class ModalStoreComponent implements OnInit {
         this.listScoreDetalleCorp  = resp.list;
        }
 
+       // ESTADO MAESTRA EN ENVIADO
        if((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado.toUpperCase() == 'ENVIADO') {
         this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 6 ) && score.caso_score.toUpperCase() == 'GENERAL');
         this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 6 ) && score.caso_score.toUpperCase() == 'EXCEPCION')
         this.listScoreDetalleCorp  = resp.list;
        }
 
+
+       // ESTADO MAESTRA EN SUBSANADO
        if(this.authService.esUsuarioGestor() && this.DATA_SCORE.estado.toUpperCase() == 'SUBSANADO') {
         this.listScoreDetalle = resp.list.filter((score: any) => (score.id_estado == 5 || score.id_estado == 6));
         console.log('ENVIADOS_DATA', this.listScoreDetalle);
        }
 
+
+       // ESTADO MAESTRA EN SUBSANADO
        if((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado.toUpperCase() == 'FINALIZADO') {
         this.listScoreDetalleGen   = resp.list.filter((score: any) => (score.id_estado == 7 ) && score.caso_score.toUpperCase() == 'GENERAL');
         this.listScoreDetalleExcep = resp.list.filter((score: any) => (score.id_estado == 7 ) && score.caso_score.toUpperCase() == 'EXCEPCION')
@@ -226,7 +231,6 @@ export class ModalStoreComponent implements OnInit {
 
       this.totalGeneral = this.listScoreDetalleGen.length;
       this.totalExcep = this.listScoreDetalleExcep.length;
-
 
         this.spinner.hide();
       });
@@ -263,25 +267,6 @@ export class ModalStoreComponent implements OnInit {
     const estado = this.buscarEstadoPorNombre(nombreEstado);
 
     this.actualizarScore(estado.idEstado);
-  }
-
-  solicitarScore(){
-    if (this.DATA_SCORE.estado == 'Registrado' || this.DATA_SCORE.estado == 'Observado') {
-      Swal.fire({
-        title: '¿Solicitar Score?',
-        text: '¿Estas seguro que deseas Solicitar el Score, tenga en cuenta que sólo se enviarán los registros que se encuentran en estado SOLICITADO',
-        icon: 'question',
-        confirmButtonColor: '#ec4756',
-        cancelButtonColor : '#3cd8aa',
-        confirmButtonText : 'Si, Solicitar!',
-        showCancelButton  : true,
-        cancelButtonText  : 'Cancelar',
-      }).then((resp) => {
-        if (resp.value) {
-          this.cambiarEstadoScoreM('SOLICITADO')
-        }
-      });
-    }
   }
 
   observarScoreRegistro(){
@@ -444,28 +429,25 @@ export class ModalStoreComponent implements OnInit {
       data.append("From","procesosqa@indratools.net");
       data.append("ToEmail", listaCorreo.join(';'));
       data.append("Cc", correoCopia.join(';'));
-      data.append("Subject","F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -MASIVA-QA v2");
-      data.append("Body","Buen día, Se realizaron las modificaciones solicitadas. Las modificaciones se visualizan en el archivo adjunto.");
-      data.append("Attachments", file, "F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+" -MASIVA-QA v2" + '.xlsx');
+      data.append("Subject","Formato_Solicitud_Score_B2C_ "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+"-MASIVO");
+      data.append("Body","Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación..");
+      data.append("Attachments", file, "Formato_Solicitud_Score_B2C_ "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+"-MASIVO" + '.xlsx');
     }
-
     if (this.scoreForm.controls['tipoScore'].value == 'Diurno') {
       data.append("From","procesosqa@indratools.net");
       data.append("ToEmail", listaCorreo.join(';'));
       data.append("Cc", correoCopia.join(';'));
-      data.append("Subject","F-EXCEP- "+this.fechaIniPrueba +" -DIURNA-QA");
-      data.append("Body","Buen día, Se realizaron las modificaciones solicitadas. Las modificaciones se visualizan en el archivo adjunto.");
-      data.append("Attachments", file, "F-EXCEP- "+this.fechaIniPrueba+" -DIURNA-QA" + '.xlsx');
+      data.append("Subject","Formato_Solicitud_Score_B2C_ "+this.fechaIniPrueba +" -DIURNA_v2");
+      data.append("Body","Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación.");
+      data.append("Attachments", file, "Formato_Solicitud_Score_B2C_ "+this.fechaIniPrueba+" -DIURNA_v2" + '.xlsx');
     }
     if(this.scoreForm.controls['tipoScore'].value == 'B2B') {
       data.append("From","procesosqa@indratools.net");
       data.append("ToEmail", listaCorreo.join(';'));
       data.append("Cc", correoCopia.join(';'));
-      data.append("Subject","F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+"-B2B");
-      data.append("Body","Buen día, Se realizaron las modificaciones solicitadas. Las modificaciones se visualizan en el archivo adjunto.");
-      data.append("Attachments", file, "F-EXCEP- "+this.fechaIniPrueba +  " AL "+this.fechaFinPrueba+"-B2B-QA" + '.xlsx');
-
-      // Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación. ==> B2B
+      data.append("Subject","Formato_Solicitud_Score_B2B_RQ-[Nro req]");
+      data.append("Body","Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación.");
+      data.append("Attachments", file, "Formato_Solicitud_Score_B2B_RQ-[Nro req]" + '.xlsx');
     }
 
     this.sendMailService.SendDataByEmail(data).then((response) => {
@@ -530,6 +512,10 @@ export class ModalStoreComponent implements OnInit {
    this.scoreService.actualizarScoreD(parametro[0]).subscribe( {next: (resp: any) => {
      }});
    };
+
+   descargarPDF(){
+    // FALTA IMPLEMENTAR¡¡¡¡¡¡¡¡¡¡¡¡¡¡
+   }
 
   actualizarScoreD(){
     const formValues = this.scoreForm.getRawValue();
@@ -662,28 +648,28 @@ export class ModalStoreComponent implements OnInit {
   };
 
 
-  disabledControls(){
+   disabledControls(){
       this.scoreForm.controls['fecha_ini_prueba'].disable()
       this.scoreForm.controls['fecha_fin_prueba'].disable()
       this.scoreForm.controls['motivo_solicitud'].disable()
       this.scoreForm.controls['obs_score'       ].disable()
-  }
+   }
 
-  validarIfIsGestor(){
+   validarIfIsGestor(){
     if (!this.authService.esUsuarioGestor()) {
       this.disabledControls();
     }
-  }
+   }
 
-  validateIfIsLider(){
+   validateIfIsLider(){
     if (!this.authService.esUsuarioLider()) {
       this.disabledControls();
       this.scoreForm.controls['importar'].disable()
     }
-  }
+   }
 
-  listHistoricoCambios: any[] = [];
-  ListaHistoricoCambios(idRegistro: number){
+   listHistoricoCambios: any[] = [];
+   ListaHistoricoCambios(idRegistro: number){
     this.spinner.show();
 
     let parametro:any[] = [{
@@ -697,19 +683,19 @@ export class ModalStoreComponent implements OnInit {
      console.log("listHistorico", resp.list);
       this.spinner.hide();
     });
-  }
+   }
 
-  listEstado: any[] = [];
-  getListEstado(){
+   listEstado: any[] = [];
+   getListEstado(){
     let parametro: any[] = [{ queryId: 3 }];
 
     this.scoreService.getListEstado(parametro[0]).subscribe((resp: any) => {
       this.listEstado = resp.list;
       // console.log('ESTADOS', resp.list);
     });
-  }
+   }
 
-  getUserID(){
+   getUserID(){
     this.authService.getCurrentUser().subscribe( resp => {
       this.userID   = resp.user.userId;
       console.log('ID-USER', this.userID);
@@ -758,16 +744,24 @@ export class ModalStoreComponent implements OnInit {
     }
    }
 
+   estadoSolicitadoMaestra(resp: any ){
+    if (resp.exitoMessage == "Actualización exitosa") {
+        this.cambiarEstadoScoreM('SOLICITADO');
+    }
+   }
+
    estadoObservadoMaestra(resp: any ){
     if (resp.exitoMessage == "Actualización exitosa") {
         this.cambiarEstadoScoreM('OBSERVADO');
     }
    }
 
-   estadoSolicitadoMaestra(resp: any ){
-    if (resp.exitoMessage == "Actualización exitosa") {
-        this.cambiarEstadoScoreM('SOLICITADO');
-    }
+   estadoAprobadoMaestra(resp: any ){
+    this.cambiarEstadoScoreM('APROBADO');
+
+    // if (resp.exitoMessage == "Actualización exitosa") {
+    //     this.cambiarEstadoScoreM('APROBADO');
+    // }
    }
 
    asignarObservacion(DATA: any){
@@ -787,22 +781,25 @@ export class ModalStoreComponent implements OnInit {
         this.cargarOBuscarScoreDetalle()
       }
     })
-  };
+   };
 
-  aprobarObservarMasivamenteSolicitud() {
+   observarMasivamenteSolicitud() {
     const dialogRef = this.dialog.open(ObservarMasivamenteComponent, { width: '25%', data: {scoreObsForm: this.scoreForm.getRawValue(), isCreation: true}});
     dialogRef.afterClosed().subscribe((resp) => {
       if (resp) {
         // this.cargarOBuscarEvento();
+        console.log('X-Y-Z', resp);
 
         if (this.DATA_SCORE.tipoScore == 'B2B' || this.DATA_SCORE.tipoScore == 'Masivo' || this.DATA_SCORE.tipoScore == 'Diurno') {
           this.estadoObservadoMaestra(resp)
           this.cambiarEstadoDetalleAobservado();
-          this.cargarOBuscarScoreDetalle()
+          this.cargarOBuscarScoreDetalle();
+          this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
         }
           this.cambiarEstadoDetalleAobservado();
           this.estadoObservadoMaestra(resp);
-        this.cargarOBuscarScoreDetalle()
+          this.cargarOBuscarScoreDetalle();
+          this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
       }
     });
   }
@@ -810,18 +807,22 @@ export class ModalStoreComponent implements OnInit {
   importarAprobarSolicitud() {
     const dialogRef = this.dialog.open(AprobarImportarComponent, { width: '25%', data: {scoreObsForm: this.scoreForm.getRawValue(), isCreation: true}});
     dialogRef.afterClosed().subscribe((resp) => {
-      if (resp) {
-        // this.cargarOBuscarEvento();
+      this.estadoAprobadoMaestra(resp)
+
+      // if (resp) {
+        console.log('XYZ', resp);
 
         if (this.DATA_SCORE.tipoScore == 'B2B' || this.DATA_SCORE.tipoScore == 'Masivo' || this.DATA_SCORE.tipoScore == 'Diurno') {
-          this.estadoObservadoMaestra(resp)
-          this.cambiarEstadoDetalleAobservado();
-          this.cargarOBuscarScoreDetalle()
+          this.estadoAprobadoMaestra(resp)
+          // this.cambiarEstadoDetalleAaprobado();
+          this.cargarOBuscarScoreDetalle();
+          this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
         }
-          this.cambiarEstadoDetalleAobservado();
-          this.estadoObservadoMaestra(resp);
-        this.cargarOBuscarScoreDetalle()
-      }
+          // this.cambiarEstadoDetalleAaprobado();
+          this.estadoAprobadoMaestra(resp);
+          this.cargarOBuscarScoreDetalle();
+          this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
+      // }
     });
   }
 
