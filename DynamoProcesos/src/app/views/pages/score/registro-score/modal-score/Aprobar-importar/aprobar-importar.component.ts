@@ -31,7 +31,6 @@ export class AprobarImportarComponent implements OnInit {
 
   ngOnInit(): void {
     this.newFilfroForm();
-    // this.cargarObservacionByID();
   }
 
   newFilfroForm() {
@@ -46,7 +45,6 @@ export class AprobarImportarComponent implements OnInit {
     const formValues = this.importForm.getRawValue();
     console.log('O B S_IMPORT',this.importForm.value, this.DATA_SCORE.scoreObsForm.id_score);
     console.log('ID_Score_IMPORT', this.DATA_SCORE.scoreObsForm.id_score);
-
 
     let parametro: any[] = [
       {
@@ -79,10 +77,7 @@ export class AprobarImportarComponent implements OnInit {
   }
 
   campoNoValido(campo: string): boolean {
-    if (
-      this.importForm.get(campo)?.invalid &&
-      this.importForm.get(campo)?.touched
-    ) {
+    if (this.importForm.get(campo)?.invalid && this.importForm.get(campo)?.touched) {
       return true;
     } else {
       return false;

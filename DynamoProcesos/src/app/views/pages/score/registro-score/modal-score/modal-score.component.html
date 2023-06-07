@@ -238,7 +238,7 @@
                                   class="btn-obs btn-obs"
                                   style="margin: 0"
                                   type="button"
-                                  (click)="asignarObservacion(score)"
+                                  (click)="asignarComentarioScore_d(score)"
                                   matTooltip="Observar o Aprobar registro"
                                   ><mat-icon class="icon-13">loupe</mat-icon>
                                 </button>{{ score.obs_registro }}
@@ -434,7 +434,7 @@
                                       class="btn-obs btn-obs"
                                       style="margin: 0"
                                       type="button"
-                                      (click)="asignarObservacion(score)"
+                                      (click)="asignarComentarioScore_d(score)"
                                       matTooltip="Observar o Aprobar registro"
                                       ><mat-icon class="icon-13">loupe</mat-icon>
                                     </button>{{ score.obs_registro }}
@@ -445,14 +445,14 @@
                                 <span *ngIf="score.req_validacion == '0'" style="color: #fd0d89">SI</span>
                                 <span *ngIf="score.req_validacion == '1'" style="color: #0daef4">NO</span>
                               </td>
-                              <td>{{ score.segmento        }}</td>
-                              <td>{{ score.tipoTransaccion }}</td>
-                              <td>{{ score.tipoVenta       }}</td>
-                              <td>{{ score.gama            }}</td>
-                              <td>{{ score.cuota_inicial   }}</td>
-                              <td>{{ score.cuotas          }}</td>
-                              <td>{{ score.cap_finan_2     }}</td>
-                              <td>{{ score.usuario         }}</td>
+                              <td style="text-align: left;">{{ score.segmento        }}</td>
+                              <td style="text-align: left;">{{ score.tipoTransaccion }}</td>
+                              <td style="text-align: left;">{{ score.tipoVenta       }}</td>
+                              <td style="text-align: left;">{{ score.gama            }}</td>
+                              <td style="text-align: left;">{{ score.cuota_inicial   }}</td>
+                              <td >{{ score.cuotas          }}</td>
+                              <td >{{ score.cap_finan_2     }}</td>
+                              <td style="text-align: left;">{{ score.usuario         }}</td>
                               <td>{{ score.cargo_fijo_max  }}</td>
                               <td>{{ score.cap_financ_prev }}</td>
                               <td>{{ score.score           }}</td>
@@ -580,7 +580,7 @@
                                 <th style="min-width: 65px;"  >Estado</th>
                                 <th style="min-width: 130px; font-size: 11px;" >C O M E N T A R I O S</th>
                                 <th style="min-width: 108px;" >Req. Validación</th>
-                                <th style="min-width: 85px;"  >Cuota Inicial</th>
+                                <th style="min-width: 90px;"  >Cuota Inicial</th>
                                 <th style="min-width: 65px;"  >Gama</th>
                                 <th style="min-width: 63px;"  >Tipo Doc</th>
                                 <th style="min-width: 66px;"  >Num Doc</th>
@@ -621,10 +621,10 @@
                                       class="btn-obs btn-obs"
                                       style="margin: 0"
                                       type="button"
-                                      (click)="asignarObservacion(score)"
+                                      (click)="asignarComentarioScore_d(score)"
                                       matTooltip="Observar o Aprobar registro"
                                       ><mat-icon class="icon-13">loupe</mat-icon>
-                                    </button>{{ score.observacion_gestor }}
+                                    </button>{{ score.obs_registro }}
                                 </div>
                                 </ng-container>
                               </td>
@@ -632,7 +632,7 @@
                                 <span *ngIf="score.req_validacion == '0'"  style="color: #fd0d89">SI</span>
                                 <span *ngIf="score.req_validacion == '1'"  style="color: #0daef4">NO</span>
                               </td>
-                              <td><div>{{ score.cuota_inicial }}</div></td>
+                              <td>{{ score.cuota_inicial    }}</td>
                               <td>{{ score.gama             }}</td>
                               <td>{{ score.tipo_documento   }}</td>
                               <td>{{ score.numero_documento }}</td>
@@ -704,7 +704,7 @@
                   <tr *ngFor="let historico of listHistoricoCambios; let i = index">
                     <td>{{ i + 1 }}</td>
                     <td>{{ historico.id_score_m }}</td>
-                    <td>{{ historico.cNombre }}</td>
+                    <td>{{ historico.cNombre    }}</td>
                     <td class="w300">{{ historico.responsable }}</td>
                     <td>{{ historico.fecha_cambio }}</td>
                   </tr>
@@ -728,7 +728,7 @@
     <!----------------------------------------------BOTONES ------------------------------------------>
     <div class="cli-form-buttons">
       <button *ngIf="(authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 6))
-             || (authService.esUsuarioLider() && (scoreForm.controls['id_estado_m'].value == 1 || scoreForm.controls['id_estado_m'].value == 4 || scoreForm.controls['id_estado_m'].value != 3 || scoreForm.controls['id_estado_m'].value == 2 ))"
+                  || (authService.esUsuarioLider()  && (scoreForm.controls['id_estado_m'].value == 1 || scoreForm.controls['id_estado_m'].value == 4 || scoreForm.controls['id_estado_m'].value != 3 || scoreForm.controls['id_estado_m'].value == 2 ))"
          class="cli-btn btn-m btn-salir"
          type="submit" (click)="close()">
         <mat-icon class="icon-18">cancel</mat-icon> Salir
@@ -740,7 +740,7 @@
           <button
              class="cli-btn btn-m btn-aprobar"
              type="submit"
-             (click)="importarAprobarSolicitud()"
+             (click)="importarPdf_AprobarSolicitud()"
              >
              <!-- (click)="aprobarScoreRegistro()" -->
              <mat-icon class="icon-18">check_small</mat-icon> Aprobar

@@ -25,7 +25,6 @@ export class RegistroScoreComponent implements OnInit {
   userId!: number;
   filtroForm!: FormGroup;
 
-
   page = 1;
   totalScore: number = 0;
   pageSize = 10;

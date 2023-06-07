@@ -60,7 +60,7 @@ export class ObservarMasivamenteComponent implements OnInit {
         },
       },
     ];
-    this.scoreService.actualizarObservacion(parametro[0]).subscribe({
+    this.scoreService.actualizarComentarioScore_materiales(parametro[0]).subscribe({
       next: (resp: any) => {
         this.spinner.hide();
         console.log('OBS_NOTA_ACTUALIZADO', resp);

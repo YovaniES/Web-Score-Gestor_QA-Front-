@@ -9,10 +9,10 @@ import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-asignar-vacaciones',
-  templateUrl: './asignar-observacion.component.html',
-  styleUrls: ['./asignar-observacion.component.scss']
+  templateUrl: './asignar-comentario.component.html',
+  styleUrls: ['./asignar-comentario.component.scss']
 })
-export class AsignarObservacionComponent implements OnInit {
+export class AsignarComentarioComponent implements OnInit {
 
   asigObservacionForm!: FormGroup;
 
@@ -22,7 +22,7 @@ export class AsignarObservacionComponent implements OnInit {
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
     public datePipe: DatePipe,
-    private dialogRef: MatDialogRef<AsignarObservacionComponent>,
+    private dialogRef: MatDialogRef<AsignarComentarioComponent>,
     @Inject(MAT_DIALOG_DATA) public DATA_SCORE_DET: any
   ) { }
 
@@ -31,7 +31,7 @@ export class AsignarObservacionComponent implements OnInit {
     this.getUserID();
     this.getUsername();
     this.getListEstadoDetalle();
-    this.cargarObservacionByID();
+    this.cargarComentarioScore_d_ByID();
     console.log('DATA_SCORE_DETALLE_OBS', this.DATA_SCORE_DET, this.DATA_SCORE_DET);
     console.log('DATA_SCORE_DET_OBS', this.DATA_SCORE_DET.observacion_solic);
     console.log('DATA_SCORE_OBS_GEST', this.DATA_SCORE_DET.obs_registro);
@@ -47,33 +47,33 @@ export class AsignarObservacionComponent implements OnInit {
     })
    }
 
-  actualizarObservacion() {
+   asignarComentarioScore_d() {
     this.spinner.show();
     const formValues = this.asigObservacionForm.getRawValue();
     console.log('O B S', this.asigObservacionForm.value);
 
     let parametro: any[] = [{ queryId: 19,
         mapValue: {
-          p_idscored               : this.DATA_SCORE_DET.idScored,
-          p_id_estado              : formValues.id_estado_d,
-          p_actualiza              : this.userName,
-          p_f_actualiza            : '',
-          p_obs_registro           : formValues.observacion_usu ,
-          CONFIG_USER_ID           : this.userID,
-          CONFIG_OUT_MSG_ERROR     : '',
-          CONFIG_OUT_MSG_EXITO     : ''
+          p_idscored           : this.DATA_SCORE_DET.idScored,
+          p_id_estado          : formValues.id_estado_d,
+          p_actualiza          : this.userName,
+          p_f_actualiza        : '',
+          p_obs_registro       : formValues.observacion_usu ,
+          CONFIG_USER_ID       : this.userID,
+          CONFIG_OUT_MSG_ERROR : '',
+          CONFIG_OUT_MSG_EXITO : ''
         },
       }];
-     this.scoreService.actualizarObservacion(parametro[0]).subscribe({next: (resp: any) => {
+     this.scoreService.asignarComentarioScore_d(parametro[0]).subscribe({next: (resp: any) => {
         this.spinner.hide();
       console.log('OBS_ACTUALIZADO', resp);
 
-        this.cargarObservacionByID();
+        this.cargarComentarioScore_d_ByID();
         this.close(resp)
 
           Swal.fire({
-            title: 'Observar registro!',
-            text : `Se Observó con éxito el registro`,
+            title: 'Asignar comentario!',
+            text : `Se asignó el Comentario con éxito`,
             icon : 'success',
             confirmButtonText: 'Ok'
             });
@@ -81,14 +81,14 @@ export class AsignarObservacionComponent implements OnInit {
         }, error:()=>{
           Swal.fire(
             'ERROR',
-            'No se pudo Observar el registro',
+            'No se pudo Comentar el registro',
             'warning'
           );
         }
      });
   }
 
-  cargarObservacionByID(){
+  cargarComentarioScore_d_ByID(){
       this.asigObservacionForm.controls['observacion_usu' ].setValue(this.DATA_SCORE_DET.obs_registro);
       this.asigObservacionForm.controls['id_estado_d'     ].setValue(this.DATA_SCORE_DET.id_estado);
       this.asigObservacionForm.controls['tipo_documento'  ].setValue(this.DATA_SCORE_DET.tipo_documento);

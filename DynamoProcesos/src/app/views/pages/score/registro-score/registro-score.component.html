@@ -120,7 +120,7 @@
                   </button>
                 </div>
               </td>
-              <td class="w150">{{ score.idScore_M }}</td>
+              <td class="w150">{{ score.idScore_M       }}</td>
               <td class="w100">{{ score.fecha_solicitud }}</td>
               <td>{{ score.solicitante }}</td>
               <td >
@@ -150,8 +150,8 @@
                 <span *ngIf="score.estado == 'Subsanado'"     class="label est-subsanado"> {{ score.estado | uppercase }}</span>
               </td>
 
-              <td style="min-width: 95px;"> {{ score.fecha_crea }}</td>
-              <td style="min-width: 100px;">{{ score.usuario_actualiza }}</td>
+              <td style="min-width: 95px;"> {{ score.fecha_crea          }}</td>
+              <td style="min-width: 100px;">{{ score.usuario_actualiza   }}</td>
               <td style="min-width: 115px"> {{ score.fecha_actualizacion }}</td>
             </tr>
           </tbody>

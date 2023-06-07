@@ -56,7 +56,7 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   }
 
-  actualizarObservacion(obj: any){
+  asignarComentarioScore_d(obj: any){
     return this.http.post(API_SCORE, obj);
   }
 
@@ -75,4 +75,9 @@ export class ScoreService {
   importarAprobarSolicitud(obj: any){
     return this.http.post(API_SCORE, obj);
   }
+
+  actualizarComentarioScore_materiales(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
+
 }
