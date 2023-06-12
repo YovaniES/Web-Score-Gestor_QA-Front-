@@ -89,7 +89,7 @@ export class ModalStoreComponent implements OnInit {
       fecha_fin_prueba: ['', Validators.required],
       motivo_solicitud: [''],
       casoScore       : [''],
-      tipoScore       : [''],
+      formatoScore    : [''],
       req_validacion  : [''],
       obs_score       : [''],
       fechaIniPrueba  : [null],
@@ -184,44 +184,44 @@ export class ModalStoreComponent implements OnInit {
       {
         queryId: 33,
         mapValue: {
-          p_idScore: this.DATA_SCORE.idScoreM,
-          p_num_doc: this.scoreForm.value.num_doc,
-          p_id_estado: this.scoreForm.value.id_estado_d,
+          p_idScore       : this.DATA_SCORE.idScoreM,
+          p_num_doc       : this.scoreForm.value.num_doc,
+          p_id_estado     : this.scoreForm.value.id_estado_d,
           p_req_validacion: this.scoreForm.value.req_validacion,
         },
       },
     ];
-    this.scoreService
-      .cargarOBuscarScoreDetalle(parametro[0])
-      .subscribe((resp: any) => {
+    this.scoreService.cargarOBuscarScoreDetalle(parametro[0]).subscribe((resp: any) => {
         this.blockUI.stop();
 
         console.log('D A T A - score_D', resp, resp.list.length);
+        console.log('REQ-VAL', this.listScoreDetalleGen.filter(x=>x.req_validacion == 0));
+
 
         if ( (this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && (this.DATA_SCORE.estado.toUpperCase() == 'OBSERVADO' || this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO' || this.DATA_SCORE.estado.toUpperCase() == 'APROBADO')) {
-          this.listScoreDetalleGen   = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 5) && score.caso_score.toUpperCase() == 'GENERAL');
-          this.listScoreDetalleExcep = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 5) && score.caso_score.toUpperCase() == 'EXCEPCION');
+          this.listScoreDetalleGen   = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 5) && score.tipo_score.toUpperCase() == 'GENERAL');
+          this.listScoreDetalleExcep = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 5) && score.tipo_score.toUpperCase() == 'EXCEPCION');
           this.listScoreDetalleCorp  = resp.list;
         }
 
         // ESTADO MAESTRA EN VALIDACION
         if ((this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && this.DATA_SCORE.estado.toUpperCase() == 'EN VALIDACIÓN' ) {
-          this.listScoreDetalleGen   = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 4 || score.id_estado == 5 || score.id_estado == 7) && score.caso_score.toUpperCase() == 'GENERAL');
-          this.listScoreDetalleExcep = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 4 || score.id_estado == 5 || score.id_estado == 7) && score.caso_score.toUpperCase() == 'EXCEPCION');
+          this.listScoreDetalleGen   = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 4 || score.id_estado == 5 || score.id_estado == 7) && score.tipo_score.toUpperCase() == 'GENERAL');
+          this.listScoreDetalleExcep = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 4 || score.id_estado == 5 || score.id_estado == 7) && score.tipo_score.toUpperCase() == 'EXCEPCION');
           this.listScoreDetalleCorp  = resp.list;
         }
 
         // ESTADO MAESTRA EN OBSERVACION
         if ( (this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && this.DATA_SCORE.estado.toUpperCase() == 'OBSERVADO') {
-          this.listScoreDetalleGen   = resp.list.filter((score: any) =>score.id_estado == 4 && score.caso_score.toUpperCase() == 'GENERAL');
-          this.listScoreDetalleExcep = resp.list.filter((score: any) =>score.id_estado == 4 && score.caso_score.toUpperCase() == 'EXCEPCION');
+          this.listScoreDetalleGen   = resp.list.filter((score: any) =>score.id_estado == 4 && score.tipo_score.toUpperCase() == 'GENERAL');
+          this.listScoreDetalleExcep = resp.list.filter((score: any) =>score.id_estado == 4 && score.tipo_score.toUpperCase() == 'EXCEPCION');
           this.listScoreDetalleCorp  = resp.list;
         }
 
         // ESTADO MAESTRA EN ENVIADO
         if ((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado.toUpperCase() == 'ENVIADO') {
-          this.listScoreDetalleGen   = resp.list.filter((score: any) =>score.id_estado == 6 && score.caso_score.toUpperCase() == 'GENERAL');
-          this.listScoreDetalleExcep = resp.list.filter((score: any) =>score.id_estado == 6 && score.caso_score.toUpperCase() == 'EXCEPCION');
+          this.listScoreDetalleGen   = resp.list.filter((score: any) =>score.id_estado == 6 && score.tipo_score.toUpperCase() == 'GENERAL');
+          this.listScoreDetalleExcep = resp.list.filter((score: any) =>score.id_estado == 6 && score.tipo_score.toUpperCase() == 'EXCEPCION');
           this.listScoreDetalleCorp  = resp.list;
         }
 
@@ -233,13 +233,13 @@ export class ModalStoreComponent implements OnInit {
 
         // ESTADO MAESTRA EN FINALIZADO
         if ((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado.toUpperCase() == 'FINALIZADO') {
-          this.listScoreDetalleGen   = resp.list.filter((score: any) =>score.id_estado == 7 && score.caso_score.toUpperCase() == 'GENERAL');
-          this.listScoreDetalleExcep = resp.list.filter((score: any) =>score.id_estado == 7 && score.caso_score.toUpperCase() == 'EXCEPCION');
+          this.listScoreDetalleGen   = resp.list.filter((score: any) =>score.id_estado == 7 && score.tipo_score.toUpperCase() == 'GENERAL');
+          this.listScoreDetalleExcep = resp.list.filter((score: any) =>score.id_estado == 7 && score.tipo_score.toUpperCase() == 'EXCEPCION');
           this.listScoreDetalleCorp  = resp.list.filter((score: any) => score.id_estado == 7);
         }
 
         this.totalGeneral = this.listScoreDetalleGen.length;
-        this.totalExcep = this.listScoreDetalleExcep.length;
+        this.totalExcep   = this.listScoreDetalleExcep.length;
 
         this.spinner.hide();
       });
@@ -257,8 +257,8 @@ export class ModalStoreComponent implements OnInit {
     // console.log('**', this.listScoreDetalleCorp.find( score => score.req_validacion == 0), this.listScoreDetalleCorp)
 
     if (this.DATA_SCORE.casoScore.toUpperCase() == 'RESIDENCIAL') {
-      const detalleGeneralEncontrado   = this.listScoreDetalleGen.find((score) => score.req_validacion == 0); //1:NO
-      const detalleExcepcionEncontrado = this.listScoreDetalleExcep.find((score) => score.req_validacion == 0);
+      const detalleGeneralEncontrado   = this.listScoreDetalleGen.find((score) => score.req_validacion == 1); //1:SI
+      const detalleExcepcionEncontrado = this.listScoreDetalleExcep.find((score) => score.req_validacion == 1);
       return detalleGeneralEncontrado || detalleExcepcionEncontrado;
     } else {
       return this.listScoreDetalleCorp.find((score) => score.req_validacion == 1);
@@ -275,11 +275,7 @@ export class ModalStoreComponent implements OnInit {
   }
 
   observarScoreRegistro() {
-    if (
-      this.DATA_SCORE.estado == 'Solicitado' ||
-      this.DATA_SCORE.estado == 'Aprobado' ||
-      this.DATA_SCORE.estado == 'En Validación'
-    ) {
+    if (this.DATA_SCORE.estado == 'Solicitado' || this.DATA_SCORE.estado == 'Aprobado' || this.DATA_SCORE.estado == 'En Validación') {
       Swal.fire({
         title: 'Observar estado?',
         text: `¿Estas seguro que desea cambiar de estado a Observado?`,
@@ -309,27 +305,6 @@ export class ModalStoreComponent implements OnInit {
     }
   }
 
-  aprobarScoreRegistro() {
-    if (this.DATA_SCORE.estado == 'Solicitado') {
-      Swal.fire({
-        title: 'Aprobar y adjuntar detalle?',
-        text: `¿Estas seguro que desea Aprobar los registros?`,
-        icon: 'question',
-        confirmButtonColor: '#20c997',
-        cancelButtonColor: '#9da7b1',
-        confirmButtonText: 'Si, Aprobar!',
-        showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-      }).then((resp) => {
-        if (resp.value) {
-          this.cambiarEstadoScoreM('APROBADO');
-          this.cambiarEstadoDetalleAaprobado();
-          this.cargarOBuscarScoreDetalle();
-        }
-      });
-    }
-  }
-
   enviarRegistroTDPX() {
     let parametro: any[] = [
       {
@@ -339,21 +314,16 @@ export class ModalStoreComponent implements OnInit {
         },
       },
     ];
-    this.scoreService
-      .exportScoreDetalleMasivoOdiurno(parametro[0])
-      .subscribe((resp: any) => {
+    this.scoreService.exportScoreDetalleMasivoOdiurno(parametro[0]).subscribe((resp: any) => {
         this.excellB2BService.dowloadExcel(resp.list);
       });
   }
 
-  enviarRegistroTDP() {
-    if (
-      this.DATA_SCORE.estado == 'Solicitado' ||
-      this.DATA_SCORE.estado == 'Aprobado'
-    ) {
+  enviarSolicitudTDP() {
+    if (this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO' || this.DATA_SCORE.estado.toUpperCase() == 'APROBADO') {
       Swal.fire({
-        title: 'Enviar Registro score?',
-        text: `¿Estas seguro que desea enviar el registro y cambiar el estado a enviado? `,
+        title: 'Enviar Solicitud score?',
+        text: `¿Estas seguro que desea enviar la Solicitud y cambiar el estado a enviado? `,
         icon: 'question',
         confirmButtonColor: '#20c997',
         cancelButtonColor: '#9da7b1',
@@ -364,7 +334,7 @@ export class ModalStoreComponent implements OnInit {
         console.log('123', resp);
 
         if (resp.value) {
-          if (this.scoreForm.controls['tipoScore'].value == 'Masivo' || this.scoreForm.controls['tipoScore'].value == 'Diurno') {// CASO: GENERAL | EXCEP
+          if (this.scoreForm.controls['formatoScore'].value == 'Masivo' || this.scoreForm.controls['formatoScore'].value == 'Diurno') {// TIPO: GENERAL | EXCEP
             this.exportScoreDetalleMasivoOdiurno(this.DATA_SCORE.idScoreM);
           } else {
             this.exportScoreDetalleB2B(this.DATA_SCORE.idScoreM);
@@ -383,25 +353,33 @@ export class ModalStoreComponent implements OnInit {
         },
       },
     ];
-    this.scoreService
-      .exportScoreDetalleMasivoOdiurno(parametro[0])
-      .subscribe((resp: any) => {
-        console.log('TIPO-SCORE', resp.list);
+    this.scoreService.exportScoreDetalleMasivoOdiurno(parametro[0]).subscribe((resp: any) => {
+        console.log('TIPO-SCORE', resp.list, this.DATA_SCORE.formatoScore );
 
-        const tipoScoreMasivo = resp.list.filter((x: any) => x.tipo_score.toUpperCase() == 'MASIVO');
-        // const tipoScoreDiurno = resp.list.filter((x:any)=>x.tipo_score.toUpperCase() == 'DIURNO');
+        // const formatoScoreMasivo = resp.list.filter((x: any) => x.formatoScore.toUpperCase() == 'MASIVO');
+        // const formatoScoreDiurno = this.scoreForm.controls['formatoScore'].value == 'Masivo';
+        // const formatoMasivo_x = this.DATA_SCORE.formatoScore
 
-        if (tipoScoreMasivo) {
-          this.excellMasivoService.generarExcell(resp.list).then((file: any) => {
-              const blob = new Blob([file]);
-              this.listadoCorreosTDP(blob);
-            });
-        } else {
-          this.excellDiurnoService.generarExcell(resp.list).then((file: any) => {
-              const blob = new Blob([file]);
-              this.listadoCorreosTDP(blob);
-            });
+        if (resp) {
+          if (this.DATA_SCORE.formatoScore == 'Masivo') {
+            console.log('IF-MASIVO');
+
+            this.excellMasivoService.generarExcell(resp.list).then((file: any) => {
+                const blob = new Blob([file]);
+                this.listadoCorreosTDP(blob);
+              });
+          }
+
+          if (this.DATA_SCORE.formatoScore == 'Diurno'){
+            console.log('ELSE-DIURNO');
+
+            this.excellDiurnoService.generarExcell(resp.list).then((file: any) => {
+                const blob = new Blob([file]);
+                this.listadoCorreosTDP(blob);
+              });
+           }
         }
+
       });
   }
 
@@ -424,15 +402,24 @@ export class ModalStoreComponent implements OnInit {
       });
   }
 
+  listCorreoGestor: string = '';
+  listadoCorreosGESTOR() {
+    let parametro: any[] = [{ queryId: 25 }];
+    this.scoreDetalleService.listadoCorreosTDP(parametro[0]).subscribe((resp: any) => {
+        if (resp && resp.list) {
+          console.log('CORREOS-GESTOR',resp.list, resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
+          this.notificarAprobacionPorCorreo(resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
+        }
+      });
+  }
+
   listCorreoTdp: string = '';
   listadoCorreosTDP(file: Blob) {
     let parametro: any[] = [{ queryId: 25 }];
     this.scoreDetalleService.listadoCorreosTDP(parametro[0]).subscribe((resp: any) => {
         if (resp && resp.list) {
-          console.log('CORREO-TDP',resp.list,resp.list.map((x: any) => x.valor_texto_1),
-            resp.list.map((cc: any) => cc.valor_texto_2)
-          );
-          this.enviarCorreo(file,resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
+          console.log('CORREOS-TDP',resp.list, resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
+          this.enviarCorreo(file, resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
         }
       });
   }
@@ -441,10 +428,10 @@ export class ModalStoreComponent implements OnInit {
   fechaFinPrueba: any = '';
   enviarCorreo(file: Blob, listaCorreo: string[], correoCopia: string[]) {
     console.log('|==>', file, this.scoreForm.value);
-    this.blockUI.start('Enviando Data al correo del TDP');
+    this.blockUI.start('Enviando Solicitud al correo del TDP ...');
     const data = new FormData();
 
-    if (this.scoreForm.controls['tipoScore'].value == 'Masivo') {
+    if (this.scoreForm.controls['formatoScore'].value.toUpperCase() == 'MASIVO') {
       data.append('From', 'procesosqa@indratools.net');
       data.append('ToEmail', listaCorreo.join(';'));
       data.append('Cc', correoCopia.join(';'));
@@ -452,7 +439,7 @@ export class ModalStoreComponent implements OnInit {
       data.append('Body','Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación..');
       data.append('Attachments',file,'Formato_Solicitud_Score_B2C_ ' +this.fechaIniPrueba +' AL ' +this.fechaFinPrueba +'-MASIVO' +'.xlsx');
     }
-    if (this.scoreForm.controls['tipoScore'].value == 'Diurno') {
+    if (this.scoreForm.controls['formatoScore'].value == 'Diurno') {
       data.append('From', 'procesosqa@indratools.net');
       data.append('ToEmail', listaCorreo.join(';'));
       data.append('Cc', correoCopia.join(';'));
@@ -460,7 +447,7 @@ export class ModalStoreComponent implements OnInit {
       data.append('Body','Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación.');
       data.append('Attachments',file,'Formato_Solicitud_Score_B2C_ ' +this.fechaIniPrueba +' -DIURNA_v2' +'.xlsx');
     }
-    if (this.scoreForm.controls['tipoScore'].value == 'B2B') {
+    if (this.scoreForm.controls['formatoScore'].value == 'B2B') {
       data.append('From', 'procesosqa@indratools.net');
       data.append('ToEmail', listaCorreo.join(';'));
       data.append('Cc', correoCopia.join(';'));
@@ -469,9 +456,7 @@ export class ModalStoreComponent implements OnInit {
       data.append('Attachments',file,'Formato_Solicitud_Score_B2B_RQ-[Nro req]' + '.xlsx');
     }
 
-    this.sendMailService
-      .SendDataByEmail(data)
-      .then((response) => {
+    this.sendMailService.SendDataByEmail(data).then((response) => {
         if (response && response.ok) {
           Swal.fire({
             title: 'Enviar formato!',
@@ -481,6 +466,37 @@ export class ModalStoreComponent implements OnInit {
           });
           this.cambiarEstadoScoreM('ENVIADO');    //-------------------------------------------------------- CAMBIAR DE ESTADO SCORE_M -----------------------------------------------
           this.cambiarEstadoDetalleAenviado();    //-------------------------------------------------------- CAMBIAR DE ESTADO SCORE_D -----------------------------------------------
+          this.close(true);
+        }
+        console.log(response);
+        this.blockUI.stop();
+      })
+      .catch((error) => console.log('error', error));
+  }
+
+
+  notificarAprobacionPorCorreo(listaCorreoGestor: string[], correoCopia: string[]) {
+    this.blockUI.start('Notificando la Aprobación de la Solicitud, al correo del Gestor');
+    const data = new FormData();
+    const listCorreo =
+
+      data.append('From', 'procesosqa@indratools.net');
+      data.append('ToEmail', listaCorreoGestor.join(';'));
+      data.append('Cc', correoCopia.join(';'));
+      data.append('Subject','Aprobación de Solicitud' + this.DATA_SCORE.idScore_M +' Caso ' + this.DATA_SCORE.casoScore + 'en Formato'+ this.DATA_SCORE.formatoScore);
+      data.append('Body','Estimado Gestor, Por favor su apoyo con con la aprobación de la Solicitud, se adjuntó la evidencia a la Web Dynamo. De antemano muchas gracias por el apoyo.');
+      // data.append('Attachments',file,'Formato_Solicitud_Score_B2C_ ' +this.fechaIniPrueba +' AL ' +this.fechaFinPrueba +'-MASIVO' +'.xlsx');
+
+      this.sendMailService.SendDataByEmail(data).then((response) => {
+        if (response && response.ok) {
+          Swal.fire({
+            title: 'Aprobación de Solicitud!',
+            text: `Se notificó al Gestor de la aprobación de la Solicitud`,
+            icon: 'success',
+            confirmButtonText: 'Ok',
+          });
+          // this.cambiarEstadoScoreM('APROBADO');//-------------------------------------------------------- CAMBIAR DE ESTADO SCORE_M -----------------------------------------------
+          // this.cambiarEstadoDetalleAaprobado();//-------------------------------------------------------- CAMBIAR DE ESTADO SCORE_D -----------------------------------------------
           this.close(true);
         }
         console.log(response);
@@ -633,7 +649,7 @@ export class ModalStoreComponent implements OnInit {
     this.scoreForm.controls['id_estado_m'     ].setValue(this.DATA_SCORE.idEstado);
     this.scoreForm.controls['motivo_solicitud'].setValue(this.DATA_SCORE.motivo_solicitud);
     this.scoreForm.controls['casoScore'       ].setValue(this.DATA_SCORE.casoScore);
-    this.scoreForm.controls['tipoScore'       ].setValue(this.DATA_SCORE.tipoScore);
+    this.scoreForm.controls['formatoScore'    ].setValue(this.DATA_SCORE.formatoScore);
     this.scoreForm.controls['fecha_ini_prueba'].setValue(this.DATA_SCORE.fecha_ini_prueba);
     this.scoreForm.controls['fecha_fin_prueba'].setValue(this.DATA_SCORE.fecha_fin_prueba);
     this.scoreForm.controls['obs_score'       ].setValue(this.DATA_SCORE.obs_score);
@@ -645,7 +661,7 @@ export class ModalStoreComponent implements OnInit {
       const month = Number(str[1]);
       const date = Number(str[0]);
       this.scoreForm.controls['fecha_ini_prueba'].setValue(this.datePipe.transform(new Date(year, month - 1, date), 'yyyy-MM-dd'));
-      this.scoreForm.controls['fechaIniPrueba'].setValue(this.datePipe.transform(new Date(year, month - 1, date), 'dd/MM/yyyy'));
+      this.scoreForm.controls['fechaIniPrueba'  ].setValue(this.datePipe.transform(new Date(year, month - 1, date), 'dd/MM/yyyy'));
 
       this.fechaIniPrueba = this.datePipe.transform(new Date(year, month - 1, date),'ddMMyyyy');
     }
@@ -659,7 +675,7 @@ export class ModalStoreComponent implements OnInit {
       const month = Number(str[1]);
       const date = Number(str[0]);
       this.scoreForm.controls['fecha_fin_prueba'].setValue(this.datePipe.transform(new Date(year, month - 1, date), 'yyyy-MM-dd'));
-      this.scoreForm.controls['fechaFinPrueba'].setValue(this.datePipe.transform(new Date(year, month - 1, date), 'dd/MM/yyyy'));
+      this.scoreForm.controls['fechaFinPrueba'  ].setValue(this.datePipe.transform(new Date(year, month - 1, date), 'dd/MM/yyyy'));
 
       this.fechaFinPrueba = this.datePipe.transform(new Date(year, month - 1, date),'ddMMyyyy');
     }
@@ -757,7 +773,7 @@ export class ModalStoreComponent implements OnInit {
 
     if (this.totalfiltro != this.totalScore) {
       this.scoreService.cargarOBuscarScoreDetalle(offset.toString()).subscribe((resp: any) => {
-          //  this.listScoreDetalleGen = resp.list.filter((x: any)=> x.caso_score == 'General');
+          //  this.listScoreDetalleGen = resp.list.filter((x: any)=> x.tipo_score == 'General');
           this.listScoreDetalleGen = resp.list;
           this.spinner.hide();
         });
@@ -767,17 +783,16 @@ export class ModalStoreComponent implements OnInit {
     this.page = event;
   }
 
-  validarCambioScoreM(resp: any) {
+  validarCambioScoreM(response: any) {
     // console.log('DATA_SCOR_DETALLE', this.listScoreDetalle, this.listScoreDetalleCorp);
-
-    if (resp.exitoMessage == 'Actualización exitosa') {
+    if (response.resp.exitoMessage == 'Actualización exitosa') {
       this.cambiarEstadoScoreM('EN VALIDACIÓN');
     }
   }
 
   estadoSolicitadoMaestra(resp: any) {
     if (resp.exitoMessage == 'Actualización exitosa') {
-      this.cambiarEstadoScoreM('SOLICITADO');
+      this.cambiarEstadoScoreM('SOLICITADO'); // Cabecera_estado: SCORE_MAESTRA
     }
   }
 
@@ -800,34 +815,21 @@ export class ModalStoreComponent implements OnInit {
     return this.listScoreDetalle.find(s => s.estado.toUpperCase() == 'OBSERVADO');
   }
 
-  validarSiExiteRegistroObservadoGen(): any {
-    return this.listScoreDetalleGen.find(s => s.estado.toUpperCase() == 'OBSERVADO')
-  }
-
-  validarSiExiteRegistroObservadoExcep(): any {
-    return this.listScoreDetalleExcep.find(s => s.estado.toUpperCase() == 'OBSERVADO')
-  }
-
-  validarSiExiteRegistroObservadoCorp(): any {
-    return this.listScoreDetalleCorp.find(s => s.estado.toUpperCase() == 'OBSERVADO')
+  exiteRegistroAprobado(): any {
+    return this.listScoreDetalle.find(s => s.estado.toUpperCase() == 'APROBADO');
   }
 
   asignarComentarioScore_d(DATA: any) {
     const dialogRef = this.dialog.open(AsignarComentarioComponent, {width: '35%', data: DATA,});
 
     dialogRef.afterClosed().subscribe((resp) => {
-      // console.log('CLOSE_COMENTARIO', resp, this.listScoreDetalleExcep.find(s => s.id_estado == 4), this.listScoreDetalleGen.find(s => s.id_estado == 4), this.listScoreDetalleCorp.find(s => s.id_estado == 4));
-      // console.log('DATA_SCOR_DETALLE', this.DATA_SCORE, this.DATA_SCORE.tipoScore, this.listScoreDetalleCorp);
-      // console.log('DATA_SCOR_MAESTRA', this.listScoreDetalleCorp.find(x=>x.tipo_score == 'B2B'));
+      // console.log('DATA_SCOR_MAESTRA', this.listScoreDetalleCorp.find(x=>x.formato_score == 'B2B'));
 
       if (resp) {
-        // return
-        if ((this.DATA_SCORE.tipoScore == 'B2B' || this.DATA_SCORE.tipoScore == 'Masivo' || this.DATA_SCORE.tipoScore == 'Diurno') &&  (!this.validarSiExiteRegistroObservadoGen() || !this.validarSiExiteRegistroObservadoExcep() || !this.validarSiExiteRegistroObservadoCorp()) ) {
-          this.estadoSolicitadoMaestra(resp);
-          this.cargarOBuscarScoreDetalle();
-          this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
+        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && resp.formValues && resp.formValues.id_estado_d == 4) {
+          console.log('stado_x', resp,);
+          this.validarCambioScoreM(resp);
         }
-        this.validarCambioScoreM(resp);
         this.cargarOBuscarScoreDetalle();
         this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
       }
@@ -838,23 +840,18 @@ export class ModalStoreComponent implements OnInit {
     const dialogRef = this.dialog.open(ObservarMasivamenteComponent, { width: '25%', data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
     dialogRef.afterClosed().subscribe((resp) => {
       if (resp) {
-        // this.cargarOBuscarEvento();
         console.log('X-Y-Z', resp);
 
-        if (
-          this.DATA_SCORE.tipoScore == 'B2B' ||
-          this.DATA_SCORE.tipoScore == 'Masivo' ||
-          this.DATA_SCORE.tipoScore == 'Diurno'
-        ) {
+        if (this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') {
           this.estadoObservadoMaestra(resp);
           this.cambiarEstadoDetalleAobservado();
           this.cargarOBuscarScoreDetalle();
           this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
         }
-        this.cambiarEstadoDetalleAobservado();
-        this.estadoObservadoMaestra(resp);
-        this.cargarOBuscarScoreDetalle();
-        this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
+        // this.cambiarEstadoDetalleAobservado();
+        // this.estadoObservadoMaestra(resp);
+        // this.cargarOBuscarScoreDetalle();
+        // this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
       }
     });
   }
@@ -862,22 +859,25 @@ export class ModalStoreComponent implements OnInit {
   importarPdf_AprobarSolicitud() {
     const dialogRef = this.dialog.open(AprobarImportarComponent, {width: '25%',data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
     dialogRef.afterClosed().subscribe((resp) => {
-      this.estadoAprobadoMaestra(resp);
 
-      // if (resp) {
       console.log('XYZ', resp);
-
-      if (this.DATA_SCORE.tipoScore == 'B2B' || this.DATA_SCORE.tipoScore == 'Masivo' || this.DATA_SCORE.tipoScore == 'Diurno') {
-        this.estadoAprobadoMaestra(resp);
-        // this.cambiarEstadoDetalleAaprobado();
-        this.cargarOBuscarScoreDetalle();
-        this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
+      if (resp) {
+        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno')
+        // && this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO'
+        ) {
+          console.log('if');
+          this.estadoAprobadoMaestra(resp);
+          // this.cambiarEstadoDetalleAaprobado();
+          this.cargarOBuscarScoreDetalle();
+          this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
+        }else{
+          console.log('else');
+          // this.cambiarEstadoDetalleAaprobado();
+          this.estadoAprobadoMaestra(resp);
+          this.cargarOBuscarScoreDetalle();
+          this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
+        }
       }
-      // this.cambiarEstadoDetalleAaprobado();
-      this.estadoAprobadoMaestra(resp);
-      this.cargarOBuscarScoreDetalle();
-      this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
-      // }
     });
   }
 
@@ -893,3 +893,4 @@ export class ModalStoreComponent implements OnInit {
     this.dialogRef.close(succes);
   }
 }
+

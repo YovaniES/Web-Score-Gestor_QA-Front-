@@ -89,7 +89,7 @@
               <th>Fecha Solicitud</th>
               <th>Solicitante</th>
               <th>Caso Score</th>
-              <th>Tipo Score</th>
+              <th>Formato Score</th>
               <th>Fecha Prueba</th>
               <th>Estado</th>
               <th>Fecha Creación</th>
@@ -128,7 +128,7 @@
                 <span style="align-items: center; display: flex; color: #999999;" *ngIf="score.casoScore == 'Residencial'"><mat-icon class="icon-10 icon-btn" style="margin-right: 5px; display: flex; color: #00d4ff;">workspaces_filled  </mat-icon>{{ score.casoScore | uppercase }}</span>
                 <span style="align-items: center; display: flex; color: #999999;" *ngIf="score.casoScore == 'Excepción'"  ><mat-icon class="icon-10 icon-btn" style="margin-right: 5px; display: flex; color: #00ffc3;">adjust             </mat-icon>{{ score.casoScore | uppercase }}</span>
               </td>
-              <td>{{ score.tipoScore }}</td>
+              <td>{{ score.formatoScore }}</td>
 
               <td>
                 <div class="cli-table"

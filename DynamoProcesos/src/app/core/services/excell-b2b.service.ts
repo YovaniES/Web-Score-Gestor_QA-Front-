@@ -19,7 +19,7 @@ export class ExcellB2BService {
 
     this.wb.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data]);
-      fs.saveAs(blob, 'F-EXCEP-B2B-QA '+ dataExcel[0].fechaIniPrueba +  " AL "+dataExcel[0].fechaFinPrueba+'v1.xlsx')
+      fs.saveAs(blob, 'F-EXCEP-B2B-QA '+ dataExcel[0].fecha_ini_prueba +  " AL "+dataExcel[0].fecha_fin_prueba+'v1.xlsx')
     });
   };
 
@@ -58,6 +58,19 @@ export class ExcellB2BService {
     sheet.getColumn('O').width = 25;
     sheet.getColumn('P').width = 75;
 
+    sheet.getColumn('Q').width = 25;
+    sheet.getColumn('R').width = 25;
+    sheet.getColumn('S').width = 25;
+    sheet.getColumn('T').width = 85;
+    sheet.getColumn('U').width = 25;
+    sheet.getColumn('V').width = 25;
+    sheet.getColumn('W').width = 25;
+    sheet.getColumn('X').width = 25;
+    sheet.getColumn('Y').width = 25;
+    sheet.getColumn('Z').width = 25;
+    sheet.getColumn('AA').width = 25;
+    sheet.getColumn('AB').width = 25;
+
     this.aplicarMergeTitle(sheet, [
       { value: 'FECHA DE SOLICITUD', cell: 'B4'},
       { value: 'CÓDIGO RQ', cell: 'B5'},
@@ -66,11 +79,11 @@ export class ExcellB2BService {
       { value: 'FECHA FIN DE PRUEBAS', cell: 'B8'},
 
       // Data  colum D
-      { value: scoreTable[0].fecha_solicitud, cell: 'F4'},
-      { value: scoreTable[0].codigo_proyecto, cell: 'F5'},
-      { value: scoreTable[0].nombre_proyecto, cell: 'F6'},
-      { value: scoreTable[0].fecha_ini_prueba, cell: 'F7' },
-      { value: scoreTable[0].fecha_fin_prueba, cell: 'F8' },
+      { value: scoreTable[0].fecha_solicitud,  cell: 'F4'},
+      { value: scoreTable[0].codigo_proyecto,  cell: 'F5'},
+      { value: scoreTable[0].nombre_proyecto,  cell: 'F6'},
+      { value: scoreTable[0].fecha_ini_prueba, cell: 'F7'},
+      { value: scoreTable[0].fecha_fin_prueba, cell: 'F8'},
       // { value: scoreTable[0].fecha_ini_prueba +' a ' + scoreTable[0].fecha_fin_prueba , cell: 'F8'},
     ]);
 
@@ -158,7 +171,19 @@ export class ExcellB2BService {
         'CF Disponible',                        //M
         'CAP FINANCIAMIENTO',                   //N
         'CÓDIGO DE EVALUACIÓN',                 //O
-        'OBSERVACIONES',                        //P
+        'OBSERVACIONES',                        //p
+        'NUM OPE-RUC',                          //Q
+        'VAL RUC 1',                            //R
+        'VAL RUC 2',                            //S
+        'LLAVE',                                //T
+        'Q LINEAS',                             //U
+        'SCORE',                                //V
+        'CF',                                   //W
+        'CAP FINAN',                            //X
+        'Val Lineas',                           //Y
+        'Val Score',                            //Z
+        'Val CF',                               //AA
+        'Val Cap Finan'                         //AB
       ];
 
       // Insertamos la data en las respectivas Columnas.
@@ -180,9 +205,24 @@ export class ExcellB2BService {
           scoreTable[i].num_lin_disp,     //K
           scoreTable[i].score,            //L
           scoreTable[i].cf_disponible,    //M
-          scoreTable[i].cap_financ_prev,  //N
+          scoreTable[i].cap_financ,        //N
           scoreTable[i].cod_evaluacion,   //O
-          scoreTable[i].observacion       //P
+          scoreTable[i].observacion,      //P
+          scoreTable[i].num_ope_ruc,      //Q
+          'VERDADERO',                    //R
+          'VÁLIDO',                       //S
+                scoreTable[i].caso_score+''+
+                scoreTable[i].segmento+''+
+                scoreTable[i].tipoVenta+''+
+                scoreTable[i].gama,       //T
+          scoreTable[i].num_lin_disp,     //U
+          scoreTable[i].score,            //V
+          scoreTable[i].cf_disponible,    //W
+          scoreTable[i].cap_financ,       //X
+          'VERDADERO',                    //Y
+          'VERDADERO',                    //Z
+          'VERDADERO',                    //AA
+          'VERDADERO'                     //AB
         ];
         fila.font = { size: 11}
         fila.alignment = { horizontal: 'center', vertical: 'middle'}

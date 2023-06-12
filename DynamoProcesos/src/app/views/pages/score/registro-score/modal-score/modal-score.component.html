@@ -27,7 +27,7 @@
       <div class="pr-section mb-3">
         <div class="pr-module-container">
           <div class="row g-2">
-              <div class="col-sm-3 cli-form-element" *ngIf="!DATA_SCORE ||  this.DATA_SCORE.tipoScore == 'Residencial'">
+              <div class="col-sm-3 cli-form-element" *ngIf="!DATA_SCORE || this.DATA_SCORE.formatoScore == 'Residencial'">
               <label>Solicitante</label>
               <input
                 type="text"
@@ -46,12 +46,12 @@
                 </div>
 
               <div class="col-sm-3 cli-form-element" *ngIf="DATA_SCORE">
-                <label>Tipo Score</label>
+                <label>Formato Score</label>
                 <input
                   type="text"
                   readonly="true"
                   class="form-control cli-input-white"
-                  formControlName="tipoScore"/>
+                  formControlName="formatoScore"/>
               </div>
 
               <div class="col-sm-3 cli-form-element" *ngIf="DATA_SCORE" >
@@ -218,7 +218,7 @@
                                       currentPage: page,
                                       totalItems: totalScore }">
                             <td>{{ score.idScored        }}</td>
-                            <td>{{ score.caso_score      }}</td>
+                            <td>{{ score.tipo_score      }}</td>
                             <td>{{ score.segmento        }}</td>
                             <td>{{ score.tipoTransaccion }}</td>
                             <td>{{ score.tipoVenta       }}</td>
@@ -246,8 +246,8 @@
                             </ng-container>
                             </td>
                             <td style="min-width: 145px;color: #4089ff;">
-                              <span *ngIf="score.req_validacion == '0'"  style="color: #fd0d89">SI</span>
-                              <span *ngIf="score.req_validacion == '1'"  style="color: #0daef4">NO</span>
+                              <span *ngIf="score.req_validacion == '0'"  style="color: #0daef4">NO</span>
+                              <span *ngIf="score.req_validacion == '1'"  style="color: #fd0d89">SI</span>
                             </td>
                             <td>{{ score.tipo_documento   }}</td>
                             <td>{{ score.numero_documento }}</td>
@@ -255,9 +255,9 @@
                             <td>{{ score.num_lin_disp     }}</td>
                             <td>{{ score.score            }}</td>
                             <td>{{ score.cf_disponible    }}</td>
-                            <td>{{ score.cap_financ_prev  }}</td>
+                            <td>{{ score.cap_financ       }}</td>
                             <td>{{ score.cod_evaluacion   }}</td>
-                            <td>{{ score.observacion      }}</td>
+                            <td style="color: #16b21d">{{ score.observacion }}</td>
                           </tr>
                           </tbody>
                         </table>
@@ -294,7 +294,7 @@
               <div *ngIf="this.DATA_SCORE.casoScore == 'Residencial'">
                 <ul class="tabs-container">
                   <li (click)="onTabClick('General')"   [class.active]="activeTab == 'General'"   class="tab-link">General   (<small style="color:#f46797">{{totalGeneral}}</small>)</li>
-                  <li (click)="onTabClick('Excepcion')" [class.active]="activeTab == 'Excepcion'" class="tab-link">Excepción (<small style="color:#f46797">{{totalExcep}}</small>)</li>
+                  <li (click)="onTabClick('Excepcion')" [class.active]="activeTab == 'Excepcion'" class="tab-link">Excepción (<small style="color:#f46797">{{totalExcep  }}</small>)</li>
                 </ul>
               </div>
 
@@ -382,7 +382,7 @@
                               <tr class="bgc-turquey c-white">
                                 <th style="min-width: 65px;"  >ID Score</th>
                                 <th style="min-width: 125px;" >Solicitante</th>
-                                <th style="min-width: 165px;" >RQ-Nombre del proyecto</th>
+                                <th style="min-width: 180px;" >RQ-Nombre del proyecto</th>
                                 <th style="min-width: 110px;" >Fecha APP</th>
                                 <th style="min-width: 65px;"  >TIpo Doc</th>
                                 <th style="min-width: 67px;"  >Num Doc</th>
@@ -394,7 +394,7 @@
                                 <th style="min-width: 250px;" >Tipo Venta</th>
                                 <th style="min-width: 80px;"  >Gama</th>
                                 <th style="min-width: 100px;" >Cuota Inicial</th>
-                                <th style="min-width: 65px;"  >Cuotas</th>
+                                <th style="min-width: 85px;"  >Cuotas</th>
                                 <th style="min-width: 95px;"  >Cap. Financ. 2</th>
                                 <th style="min-width: 65px;"  >Usuario</th>
                                 <th style="min-width: 98px;"  >Cargo fijo máx</th>
@@ -414,7 +414,7 @@
                                         totalItems: totalScore }">
                               <td>{{ score.idScored         }}</td>
                               <td>{{ score.solicitante      }}</td>
-                              <td>{{ score.nombre_proy      }}</td>
+                              <td>{{ score.nombre_proyecto  }}</td>
                               <td>{{ score.fecha_score      }}</td>
                               <td>{{ score.tipo_documento   }}</td>
                               <td>{{ score.numero_documento }}</td>
@@ -442,22 +442,22 @@
                                 </ng-container>
                               </td>
                               <td style="    min-width: 145px;color: #4089ff;">
-                                <span *ngIf="score.req_validacion == '0'" style="color: #fd0d89">SI</span>
-                                <span *ngIf="score.req_validacion == '1'" style="color: #0daef4">NO</span>
+                                <span *ngIf="score.req_validacion == '0'" style="color: #0daef4">NO</span>
+                                <span *ngIf="score.req_validacion == '1'" style="color: #fd0d89">SI</span>
                               </td>
-                              <td style="text-align: left;">{{ score.segmento        }}</td>
-                              <td style="text-align: left;">{{ score.tipoTransaccion }}</td>
-                              <td style="text-align: left;">{{ score.tipoVenta       }}</td>
-                              <td style="text-align: left;">{{ score.gama            }}</td>
-                              <td style="text-align: left;">{{ score.cuota_inicial   }}</td>
+                              <td style="text-align: left;"  >{{ score.segmento        }}</td>
+                              <td style="text-align: left;"  >{{ score.tipoTransaccion }}</td>
+                              <td style="text-align: center;">{{ score.tipoVenta       }}</td>
+                              <td style="text-align: left;"  >{{ score.gama            }}</td>
+                              <td style="text-align: left;"  >{{ score.cuota_inicial   }}</td>
                               <td >{{ score.cuotas          }}</td>
                               <td >{{ score.cap_finan_2     }}</td>
                               <td style="text-align: left;">{{ score.usuario         }}</td>
-                              <td>{{ score.cargo_fijo_max  }}</td>
-                              <td>{{ score.cap_financ_prev }}</td>
-                              <td>{{ score.score           }}</td>
-                              <td>{{ score.num_lin_disp    }}</td>
-                              <td>{{ score.cod_finan       }}</td>
+                              <td>{{ score.cargo_fijo_max   }}</td>
+                              <td>{{ score.cap_financ_prev  }}</td>
+                              <td>{{ score.score            }}</td>
+                              <td>{{ score.num_lin_disp     }}</td>
+                              <td>{{ score.cod_finan        }}</td>
                             </tr>
                             </tbody>
                           </table>
@@ -575,7 +575,7 @@
                                 <th style="min-width: 65px;"  >ID Score</th>
                                 <th style="min-width: 120px;" >Solicitante</th>
                                 <th style="min-width: 80px;"  >Rq</th>
-                                <th style="min-width: 135px;" >Proyecto</th>
+                                <th style="min-width: 142px;" >Proyecto</th>
                                 <th style="min-width: 80px;"  >Casos</th>
                                 <th style="min-width: 65px;"  >Estado</th>
                                 <th style="min-width: 130px; font-size: 11px;" >C O M E N T A R I O S</th>
@@ -629,8 +629,8 @@
                                 </ng-container>
                               </td>
                               <td style="min-width: 145px;color: #4089ff;">
-                                <span *ngIf="score.req_validacion == '0'"  style="color: #fd0d89">SI</span>
-                                <span *ngIf="score.req_validacion == '1'"  style="color: #0daef4">NO</span>
+                                <span *ngIf="score.req_validacion == '0'"  style="color: #0daef4">NO</span>
+                                <span *ngIf="score.req_validacion == '1'"  style="color: #fd0d89">SI</span>
                               </td>
                               <td>{{ score.cuota_inicial    }}</td>
                               <td>{{ score.gama             }}</td>
@@ -639,7 +639,7 @@
                               <td>{{ score.fecha_score      }}</td>
                               <td>{{ score.score            }}</td>
                               <td>{{ score.cargo_fijo_max   }}</td>
-                              <td>{{ score.num_lineas_disp  }}</td>
+                              <td>{{ score.num_lin_disp     }}</td>
                               <td>{{ score.cap_financ_prev  }}</td>
                               <td>{{ score.cod_finan        }}</td>
                               <td>{{ score.cap_finan_2      }}</td>
@@ -683,7 +683,7 @@
         </div>
       </ng-container>
 
-      <!-- HISTORICO DE SCORE ------------------------------------------------------------------------->
+      <!-- HISTORICO DE ESTADOS SCORE ------------------------------------------------------------------------->
       <div *ngIf="DATA_SCORE">
         <div class="pr-subtitle mt-2">Histórico de cambios</div>
         <div class="pr-section mb-3">
@@ -694,7 +694,7 @@
                   <tr class="bgc-variable c-white">
                     <th>#</th>
                     <th>ID Score</th>
-                    <th>Estado</th>
+                    <th>Estado Solicitud</th>
                     <th>Usuario</th>
                     <th>Fecha y hora</th>
                   </tr>
@@ -734,23 +734,22 @@
         <mat-icon class="icon-18">cancel</mat-icon> Salir
       </button>
 
+      <ng-container *ngIf="((authService.esUsuarioLider() && validarSiExiteReqValidacion() ) && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 8)) && !authService.esUsuarioGestor()">
+        <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
+           class="cli-btn btn-m btn-aprobar"
+           type="submit"
+           (click)="importarPdf_AprobarSolicitud()"
+           >
+           <!-- (click)="notificarAprobacionPorCorreo()" -->
+           <mat-icon class="icon-18">check_small</mat-icon> Aprobar
+          </button>
+      </ng-container>
+
       <ng-container *ngIf="DATA_SCORE">
-
-        <ng-container *ngIf="(authService.esUsuarioLider() && validarSiExiteReqValidacion() || scoreForm.controls['id_estado_m'].value == 2) && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 8)">
-          <button
-             class="cli-btn btn-m btn-aprobar"
-             type="submit"
-             (click)="importarPdf_AprobarSolicitud()"
-             >
-             <!-- (click)="aprobarScoreRegistro()" -->
-             <mat-icon class="icon-18">check_small</mat-icon> Aprobar
-            </button>
-        </ng-container>
-
         <ng-container *ngIf="((authService.esUsuarioGestor() || (authService.esUsuarioLider() && validarSiExiteReqValidacion() && scoreForm.controls['id_estado_m'].value != 7)) && ( scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 7))">
-          <button
+          <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
              class="cli-btn btn-m btn-observar"
-             matTooltip="Al menos debe existir 1 observado"
+             matTooltip="Observar masivamente la Solicitud"
              type="submit"
              (click)="observarMasivamenteSolicitud()"
              [disabled]="validarSiExiteRegistroObservado()"
@@ -762,16 +761,18 @@
       </ng-container>
 
       <ng-container *ngIf="authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3  )">
-        <button
-           class="cli-btn btn-m btn-mail"
+        <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
+           class="cli-btn-mail btn-m btn-mail"
            type="submit"
-           (click)="enviarRegistroTDP()">
+           (click)="enviarSolicitudTDP()"
+           [disabled]="exiteRegistroAprobado()"
+           >
            <mat-icon class="icon-18">forward_to_inbox</mat-icon> Enviar
           </button>
       </ng-container>
 
       <ng-container *ngIf="authService.esUsuarioGestor()  && scoreForm.controls['id_estado_m'].value == 6">
-        <button
+        <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
            class="cli-btn btn-m btn-fin"
            type="submit"
            (click)="observarMasivamenteSolicitud()">

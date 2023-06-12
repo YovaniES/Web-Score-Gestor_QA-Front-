@@ -69,7 +69,8 @@ export class AsignarComentarioComponent implements OnInit {
       console.log('OBS_ACTUALIZADO', resp);
 
         this.cargarComentarioScore_d_ByID();
-        this.close(resp)
+
+        this.close({resp , formValues})
 
           Swal.fire({
             title: 'Asignar comentario!',
@@ -131,7 +132,7 @@ export class AsignarComentarioComponent implements OnInit {
     }
   }
 
-  close(succes?: boolean) {
+  close(succes?: any) {
     this.dialogRef.close(succes);
   }
 }

@@ -22,8 +22,8 @@ export class ExcellMasivoService {
     });
   };
 
-  buscarPorCasoScore(dataExcel: any[], caso: string){
-    return dataExcel.filter(registro => registro.caso_score.toUpperCase() == caso)
+  buscarPorCasoScore(dataExcel: any[], tipo: string){
+    return dataExcel.filter(registro => registro.tipoScore.toUpperCase() == tipo)
   }
 
   generarExcell(dataExcel: any[]): Promise<any>{
@@ -160,10 +160,10 @@ export class ExcellMasivoService {
     sheet.getColumn('J').width = 18;
     sheet.getColumn('K').width = 22;
     sheet.getColumn('L').width = 20;
-    sheet.getColumn('M').width = 20;
+    sheet.getColumn('M').width = 85;
     sheet.getColumn('N').width = 18;
     sheet.getColumn('O').width = 18;
-    sheet.getColumn('P').width = 20;
+    sheet.getColumn('P').width = 90;
     sheet.getColumn('Q').width = 20;
     sheet.getColumn('R').width = 20;
     sheet.getColumn('S').width = 25;
@@ -217,22 +217,22 @@ export class ExcellMasivoService {
         const fila = insertarFila[i];
 
         fila.values = [
-          scoreTable[i].solicitante,                //A
-          'RQ-008411 Actualizacion de Datos(OutOfDrop)',//B
-          '20230413',                                //C
+          scoreTable[i].solicitante,                 //A
+          scoreTable[i].nombre_proyecto,             //B
+          scoreTable[i].fecha_score,                 //C
           scoreTable[i].tipo_documento,              //D
           scoreTable[i].numero_documento,            //E
-          'MOVIL B2C',                               //F
-          'CAEQ+CASI',                               //G
-          'CAEQ/ALTA FINANCIADO - FIJA FINANCIADO',  //H
+          scoreTable[i].segmento,                    //F
+          scoreTable[i].tipoTransaccion,             //G
+          scoreTable[i].tipoVenta,                   //H
           scoreTable[i].gama,                        //I
           scoreTable[i].cuota_inicial,               //J
           scoreTable[i].cuotas,                      //K
           scoreTable[i].cap_finan_2,                 //L
-          'MOVIL B2C+CASI-CONTADO-MEDIA-NO APLICA--',//M
-          scoreTable[i].cod_finan,                   //N corregir
-          scoreTable[i].cap_finan_2,                 //O corregir agregar en BD
-          'VALIDO MOVISTAR TOTAL - TOTALIZACION MT-CAEQ/ALTA FINANCIADO-FIJA FINANCIADO-MEDIA-CI X GAMA-12',//P
+          scoreTable[i].segmento+'-'+scoreTable[i].tipoTransaccion+'-'+scoreTable[i].tipoVenta+'-'+scoreTable[i].gama+'-'+scoreTable[i].cuota_inicial+'-'+scoreTable[i].cuotas, //M
+          'SI',                   //N corregir Y validar valor (SI o NO)
+          scoreTable[i].validWL,               //O validar valor (VALIDO o INVALIDO)
+          scoreTable[i].segmento+'-'+scoreTable[i].tipoTransaccion+'-'+scoreTable[i].tipoVenta+'-'+scoreTable[i].gama+'-'+scoreTable[i].cuota_inicial+'-'+scoreTable[i].cuotas, //P
           'PROCEDE',                                 //Q
           scoreTable[i].usuario,                     //R
           scoreTable[i].cargo_fijo_max,              //S
@@ -547,14 +547,15 @@ export class ExcellMasivoService {
           scoreTable[i].score,                      //L
           scoreTable[i].cap_financ_prev,            //M
           scoreTable[i].cod_finan,                  //N
-          scoreTable[i].cap_finan_2,                //O
+          scoreTable[i].cap_finan_2,                //O OJO falta agregar col BD ***
           scoreTable[i].usuario,                    //P
-          '8242-DITO-STD ALONE-FINANCIADO-1608-90-1-250-1',//Q
-          'ERROR EN LLAVE',                         //R
-          'NO VÁILDO',                              //S
-          '8241-DITO-STD ALONE-FINANCIADO-1506-80-1-100-1',//T
-          'NO PROCEDE'                              //U
-
+          // '8242-DITO-STD ALONE-FINANCIADO-1608-90-1-250-1',//Q
+          scoreTable[i].rq+'-'+scoreTable[i].proyecto+'-'+ scoreTable[i].casos+'-'+ scoreTable[i].cuota_inicial+'-'+ scoreTable[i].score+'-'+ scoreTable[i].cargo_fijo_max+'-'+ scoreTable[i].num_lin_disp+'-'+ scoreTable[i].cap_financ_prev+'-'+ scoreTable[i].cod_finan+'-',
+          'SI',                         //R
+          scoreTable[i].validWL,                              //S
+          // '8241-DITO-STD ALONE-FINANCIADO-1506-80-1-100-1',//T
+          scoreTable[i].rq+'-'+scoreTable[i].proyecto+'-'+ scoreTable[i].casos+'-'+ scoreTable[i].cuota_inicial+'-'+ scoreTable[i].score+'-'+ scoreTable[i].cargo_fijo_max+'-'+ scoreTable[i].num_lin_disp+'-'+ scoreTable[i].cap_financ_prev+'-'+ scoreTable[i].cod_finan+'-',
+          'PROCEDE'                              //U
         ];
         fila.font = { size: 11}
         fila.alignment = { horizontal: 'center', vertical: 'middle'}

@@ -40,6 +40,25 @@
   &:disabled {
     background-color: #94dfff;
     color: #fff;
+    // background-color: #d8ffe5;
+    // color: #acacac;
+  }
+}
+
+.cli-btn-mail {
+  border: none;
+  border-radius: 3px;
+  margin: 0 5px;
+  height: 30px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  & mat-icon {
+    margin: 0 5px;
+  }
+  &:disabled {
+    background-color: #d8ffe5;
+    color: #acacac;
   }
 }
 
