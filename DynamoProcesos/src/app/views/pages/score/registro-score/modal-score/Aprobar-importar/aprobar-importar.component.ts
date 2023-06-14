@@ -39,7 +39,7 @@ export class AprobarImportarComponent implements OnInit {
     });
   }
 
-  guardarPdf_y_AprobarSolicitud() {
+  guardarPdf_y_AprobarOfinalizarSolicitud() {
     this.spinner.show();
 
     const formValues = this.importForm.getRawValue();
@@ -48,7 +48,7 @@ export class AprobarImportarComponent implements OnInit {
 
     let parametro: any[] = [
       {
-        queryId: 28, //OJO Falta importar y guardar el pdf en la BD
+        queryId: 16, //OJO Falta importar y guardar el pdf en la BD
         mapValue: {
           p_idScore       : this.DATA_SCORE.scoreObsForm.id_score,
           // p_idscore_materiales       : this.DATA_SCORE.scoreObsForm.id_score,
@@ -57,7 +57,7 @@ export class AprobarImportarComponent implements OnInit {
         },
       },
     ];
-    this.scoreService.importarAprobarSolicitud(parametro[0]).subscribe({
+    this.scoreService.aprobarOfinalizarSolicitud(parametro[0]).subscribe({
       next: (resp: any) => {
         this.spinner.hide();
 

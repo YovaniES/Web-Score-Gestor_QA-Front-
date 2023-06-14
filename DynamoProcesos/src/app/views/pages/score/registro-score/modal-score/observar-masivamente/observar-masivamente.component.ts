@@ -48,15 +48,15 @@ export class ObservarMasivamenteComponent implements OnInit {
     this.spinner.show();
     const formValues = this.obs_mForm.getRawValue();
     console.log('O B S_MAS', this.obs_mForm.value, this.DATA_SCORE.scoreObsForm.id_score);
-    console.log('ESTA_M_IMPORT', this.obs_mForm.value, this.DATA_SCORE.scoreObsForm);
+    console.log('ESTADO_M_IMPORT', this.obs_mForm.value, this.DATA_SCORE.scoreObsForm);
 
     let parametro: any[] = [
       {
-        queryId: 36,
+        queryId: 22,
         mapValue: {
-          p_idscore_materiales       : this.DATA_SCORE.scoreObsForm.id_score,
-          p_observacionScore_material: formValues.obs_solicitud_m,
-          CONFIG_OUT_MSG_EXITO       : '',
+          p_idScoreM            : this.DATA_SCORE.scoreObsForm.id_score,
+          p_obs_solicitud       : formValues.obs_solicitud_m,
+          CONFIG_OUT_MSG_EXITO  : '',
         },
       },
     ];

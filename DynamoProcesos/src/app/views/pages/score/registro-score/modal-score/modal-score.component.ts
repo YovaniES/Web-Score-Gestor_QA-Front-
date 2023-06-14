@@ -7,10 +7,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { ScoreService } from 'src/app/core/services/score.service';
 import Swal from 'sweetalert2';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
-import * as XLSX from 'xlsx';
 import { ScoreDetalleService } from 'src/app/core/services/score-detalle.service';
-import { ScoreDetalle } from 'src/app/core/models/scored.models';
-import { mapearListadoDetalleScore } from 'src/app/core/mapper/detalle-score.mapper';
 import { concatMap, of, tap } from 'rxjs';
 import { SendMailService } from 'src/app/core/services/send-mail.service';
 import { ExcellDiurnoService } from 'src/app/core/services/excell-diurno.service';
@@ -84,7 +81,6 @@ export class ModalStoreComponent implements OnInit {
       id_score        : [''],
       num_doc         : [''],
       id_estado_d     : [''],
-      importar        : [''],
       fecha_ini_prueba: ['', Validators.required],
       fecha_fin_prueba: ['', Validators.required],
       motivo_solicitud: [''],
@@ -102,81 +98,11 @@ export class ModalStoreComponent implements OnInit {
     this.activeTab = tab;
   }
 
-  importacion = 0;
-  scoreDataImport: any[] = [];
-  readExcell(e: any) {
-    console.log('==>', e, this.scoreForm);
-    this.importacion++;
-    this.blockUI.start('Espere por favor, estamos Importando la Data a la Base de Datos, importación N°: ' + this.importacion);
 
-    let file = e.target.files[0];
-    let fileReader = new FileReader();
-
-    fileReader.readAsBinaryString(file);
-
-    fileReader.onload = (e) => {
-      var wb = XLSX.read(fileReader.result, {
-        type: 'binary',
-        cellDates: true,
-      });
-      // console.log('****', wb);
-
-      var sheetNames = wb.SheetNames;
-
-      this.scoreDataImport = XLSX.utils.sheet_to_json(wb.Sheets[sheetNames[0]]);
-
-      console.log('DATA_EXCELL-IMPORTADO', this.scoreDataImport);
-
-      this.scoreForm.controls['importar'].reset();
-      this.scoreForm.controls['importar'].setValue(null);
-
-      // this.validarImportacionExcell();
-      this.insertarListadoDetalleScore();
-
-      this.blockUI.stop();
-    };
-  }
-
-  insertarListadoDetalleScore() {
-    this.spinner.show();
-    let parametro: any[] = this.mapearScore();
-
-    const listScoreDetalle: ScoreDetalle[] = mapearListadoDetalleScore(
-      this.scoreDataImport,
-      this.DATA_SCORE.idScoreM,
-      this.scoreForm.controls['version'].value
-    );
-
-    this.scoreDetalleService.insertarListadoDetalleScore(listScoreDetalle)
-      .pipe(
-        concatMap((resp: any) => {
-          return resp && resp.message == 'ok'? this.scoreService.actualizarScore(parametro[0]): of({});
-        })
-      ).subscribe((resp: any) => {
-        console.log('ABC', resp);
-
-        if (resp && resp.exitoMessage == 'Actualización exitosa') {
-          this.scoreForm.controls['version'].setValue(this.DATA_SCORE.version + 1); //Seteamos la version del Score_m,
-
-          Swal.fire({
-            title: 'Importar Score!',
-            text: `Se importó con éxito la data`,
-            icon: 'success',
-            confirmButtonText: 'Ok',
-          });
-
-          this.spinner.hide();
-          this.actualizarScoreD();
-          this.cargarOBuscarScoreDetalle();
-        }
-        console.log('DATA_SCORE_DETALLE', resp);
-      });
-  }
-
-  listScoreDetalle     : any[] = []; // 17
-  listScoreDetalleExcep: any[] = []; // 8
-  listScoreDetalleGen  : any[] = []; // 9
-  listScoreDetalleCorp : any[] = []; // 17
+  listScoreDetalle     : any[] = [];
+  listScoreDetalleExcep: any[] = [];
+  listScoreDetalleGen  : any[] = [];
+  listScoreDetalleCorp : any[] = [];
   cargarOBuscarScoreDetalle() {
     console.log('DATA_DETALLE_*', this.scoreForm.getRawValue(), this.DATA_SCORE);
 
@@ -184,7 +110,7 @@ export class ModalStoreComponent implements OnInit {
     this.blockUI.start('Cargando Score detalle...');
     let parametro: any[] = [
       {
-        queryId: 33,
+        queryId: 19,
         mapValue: {
           p_idScore       : this.DATA_SCORE.idScoreM,
           p_num_doc       : this.scoreForm.value.num_doc,
@@ -197,7 +123,6 @@ export class ModalStoreComponent implements OnInit {
         this.blockUI.stop();
 
         console.log('D A T A - score_D', resp, resp.list.length);
-        console.log('REQ-VAL', this.listScoreDetalleGen.filter(x=>x.req_validacion == 0));
 
         if ( (this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && (this.DATA_SCORE.estado.toUpperCase() == 'OBSERVADO' || this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO' || this.DATA_SCORE.estado.toUpperCase() == 'APROBADO')) {
           this.listScoreDetalleGen   = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 5) && score.tipo_score.toUpperCase() == 'GENERAL');
@@ -206,34 +131,34 @@ export class ModalStoreComponent implements OnInit {
         }
 
         // ESTADO SCORE_M EN VALIDACION
-        if ((this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_MAESTRA_ESTADOS.EN_VALIDACION) {
+        if ((this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_M_ESTADOS.EN_VALIDACION) {
           this.listScoreDetalleGen   = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 4 || score.id_estado == 5 || score.id_estado == 7) && score.tipo_score.toUpperCase() == 'GENERAL');
           this.listScoreDetalleExcep = resp.list.filter((score: any) =>(score.id_estado == 2 || score.id_estado == 4 || score.id_estado == 5 || score.id_estado == 7) && score.tipo_score.toUpperCase() == 'EXCEPCION');
           this.listScoreDetalleCorp  = resp.list;
         }
 
         // ESTADO SCORE_M EN OBSERVACION
-        if ( (this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && this.DATA_SCORE.estado.toUpperCase() == 'OBSERVADO') {
+        if ( (this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_M_ESTADOS.OBSERVADO) {
           this.listScoreDetalleGen   = resp.list.filter((score: any) =>score.id_estado == 4 && score.tipo_score.toUpperCase() == 'GENERAL');
           this.listScoreDetalleExcep = resp.list.filter((score: any) =>score.id_estado == 4 && score.tipo_score.toUpperCase() == 'EXCEPCION');
           this.listScoreDetalleCorp  = resp.list;
         }
 
         // ESTADO SCORE_M EN ENVIADO
-        if ((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado.toUpperCase() == 'ENVIADO') {
+        if ((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_M_ESTADOS.ENVIADO) {
           this.listScoreDetalleGen   = resp.list.filter((score: any) =>score.id_estado == 6 && score.tipo_score.toUpperCase() == 'GENERAL');
           this.listScoreDetalleExcep = resp.list.filter((score: any) =>score.id_estado == 6 && score.tipo_score.toUpperCase() == 'EXCEPCION');
           this.listScoreDetalleCorp  = resp.list;
         }
 
         // ESTADO SCORE_M EN SUBSANADO
-        if (this.authService.esUsuarioGestor() && this.DATA_SCORE.estado.toUpperCase() == 'SUBSANADO') {
+        if (this.authService.esUsuarioGestor() && this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_M_ESTADOS.SUBSANADO) {
           this.listScoreDetalle = resp.list.filter((score: any) => score.id_estado == 5 || score.id_estado == 6);
           console.log('ENVIADOS_DATA', this.listScoreDetalle);
         }
 
         // ESTADO SCORE_M EN FINALIZADO
-        if ((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.DATA_SCORE.estado.toUpperCase() == 'FINALIZADO') {
+        if ((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_M_ESTADOS.FINALIZADO) {
           this.listScoreDetalleGen   = resp.list.filter((score: any) =>score.id_estado == 7 && score.tipo_score.toUpperCase() == 'GENERAL');
           this.listScoreDetalleExcep = resp.list.filter((score: any) =>score.id_estado == 7 && score.tipo_score.toUpperCase() == 'EXCEPCION');
           this.listScoreDetalleCorp  = resp.list.filter((score: any) => score.id_estado == 7);
@@ -255,8 +180,6 @@ export class ModalStoreComponent implements OnInit {
   }
 
   validarSiExiteReqValidacion(): any {
-    // console.log('**', this.listScoreDetalleCorp.find( score => score.req_validacion == 0), this.listScoreDetalleCorp)
-
     if (this.DATA_SCORE.casoScore.toUpperCase() == 'RESIDENCIAL') {
       const detalleGeneralEncontrado   = this.listScoreDetalleGen.find((score) => score.req_validacion == 1); //1:SI
       const detalleExcepcionEncontrado = this.listScoreDetalleExcep.find((score) => score.req_validacion == 1);
@@ -272,7 +195,7 @@ export class ModalStoreComponent implements OnInit {
     console.log('Estados_M', this.listEstado);
     const estado = this.buscarEstadoPorNombre(nombreEstado);
 
-    this.actualizarScore(estado.idEstado);
+    this.actualizarScore_m(estado.idEstado);
   }
 
   observarScoreRegistro() {
@@ -296,10 +219,10 @@ export class ModalStoreComponent implements OnInit {
     }
   }
 
-  enviarRegistroTDPX() {
+  descargarExcelScore_D() { //DESCARGAR EXCELL - PRUEBA
     let parametro: any[] = [
       {
-        queryId: 35,
+        queryId: 21,
         mapValue: {
           p_idScore: this.DATA_SCORE.idScoreM,
         },
@@ -336,21 +259,9 @@ export class ModalStoreComponent implements OnInit {
   }
 
   exportScoreDetalleMasivoOdiurno(id_score: number) {
-    let parametroWL: any[] = [
-      {
-        queryId: 37,
-        mapValue: {
-        },
-      },
-    ];
+    let parametroWL: any[] = [{queryId: 23,mapValue: {},},];
 
-    let parametro: any[] = [
-      { queryId: 34,
-      mapValue: {
-        p_idScore: id_score,
-      }
-    },
-    ];
+    let parametro: any[] = [{ queryId: 20,mapValue: {p_idScore: id_score,}},];
 
     let listadoWL:any[]=[];
 
@@ -386,7 +297,7 @@ export class ModalStoreComponent implements OnInit {
 
             this.excellDiurnoService.generarExcell(resp.list, listadoWL).then((file: any) => {
                 const blob = new Blob([file]);
-                return
+
                 this.listadoCorreosTDP(blob);
               });
            }
@@ -398,7 +309,7 @@ export class ModalStoreComponent implements OnInit {
   exportScoreDetalleB2B(id_score: number) {
     let parametro: any[] = [
       {
-        queryId: 35,
+        queryId: 21,
         mapValue: {
           p_idScore: id_score,
         },
@@ -416,7 +327,7 @@ export class ModalStoreComponent implements OnInit {
 
   listCorreoGestor: string = '';
   listadoCorreosGESTOR() {
-    let parametro: any[] = [{ queryId: 25 }];
+    let parametro: any[] = [{ queryId: 15 }];
     this.scoreDetalleService.listadoCorreosTDP(parametro[0]).subscribe((resp: any) => {
         if (resp && resp.list) {
           console.log('CORREOS-GESTOR',resp.list, resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
@@ -427,7 +338,7 @@ export class ModalStoreComponent implements OnInit {
 
   listCorreoTdp: string = '';
   listadoCorreosTDP(file: Blob) {
-    let parametro: any[] = [{ queryId: 25 }];
+    let parametro: any[] = [{ queryId: 15 }];
     this.scoreDetalleService.listadoCorreosTDP(parametro[0]).subscribe((resp: any) => {
         if (resp && resp.list) {
           console.log('CORREOS-TDP',resp.list, resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
@@ -517,76 +428,47 @@ export class ModalStoreComponent implements OnInit {
       .catch((error) => console.log('error', error));
   }
 
-  crearOactualizarScore() {
-    this.spinner.show();
-
-    if (!this.DATA_SCORE) {
-      if (this.scoreForm.valid) {
-        // this.crearScoreM()
-      }
-    } else {
-      this.actualizarScore();
-    }
-    this.spinner.hide();
-  }
-
   cambiarEstadoDetalleAaprobado() {
     let parametro: any[] = [
       {
-        queryId: 28,
+        queryId: 16,
         mapValue: {
           p_idScore: this.DATA_SCORE.idScoreM,
         },
       },
     ];
 
-    this.scoreService.actualizarScoreD(parametro[0]).subscribe({ next: (resp: any) => {} });
+    this.scoreService.cambiarEstadoDetalleAaprobado(parametro[0]).subscribe({ next: (resp: any) => {} });
   }
 
   cambiarEstadoDetalleAenviado() {
     let parametro: any[] = [
       {
-        queryId: 22,
+        queryId: 14,
         mapValue: {
           p_idScore: this.DATA_SCORE.idScoreM,
         },
       },
     ];
 
-    this.scoreService.actualizarScoreD(parametro[0]).subscribe({ next: (resp: any) => {} });
+    this.scoreService.cambiarEstadoDetalleAenviado(parametro[0]).subscribe({ next: (resp: any) => {} });
   }
 
   cambiarEstadoDetalleAobservado() {
     let parametro: any[] = [
       {
-        queryId: 31,
+        queryId: 18,
         mapValue: {
           p_idScore: this.DATA_SCORE.idScoreM,
         },
       },
     ];
 
-    this.scoreService.actualizarScoreD(parametro[0]).subscribe({ next: (resp: any) => {} });
+    this.scoreService.cambiarEstadoDetalleAobservado(parametro[0]).subscribe({ next: (resp: any) => {} });
   }
 
   descargarPDF() {
     // FALTA IMPLEMENTAR¡¡¡¡¡¡¡¡¡¡¡¡¡¡
-  }
-
-  actualizarScoreD() {
-    const formValues = this.scoreForm.getRawValue();
-    let parametro: any = {
-      queryId: 24,
-      mapValue: {
-        v_idscore: this.DATA_SCORE.idScoreM,
-        v_idversion: this.DATA_SCORE.version + 1,
-      },
-    };
-
-    this.scoreService.actualizarScoreD(parametro).subscribe((resp: any) => {
-      console.log('UPDATE_SCORE_D', resp);
-      this.cargarOBuscarScoreDetalle();
-    });
   }
 
   mapearScore(idEstado?: number): any[] {
@@ -594,7 +476,7 @@ export class ModalStoreComponent implements OnInit {
 
     return [
       {
-        queryId: 4,
+        queryId: 6,
         mapValue: {
           p_idScoreM          : this.DATA_SCORE.idScoreM,
           p_idEstado          : idEstado ? idEstado : formValues.id_estado_m,
@@ -608,11 +490,11 @@ export class ModalStoreComponent implements OnInit {
     ];
   }
 
-  actualizarScore(estadoScore?: number) {
+  actualizarScore_m(estadoScore?: number) {
     this.spinner.show();
     let parametro: any[] = this.mapearScore(estadoScore);
 
-    this.scoreService.actualizarScore(parametro[0]).subscribe({
+    this.scoreService.actualizarScore_m(parametro[0]).subscribe({
       next: (resp: any) => {
         this.spinner.hide();
 
@@ -625,7 +507,7 @@ export class ModalStoreComponent implements OnInit {
 
         Swal.fire({
           title: 'Actualizar Score!',
-          text: `Score:  ${this.DATA_SCORE.idScoreM}, actualizado con éxito`,
+          text: `${this.DATA_SCORE.idScore_M}, actualizado con éxito`,
           icon: 'success',
           confirmButtonText: 'Ok',
         });
@@ -638,7 +520,7 @@ export class ModalStoreComponent implements OnInit {
 
   listScoreM_ByID() {
     let parametro: any = {
-      queryId: 20,
+      queryId: 13,
       mapValue: {
         p_idScoreM: this.DATA_SCORE.idScoreM,
       },
@@ -724,7 +606,6 @@ export class ModalStoreComponent implements OnInit {
   validateIfIsLider() {
     if (!this.authService.esUsuarioLider()) {
       this.disabledControls();
-      this.scoreForm.controls['importar'].disable();
     }
   }
 
@@ -734,7 +615,7 @@ export class ModalStoreComponent implements OnInit {
 
     let parametro: any[] = [
       {
-        queryId: 5,
+        queryId: 7,
         MapValue: {
           p_idhistorico: this.DATA_SCORE.idScoreM,
         },
@@ -749,11 +630,10 @@ export class ModalStoreComponent implements OnInit {
 
   listEstado: any[] = [];
   getListEstado() {
-    let parametro: any[] = [{ queryId: 3 }];
+    let parametro: any[] = [{ queryId: 5 }];
 
     this.scoreService.getListEstado(parametro[0]).subscribe((resp: any) => {
       this.listEstado = resp.list;
-      // console.log('ESTADOS', resp.list);
     });
   }
 
@@ -798,26 +678,24 @@ export class ModalStoreComponent implements OnInit {
     this.page = event;
   }
 
-  validarCambioScoreM(response: any) {
+  estadoEnValidacionScoreM(response: any) {
     if (response.resp.exitoMessage == 'Actualización exitosa') {
       this.cambiarEstadoScoreM('EN VALIDACIÓN');
     }
   }
 
-  estadoSolicitadoMaestra(resp: any) {
-    if (resp.exitoMessage == 'Actualización exitosa') {
-      this.cambiarEstadoScoreM('SOLICITADO'); // Cabecera_estado: SCORE_MAESTRA
-    }
-  }
-
-  estadoObservadoMaestra(resp: any) {
+  estadoObservadoScoreM(resp: any) {
     if (resp.exitoMessage == 'Actualización exitosa') {
       this.cambiarEstadoScoreM('OBSERVADO');
     }
   }
 
-  estadoAprobadoMaestra(resp: any) {
+  estadoAprobadoScoreM(resp: any) {
     this.cambiarEstadoScoreM('APROBADO');
+  }
+
+  estadoFinalizadoScoreM(resp: any) {
+    this.cambiarEstadoScoreM('FINALIZADO');
   }
 
   validarSiExiteRegistroObservado(): any {
@@ -825,7 +703,7 @@ export class ModalStoreComponent implements OnInit {
     return this.listScoreDetalle.find(s => s.estado.toUpperCase() == 'OBSERVADO');
   }
 
-  exiteRegistroAprobado(): any {
+  existeScore_dAprobado(): any {
     return this.listScoreDetalle.find(s => s.estado.toUpperCase() == 'APROBADO');
   }
 
@@ -838,7 +716,7 @@ export class ModalStoreComponent implements OnInit {
       if (resp) {
         if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && resp.formValues && resp.formValues.id_estado_d == 4) {
           console.log('stado_x', resp,);
-          this.validarCambioScoreM(resp);
+          this.estadoEnValidacionScoreM(resp);
         }else{
           this.cargarOBuscarScoreDetalle();
           this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
@@ -854,7 +732,7 @@ export class ModalStoreComponent implements OnInit {
         console.log('X-Y-Z', resp);
 
         if (this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') {
-          this.estadoObservadoMaestra(resp);
+          this.estadoObservadoScoreM(resp);
           this.cambiarEstadoDetalleAobservado();
           this.cargarOBuscarScoreDetalle();
           this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
@@ -863,24 +741,23 @@ export class ModalStoreComponent implements OnInit {
     });
   }
 
-  importarPdf_AprobarSolicitud() {
+  importarPdf_AprobarOfinalizarSolicitud() {
     const dialogRef = this.dialog.open(AprobarImportarComponent, {width: '25%',data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
     dialogRef.afterClosed().subscribe((resp) => {
 
       console.log('XYZ', resp);
       if (resp) {
-        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno')
-        // && this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO'
-        ) {
+        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && this.scoreForm.controls['id_estado_m'].value == 4) {
           console.log('if');
-          this.estadoAprobadoMaestra(resp);
+          this.estadoAprobadoScoreM(resp);
           // this.cambiarEstadoDetalleAaprobado();
           this.cargarOBuscarScoreDetalle();
           this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
         }else{
           console.log('else');
           // this.cambiarEstadoDetalleAaprobado();
-          this.estadoAprobadoMaestra(resp);
+           this.estadoFinalizadoScoreM(resp)
+          // this.estadoAprobadoScoreM(resp);
           this.cargarOBuscarScoreDetalle();
           this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
         }

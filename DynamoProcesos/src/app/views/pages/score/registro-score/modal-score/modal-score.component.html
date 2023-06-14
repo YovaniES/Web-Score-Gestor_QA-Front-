@@ -135,8 +135,8 @@
                         <label>Req. Validación</label>
                         <select class="cli-input-white" formControlName="req_validacion">
                           <option [value]="10" disabled>- Seleccione -</option>
-                          <option [value]="0">SI</option>
-                          <option [value]="1">NO</option>
+                          <option [value]="0">NO</option>
+                          <option [value]="1">SI</option>
                         </select>
                       </div>
 
@@ -326,8 +326,8 @@
                           <label>Req. Validación</label>
                           <select class="cli-input-white" formControlName="req_validacion">
                             <option [value]="10" disabled>- Seleccione -</option>
-                            <option [value]="1">NO</option>
-                            <option [value]="0">SI</option>
+                            <option [value]="0">NO</option>
+                            <option [value]="1">SI</option>
                           </select>
                         </div>
 
@@ -517,8 +517,8 @@
                           <label>Req. Validación</label>
                           <select class="cli-input-white" formControlName="req_validacion">
                             <option [value]="10" disabled>- Seleccione -</option>
-                            <option [value]="0">SI</option>
-                            <option [value]="1">NO</option>
+                            <option [value]="0">NO</option>
+                            <option [value]="1">SI</option>
                           </select>
                         </div>
 
@@ -738,7 +738,7 @@
         <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
            class="cli-btn btn-m btn-aprobar"
            type="submit"
-           (click)="importarPdf_AprobarSolicitud()"
+           (click)="importarPdf_AprobarOfinalizarSolicitud()"
            >
            <!-- (click)="notificarAprobacionPorCorreo()" -->
            <mat-icon class="icon-18">check_small</mat-icon> Aprobar
@@ -754,7 +754,6 @@
              (click)="observarMasivamenteSolicitud()"
              [disabled]="validarSiExiteRegistroObservado()"
              >
-             <!-- (click)="observarScoreRegistro();" -->
              <mat-icon class="icon-18">rule</mat-icon> Observar
           </button>
         </ng-container>
@@ -765,7 +764,7 @@
            class="cli-btn-mail btn-m btn-mail"
            type="submit"
            (click)="enviarSolicitudTDP()"
-           [disabled]="exiteRegistroAprobado()"
+           [disabled]="existeScore_dAprobado()"
            >
            <mat-icon class="icon-18">forward_to_inbox</mat-icon> Enviar
           </button>
@@ -775,18 +774,9 @@
         <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
            class="cli-btn btn-m btn-fin"
            type="submit"
-           (click)="observarMasivamenteSolicitud()">
+           (click)="importarPdf_AprobarOfinalizarSolicitud()">
            <mat-icon class="icon-18">forward_to_inbox</mat-icon> Finalizar
           </button>
-      </ng-container>
-
-      <ng-container *ngIf="(authService.esUsuarioLider() && scoreForm.controls['id_estado_m'].value == 1 && listScoreDetalle.length == 0 ) || !DATA_SCORE ">
-        <button
-           class="cli-btn btn-m btn-skyblue"
-           (click)="crearOactualizarScore()"
-           [disabled]="scoreForm.invalid">
-           <mat-icon class="icon-18">save</mat-icon> {{ actionBtn }}
-        </button>
       </ng-container>
     </div>
   </div>

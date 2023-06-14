@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { ModalStoreComponent } from './modal-score/modal-score.component';
 import { AuthService } from 'src/app/core/services/auth.service';
+import { ExcellB2BService } from 'src/app/core/services/excell-b2b.service';
 
 @Component({
   selector: 'app-registro-score',
@@ -30,8 +31,9 @@ export class RegistroScoreComponent implements OnInit {
   pageSize = 10;
 
   constructor(
-    private scoreService: ScoreService,
     public authService: AuthService,
+    private scoreService: ScoreService,
+    private excellB2BService: ExcellB2BService,
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
     public datepipe: DatePipe,
@@ -43,7 +45,7 @@ export class RegistroScoreComponent implements OnInit {
     this.validarSiEsUsuarioLider()
     this.cargarOBuscarScoreM();
     this.getListEstado();
-    this.getListFormatoEnvio();
+    // this.getListFormatoEnvio();
   }
 
   newFilfroForm(){
@@ -51,8 +53,9 @@ export class RegistroScoreComponent implements OnInit {
       actualiza_por   : [''],
       lider           : [''],
       id_estado       : [''],
-      fecha_envio_ini : [''],
-      fecha_envio_fin : [''],
+      fecha_solic_ini : [''],
+      fecha_solic_fin : [''],
+      tipo_formato    : ['']
     })
   };
 
@@ -64,42 +67,20 @@ export class RegistroScoreComponent implements OnInit {
     }
   }
 
-  cargarOBuscarScoreMXXX(){
-    this.blockUI.start("Cargando Score...");
-    let parametro: any[] = [{
-      "queryId": 2,
-      "mapValue": {
-          p_solicitante  : this.authService.getUserNameByRol(this.filtroForm.value.lider), // this.filtroForm.value.lider,
-          p_actualiza_por: this.filtroForm.value.actualiza_por,
-          p_id_estado    : this.filtroForm.value.id_estado,
-          inicio         : this.datepipe.transform(this.filtroForm.value.fecha_envio_ini,"yyyy/MM/dd"),
-          fin            : this.datepipe.transform(this.filtroForm.value.fecha_envio_fin,"yyyy/MM/dd"),
-      }
-    }];
-    this.scoreService.cargarOBuscarScoreM(parametro[0]).subscribe((resp: any) => {
-    this.blockUI.stop();
-
-     if (this.authService.esUsuarioGestor()) {
-       this.listScore = [];
-       this.listScore= resp.list.filter((x: any) => x.idEstado != 1)
-      //  this.listScore = resp.list;
-      }else{
-        this.listScore = resp.list;
-      }
-
-      this.spinner.hide();
-    });
-  };
-
   listScore: any[] = [];
   cargarOBuscarScoreM(){
     this.blockUI.start("Cargando Score...");
     let parametro: any[] = [{
-      "queryId": 29,
-      "mapValue": {
+      queryId: 17,
+      mapValue: {
           // p_solicitante  : this.authService.getUserNameByRol(this.filtroForm.value.lider),
-          // p_actualiza_por: this.filtroForm.value.actualiza_por,
-          p_id_estado    : this.filtroForm.value.id_estado,
+          p_actualiza_por: this.filtroForm.value.actualiza_por,
+          p_id_estado    : this.filtroForm.controls['id_estado'].value,
+          // p_id_estado    : this.filtroForm.value.id_estado,
+          p_tipoFormato  : this.filtroForm.value.tipo_formato,
+
+          inicio         : this.datepipe.transform(this.filtroForm.value.fecha_solic_ini,'yyyy/MM/dd'),
+          fin            : this.datepipe.transform(this.filtroForm.value.fecha_solic_fin,'yyyy/MM/dd'),
       }
     }];
     this.scoreService.cargarOBuscarScoreM(parametro[0]).subscribe((resp: any) => {
@@ -112,64 +93,59 @@ export class RegistroScoreComponent implements OnInit {
     });
   };
 
-  exportarRegistro(id: number, formatoenvio?: number) {
-    const f_envio = this.listScore.find(f => f.formato_envio == formatoenvio)
-    console.log('F_ENVIO', f_envio.formato_envio);
+  // OJO FALTA REPARAR EL DESCARGAR SEGUN FORMATO- 14-06
+  exportarRegistro(id: number, tipo_formato?: number) {
+    const tpoFormato = this.listScore.find(f => f.formatoScore == tipo_formato)
+    console.log('tipo_formato', tpoFormato.formatoScore);
 
 
-    if (f_envio.formato_envio == 1) {
+    if (tpoFormato.formatoScore.toUpperCase() == 'B2B') {
       this.exportScoreDetalleB2B(id);
     }else{
-      this.exportScoreDetalleMasivo(id)
+      this.exportScoreDetalleMasivoOdiurno(id)
     }
   }
 
-  exportScoreDetalleMasivo(id_score: number){
-    let parametro: any[] = [{
-      "queryId": 17,
-      "mapValue": {
-          p_idScore : id_score,
-      }
-    }];
+  exportScoreDetalleMasivoOdiurno(id_score: number) {
+    let parametro: any[] = [
+      {
+        queryId: 20,
+        mapValue: {
+          p_idScore: id_score,
+        },
+      },
+    ];
     this.scoreService.exportScoreDetalleMasivoOdiurno(parametro[0]).subscribe((resp: any) => {
-    // this.exportExcellIndividualService.exportarExcelDetalleMasivo(resp.list, 'Masivo');
-    });
+        this.excellB2BService.dowloadExcel(resp.list);
+      });
   }
 
-
-  exportScoreDetalleB2B(id_score: number){
-    let parametro: any[] = [{
-      "queryId": 26,
-      "mapValue": {
-          p_idScore : id_score,
-      }
-    }];
+  exportScoreDetalleB2B(id_score: number) {
+    let parametro: any[] = [
+      {
+        queryId: 21,
+        mapValue: {
+          p_idScore: id_score,
+        },
+      },
+    ];
     this.scoreService.exportScoreDetalleB2B(parametro[0]).subscribe((resp: any) => {
-      console.log('EXPORT_INDIVIDUAL', resp.list);
+        console.log('TIPO-SCORE-B2B', resp.list);
 
-    // this.exportExcellIndividualService.exportarExcelDetalleIndividual(resp.list, 'Individual');
-    });
+        this.excellB2BService.dowloadExcel(resp.list);
+      });
   }
+
 
   listEstado: any[] = [];
   getListEstado(){
-    let parametro: any[] = [{ queryId: 3 }];
+    let parametro: any[] = [{ queryId: 5 }];
 
     this.scoreService.getListEstado(parametro[0]).subscribe((resp: any) => {
       this.listEstado = resp.list;
       // console.log('ESTADOS', resp.list);
     });
   }
-
-  listFormEnvio: any[] = [];
-  getListFormatoEnvio(){
-    let parametro: any[] = [{ queryId: 16 }];
-
-    this.scoreService.getListFormatoEnvio(parametro[0]).subscribe((resp: any) => {
-      this.listFormEnvio = resp.list;
-    });
-  };
-
 
   limpiarFiltro() {
     this.filtroForm.reset('', { emitEvent: false });

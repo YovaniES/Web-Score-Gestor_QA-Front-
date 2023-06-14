@@ -52,7 +52,7 @@ export class AsignarComentarioComponent implements OnInit {
     const formValues = this.asigObservacionForm.getRawValue();
     console.log('O B S', this.asigObservacionForm.value);
 
-    let parametro: any[] = [{ queryId: 19,
+    let parametro: any[] = [{ queryId: 12,
         mapValue: {
           p_idscored           : this.DATA_SCORE_DET.idScored,
           p_id_estado          : formValues.id_estado_d,
@@ -100,7 +100,7 @@ export class AsignarComentarioComponent implements OnInit {
 
   listEstadoDetalle: any[] = [];
   getListEstadoDetalle(){
-    let parametro: any[] = [{ queryId: 3 }];
+    let parametro: any[] = [{ queryId: 5 }];
 
     this.scoreService.getListEstadoDetalle(parametro[0]).subscribe((resp: any) => {
       this.listEstadoDetalle = resp.list.filter((x: any) => x.idEstado == 2 || x.idEstado == 4 || x.idEstado == 5 || x.idEstado == 7 || x.idEstado == 8 );

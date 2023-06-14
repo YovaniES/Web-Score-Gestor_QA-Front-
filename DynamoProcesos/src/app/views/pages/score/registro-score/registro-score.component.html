@@ -5,12 +5,22 @@
       <!-- BUSCADOR POR FILTRO ---------------------------------------------------------------->
       <div class="card" style="border-radius: 2px; font-weight: 600; padding: 7px">
           <form class="row g-3" [formGroup]="filtroForm">
-            <div class="col-sm-3 cli-form-element" >
+            <!-- <div class="col-sm-3 cli-form-element" >
               <label>Lider QA</label>
               <input
                 type="text"
                 class="form-control cli-input-white"
                 formControlName="lider"/>
+            </div> -->
+
+            <div class="col-sm-3 cli-form-element">
+              <label>Formato Score</label>
+              <select class="cli-input-white" formControlName="tipo_formato">
+                <option [value]="10" disabled>- Seleccione -</option>
+                <option [value]="1">B2B</option>
+                <option [value]="2">Diurno</option>
+                <option [value]="3">Masivo</option>
+              </select>
             </div>
 
             <div class="col-sm-3 cli-form-element">
@@ -33,8 +43,8 @@
               <label class="form-label">Fecha de Solicitud</label>
               <mat-form-field color="accent" appearance="outline">
                 <mat-date-range-input [rangePicker]="picker">
-                  <input matStartDate formControlName="fecha_envio_ini" placeholder="Desde">
-                  <input matEndDate   formControlName="fecha_envio_fin" placeholder="Hasta">
+                  <input matStartDate formControlName="fecha_solic_ini" placeholder="Desde">
+                  <input matEndDate   formControlName="fecha_solic_fin" placeholder="Hasta">
                 </mat-date-range-input>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-date-range-picker #picker></mat-date-range-picker>

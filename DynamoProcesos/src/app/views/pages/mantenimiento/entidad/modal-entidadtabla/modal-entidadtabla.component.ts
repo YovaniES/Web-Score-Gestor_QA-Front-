@@ -55,8 +55,8 @@ export class ModalEntidadtablaComponent implements OnInit {
   entidadTabla: any[]=[];
   getListIdPadreTabla(idTabla?:any){
     let arrayParametro:any[] = [{
-      "queryId": 10,
-      "mapValue": {
+      queryId: 3,
+      mapValue: {
         "param_id_tabla": this.DATA_ENTIDAD.idTablaEntidad
       }
     }];
@@ -92,7 +92,7 @@ export class ModalEntidadtablaComponent implements OnInit {
     const formValues = this.entidadTablaForm.getRawValue();
 
     let parametro: any =  {
-        queryId: 14,
+        queryId: 10,
         mapValue: {
           "param_nombre"        : formValues.nombre,
           "param_descripcion"   : formValues.descripcion,
@@ -123,7 +123,7 @@ export class ModalEntidadtablaComponent implements OnInit {
 
     const formValues = this.entidadTablaForm.getRawValue();
     let parametro: any[] = [{
-        queryId: 11,
+        queryId: 4,
         mapValue: {
           "p_id"                : this.DATA_ENTIDAD.id,
           "p_id_tabla"          : formValues.id_tabla,

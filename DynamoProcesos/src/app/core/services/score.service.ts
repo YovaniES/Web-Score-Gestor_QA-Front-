@@ -33,13 +33,22 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   }
 
-  actualizarScore(obj: any){
+  actualizarScore_m(obj: any){
     return this.http.post(API_SCORE, obj);
   }
 
-  actualizarScoreD(obj: any){
+  cambiarEstadoDetalleAobservado(obj: any){
     return this.http.post(API_SCORE, obj);
   }
+
+  cambiarEstadoDetalleAaprobado(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
+
+  cambiarEstadoDetalleAenviado(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
+
   getListEstado(obj: any){
     return this.http.post(API_SCORE, obj);
   }
@@ -76,7 +85,7 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   };
 
-  importarAprobarSolicitud(obj: any){
+  aprobarOfinalizarSolicitud(obj: any){
     return this.http.post(API_SCORE, obj);
   }
 

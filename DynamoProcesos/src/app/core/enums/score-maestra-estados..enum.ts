@@ -1,4 +1,4 @@
-export enum SCORE_MAESTRA_ESTADOS {
+export enum SCORE_M_ESTADOS {
   SOLICITADO = 2,
   EN_VALIDACION = 3,
   OBSERVADO = 4,
