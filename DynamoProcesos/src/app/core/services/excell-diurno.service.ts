@@ -30,11 +30,11 @@ export class ExcellDiurnoService {
     return dataExcel.filter(registro => registro.tipoScore.toUpperCase() == tipo)
   }
 
-  generarExcell(dataExcel: any[]): Promise<any>{
+  generarExcell(dataExcel: any[], listadoWL:any[]): Promise<any>{
     const tipoGeneral   = this.buscarPorTipoScore(dataExcel, 'GENERAL')
     const tipoExcepcion = this.buscarPorTipoScore(dataExcel, 'EXCEPCION')
 
-    console.log('DIURNO(G-E)', tipoGeneral, tipoExcepcion);
+    console.log('DIURNO(G-E)', tipoGeneral, tipoExcepcion, listadoWL);
     console.log('export-data', dataExcel);
      this.wb = new Workbook();
 

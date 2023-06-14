@@ -64,6 +64,10 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   }
 
+  listExportWL(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
+
   exportScoreDetalleB2B(obj: any){
     return this.http.post(API_SCORE, obj);
   };

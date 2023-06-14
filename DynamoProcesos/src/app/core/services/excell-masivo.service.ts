@@ -26,11 +26,11 @@ export class ExcellMasivoService {
     return dataExcel.filter(registro => registro.tipoScore.toUpperCase() == tipo)
   }
 
-  generarExcell(dataExcel: any[]): Promise<any>{
-    const casoGeneral   = this.buscarPorCasoScore(dataExcel, 'GENERAL')
-    const casoExcepcion = this.buscarPorCasoScore(dataExcel, 'EXCEPCION')
-    console.log('MASIVO(G-E)', casoGeneral, casoExcepcion);
+  generarExcell(dataExcel: any[], listadoWL:any[]): Promise<any>{
+    const casoGeneral   = this.buscarPorCasoScore(dataExcel, 'GENERAL') // 9
+    const casoExcepcion = this.buscarPorCasoScore(dataExcel, 'EXCEPCION') // 8
 
+    console.log('MASIVO(G-E)', casoGeneral, casoExcepcion, listadoWL);
 
 
     console.log('export-data', dataExcel);
@@ -41,7 +41,7 @@ export class ExcellMasivoService {
      this.createTablas(dataExcel);
      this.createCasosEspeciales(dataExcel);
      this.createForExcepEscen(casoExcepcion); // <=====
-     this.createWL(dataExcel);
+     this.createWL(listadoWL);
 
      return this.wb.xlsx.writeBuffer()
   };
@@ -618,6 +618,20 @@ export class ExcellMasivoService {
         'NUM_DOC-TEXTO',   //D
       ];
 
+      // Insertamos la data en las respectivas Columnas.
+      const insertarFila = sheet.getRows(2, scoreTable.length)!;
+      for (let i = 0; i < insertarFila.length; i++) {
+        const fila = insertarFila[i];
+
+        fila.values = [
+          scoreTable[i].tipo_doc,                            //A
+          scoreTable[i].cod_doc,                      //B
+          'MOVISTAR TOTAL',                //C
+          scoreTable[i].cod_doc,      //D
+        ];
+        fila.font = { size: 11}
+        fila.alignment = { horizontal: 'center', vertical: 'middle'}
+      }
 
       headerFila.font = { bold: true, size: 12, color:{argb: 'FFFFFFFF'} };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
@@ -630,20 +644,6 @@ export class ExcellMasivoService {
       sheet.getCell('C1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
       sheet.getCell('D1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
 
-      // Insertamos la data en las respectivas Columnas.
-      const insertarFila = sheet.getRows(2, scoreTable.length)!;
-      for (let i = 0; i < insertarFila.length; i++) {
-        const fila = insertarFila[i];
-
-        fila.values = [
-          'CE',                            //A
-          '44447581',                      //B
-          'MOVISTAR TOTAL',                //C
-          scoreTable[i].Num_Lin_Disp,      //D
-        ];
-        fila.font = { size: 11}
-        fila.alignment = { horizontal: 'center', vertical: 'middle'}
-      }
 
      this.borderTableWL(sheet, scoreTable);
     });
