@@ -113,10 +113,11 @@
   color: #6c757d;
   transition: ease 0.3s;
   border: none;
-  margin: 0 3px;
+  // margin: 0 3px;
   height: 25px;
   padding: 0 3px;
   display: flex;
+  font-weight: 300;
   align-items: center;
   & mat-icon {
     margin: 0 3px;

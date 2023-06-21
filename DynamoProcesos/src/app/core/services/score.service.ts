@@ -93,4 +93,12 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   }
 
+  listTablasExport(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
+
+  finalizarSolicitud(obj: any){
+    return this.http.post(API_SCORE, obj);
+  };
+
 }

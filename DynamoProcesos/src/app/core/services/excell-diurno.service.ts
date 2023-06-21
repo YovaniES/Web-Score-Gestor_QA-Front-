@@ -30,20 +30,20 @@ export class ExcellDiurnoService {
     return dataExcel.filter(registro => registro.tipoScore.toUpperCase() == tipo)
   }
 
-  generarExcell(dataExcel: any[], listadoWL:any[]): Promise<any>{
+  generarExcell(dataExcel: any[], listadoWL:any[], listaTablas:any[]): Promise<any>{
     const tipoGeneral   = this.buscarPorTipoScore(dataExcel, 'GENERAL')
     const tipoExcepcion = this.buscarPorTipoScore(dataExcel, 'EXCEPCION')
 
-    console.log('DIURNO(G-E)', tipoGeneral, tipoExcepcion, listadoWL);
+    console.log('DIURNO(G-E)', tipoGeneral, tipoExcepcion, listadoWL, listaTablas);
     console.log('export-data', dataExcel);
      this.wb = new Workbook();
 
      this.createListaTX(dataExcel);
      this.createForExcepGeneral(tipoGeneral);
-     this.createTablas(dataExcel);
+     this.createTablas(listaTablas);
      this.createCasosEspeciales(dataExcel);
      this.createForExcepEscen(tipoExcepcion);
-     this.createWL(dataExcel);
+     this.createWL(listadoWL);
 
      return this.wb.xlsx.writeBuffer()
   };
@@ -323,17 +323,13 @@ export class ExcellDiurnoService {
         'CASOS',          //M
         'CUOTA INICIAL',  //N
         'RQ',             //O
-
-        '',
-        '',
-        '',
-
+        '',               //P
+        '',               //Q
+        '',               //R
         'MOVISTAR TOTAL', //Cambiamos a Col S
         'FIJA',           //T
         'MOVIL B2C',      //U
-
-        '',
-
+        '',               //V
         'TOTALIZACION MT',//W
       ];
 
@@ -350,34 +346,28 @@ export class ExcellDiurnoService {
 
         fila.values = [
           '',
-          '1',              //B
-          'CARLOS CUÉLLAR', //C
-          'MOVISTAR TOTAL', //D
-          'PORTA + EQUIPO', //E
-          'CAEQ/ALTA FINANCIADO - FIJA FINANCIADO', //F
-          'NO APLICA',      //G
-          'CI MINIMA 35%',  //H
-          18,               //I
-
-          '',
-          '',
-
-          'E-COMMERCE',      //L
-          'STD ALONE',       //M
-          'FINANCIADO',      //N
-
-          '',                //0
-          '',                //P
-          '',                //Q
-          '',                //R
-          scoreTable[i].Num_Lin_Disp,//S
-          scoreTable[i].Num_Lin_Disp,//T
+          scoreTable[i].tipo_doc,         //B
+          scoreTable[i].solicitante,      //C
+          scoreTable[i].segmento,         //D
+          scoreTable[i].tipo_transaccion, //E
+          scoreTable[i].tipo_venta,       //F
+          scoreTable[i].gama,             //G
+          scoreTable[i].cuota_inicial,    //H
+          scoreTable[i].cuotas,           //I
+          '',                             //J
+          '',                             //K
+          scoreTable[i].proyecto,         //L
+          scoreTable[i].casos,            //M
+          scoreTable[i].cuota_inicial,    //N
+          scoreTable[i].rq,               //O
+          '',                             //P
+          '',                             //Q
+          '',                             //R
+          scoreTable[i].movistar_total,   //S
+          scoreTable[i].fija,             //T
           'CAEQ/ALTA CONTADO - FIJA UPFRONT',//U
-
-          '',                 //V
-
-          'PREMIUM',          //W
-
+          '',                             //V
+          scoreTable[i].totalizacion_mt,  //W
         ];
         fila.font = { size: 11}
         fila.alignment = { horizontal: 'center', vertical: 'middle'}
@@ -618,10 +608,10 @@ export class ExcellDiurnoService {
         const fila = insertarFila[i];
 
         fila.values = [
-          'CE',                       //A
-          '44447581',                 //B
-          'MOVISTAR TOTAL',           //C
-          scoreTable[i].Num_Lin_Disp, //D
+          scoreTable[i].tipo_doc,//A
+          scoreTable[i].cod_doc, //B
+          'MOVISTAR TOTAL',      //C
+          scoreTable[i].cod_doc, //D
         ];
         fila.font = { size: 11}
         fila.alignment = { horizontal: 'center', vertical: 'middle'}

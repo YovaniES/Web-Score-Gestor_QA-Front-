@@ -4,6 +4,8 @@ let PATH_API_SCORE  = '';
 let API_SAVE_DATA_IMPORT = '';
 let PATH_SCORE_AUTH = '';
 let API_SEND_MAIL = '';
+let API_IMPORT_PDF = '';
+
 switch (ENVIROMENT) {
   case 'DEV':
     // PATH_SCORE_AUTH =  'http://localhost:3080/aut/seguridad';
@@ -22,9 +24,10 @@ switch (ENVIROMENT) {
     // API_SEND_MAIL        = 'http://localhost:36449/api/Mail'
     API_SEND_MAIL        = 'http://senddatascorebyemail.indratools.com/api/Mail'
 
+    API_IMPORT_PDF = 'https://localhost:7174/api/score'
 
-    PATH_API_SCORE       = 'https://localhost:3061/api/configurador/';
-    // PATH_API_SCORE       = 'http://backwebprocesos.indratools.com/api/configurador/'
+    // PATH_API_SCORE       = 'https://localhost:3061/api/configurador/';
+    PATH_API_SCORE       = 'http://backwebprocesos.indratools.com/api/configurador/'
     break;
   default:
     break;
@@ -39,4 +42,6 @@ export const API_SCORE = PATH_API_SCORE + 'ExecuteQuery';
 // API guardar data importada
 export const API_IMPORT_SCORE_DETALLE = API_SAVE_DATA_IMPORT;
 export const API_SEND_MAIL_DATA = API_SEND_MAIL;
+export const API_IMPORT_PDF_SCORE = API_IMPORT_PDF;
 
+// https://localhost:7174/api/score/AddPdf

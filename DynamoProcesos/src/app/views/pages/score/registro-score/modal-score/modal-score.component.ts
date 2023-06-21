@@ -152,15 +152,18 @@ export class ModalStoreComponent implements OnInit {
         }
 
         // ESTADO SCORE_M EN SUBSANADO
-        if (this.authService.esUsuarioGestor() && this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_M_ESTADOS.SUBSANADO) {
-          this.listScoreDetalle = resp.list.filter((score: any) => score.id_estado == 5 || score.id_estado == 6);
-          console.log('ENVIADOS_DATA', this.listScoreDetalle);
+        if ((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_M_ESTADOS.SUBSANADO) {
+          // this.listScoreDetalle = resp.list.filter((score: any) => score.id_estado == 4 || score.id_estado == 5 || score.id_estado == 8);
+          this.listScoreDetalleGen   = resp.list.filter((score: any) => score.id_estado == 8 && score.tipo_score.toUpperCase() == 'GENERAL');
+          this.listScoreDetalleExcep = resp.list.filter((score: any) => score.id_estado == 8 && score.tipo_score.toUpperCase() == 'EXCEPCION');
+          this.listScoreDetalleCorp  = resp.list.filter((score: any) => score.id_estado == 8);
+          console.log('SUBSANADOS_DATA', this.listScoreDetalle, this.listScoreDetalleGen);
         }
 
         // ESTADO SCORE_M EN FINALIZADO
         if ((this.authService.esUsuarioGestor() || this.authService.esUsuarioLider()) && this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_M_ESTADOS.FINALIZADO) {
-          this.listScoreDetalleGen   = resp.list.filter((score: any) =>score.id_estado == 7 && score.tipo_score.toUpperCase() == 'GENERAL');
-          this.listScoreDetalleExcep = resp.list.filter((score: any) =>score.id_estado == 7 && score.tipo_score.toUpperCase() == 'EXCEPCION');
+          this.listScoreDetalleGen   = resp.list.filter((score: any) => score.id_estado == 7 && score.tipo_score.toUpperCase() == 'GENERAL');
+          this.listScoreDetalleExcep = resp.list.filter((score: any) => score.id_estado == 7 && score.tipo_score.toUpperCase() == 'EXCEPCION');
           this.listScoreDetalleCorp  = resp.list.filter((score: any) => score.id_estado == 7);
         }
 
@@ -181,7 +184,7 @@ export class ModalStoreComponent implements OnInit {
 
   validarSiExiteReqValidacion(): any {
     if (this.DATA_SCORE.casoScore.toUpperCase() == 'RESIDENCIAL') {
-      const detalleGeneralEncontrado   = this.listScoreDetalleGen.find((score) => score.req_validacion == 1); //1:SI
+      const detalleGeneralEncontrado   = this.listScoreDetalleGen.find((score) => score.req_validacion == 1);
       const detalleExcepcionEncontrado = this.listScoreDetalleExcep.find((score) => score.req_validacion == 1);
       return detalleGeneralEncontrado || detalleExcepcionEncontrado;
     } else {
@@ -234,7 +237,7 @@ export class ModalStoreComponent implements OnInit {
   }
 
   enviarSolicitudTDP() {
-    if (this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO' || this.DATA_SCORE.estado.toUpperCase() == 'APROBADO') {
+    if (this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO' || this.DATA_SCORE.estado.toUpperCase() == 'APROBADO' || this.DATA_SCORE.estado.toUpperCase() == 'SUBSANADO') {
       Swal.fire({
         title: 'Enviar Solicitud score?',
         text: `¿Estas seguro que desea enviar la Solicitud y cambiar el estado a enviado? `,
@@ -259,50 +262,42 @@ export class ModalStoreComponent implements OnInit {
   }
 
   exportScoreDetalleMasivoOdiurno(id_score: number) {
-    let parametroWL: any[] = [{queryId: 23,mapValue: {},},];
+    let parametroWL: any[] = [{queryId: 23, mapValue: {},},];
+    let parametro:   any[] = [{queryId: 20, mapValue: {p_idScore: id_score,}},];
+    let paramTablas: any[] = [{queryId: 25,}];
 
-    let parametro: any[] = [{ queryId: 20,mapValue: {p_idScore: id_score,}},];
 
     let listadoWL:any[]=[];
+    let listadoTablas:any[]=[];
 
-    this.scoreService.listExportWL(parametroWL[0])
-    .pipe(
-      tap((res: any)=> { console.log('RES_*', res);
+    this.scoreService.listExportWL(parametroWL[0]).pipe(
+      tap((respWL: any)=> { console.log('LISTA_WL', respWL);  if (respWL && respWL.list ) {listadoWL = respWL.list}}),
+        concatMap(() => this.scoreService.listTablasExport(paramTablas[0]),),
 
-      if (res && res.list ) {
-        listadoWL = res.list
-      }
-    }),
-      // concatMap(() => this.scoreService.exportScoreDetalleB2B(parametro[0]),
-      // ),
-      // tap(respB2B => {console.log('RES_B2B', respB2B)}),
-      concatMap(() => this.scoreService.exportScoreDetalleMasivoOdiurno(parametro[0]) )
-      )
-    .subscribe((resp: any) => {
-        console.log('TIPO-SCORE', resp.list, this.DATA_SCORE.formatoScore, resp , listadoWL);
+      tap((respTablas: any) => {console.log('LISTA_TABLAS', respTablas); if (respTablas && respTablas.list) { listadoTablas = respTablas.list}}),
+        concatMap(() => this.scoreService.exportScoreDetalleMasivoOdiurno(parametro[0]) )
 
+      ).subscribe((resp: any) => {
+        console.log('Data-PESTAÑAS', resp.list, this.DATA_SCORE.formatoScore, listadoWL, listadoTablas);
+
+        // return
         if (resp) {
-          if (this.DATA_SCORE.formatoScore == 'Masivo') {
-            console.log('IF-MASIVO');
+          if (this.DATA_SCORE.formatoScore == 'Masivo') { console.log('IF-MASIVO');
 
             this.excellMasivoService.generarExcell(resp.list, listadoWL).then((file: any) => {
                 const blob = new Blob([file]);
-                // return
                 this.listadoCorreosTDP(blob);
               });
           }
 
-          if (this.DATA_SCORE.formatoScore == 'Diurno'){
-            console.log('ELSE-DIURNO');
+          if (this.DATA_SCORE.formatoScore == 'Diurno'){ console.log('ELSE-DIURNO');
 
-            this.excellDiurnoService.generarExcell(resp.list, listadoWL).then((file: any) => {
+            this.excellDiurnoService.generarExcell(resp.list, listadoWL, listadoTablas).then((file: any) => {
                 const blob = new Blob([file]);
-
                 this.listadoCorreosTDP(blob);
               });
-           }
-        }
-
+            }
+         }
       });
   }
 
@@ -467,7 +462,7 @@ export class ModalStoreComponent implements OnInit {
     this.scoreService.cambiarEstadoDetalleAobservado(parametro[0]).subscribe({ next: (resp: any) => {} });
   }
 
-  descargarPDF() {
+  verEvidenciasPDF() {
     // FALTA IMPLEMENTAR¡¡¡¡¡¡¡¡¡¡¡¡¡¡
   }
 
@@ -741,13 +736,14 @@ export class ModalStoreComponent implements OnInit {
     });
   }
 
-  importarPdf_AprobarOfinalizarSolicitud() {
-    const dialogRef = this.dialog.open(AprobarImportarComponent, {width: '25%',data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
+  importarPdf_AprobarSolicitud() {
+    const dialogRef = this.dialog.open(AprobarImportarComponent, {width: '35%',data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
     dialogRef.afterClosed().subscribe((resp) => {
 
       console.log('XYZ', resp);
       if (resp) {
-        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && this.scoreForm.controls['id_estado_m'].value == 4) {
+        // return
+        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && this.scoreForm.controls['id_estado_m'].value == 2) {
           console.log('if');
           this.estadoAprobadoScoreM(resp);
           // this.cambiarEstadoDetalleAaprobado();
@@ -764,6 +760,39 @@ export class ModalStoreComponent implements OnInit {
       }
     });
   }
+
+
+  finalizarSolicitud() {
+    this.spinner.show();
+    // const formValues = this.importForm.getRawValue();
+    let parametro: any[] = [
+      {
+        queryId: 24,
+        mapValue: {
+          p_idScore: this.DATA_SCORE.idScoreM,
+        },
+      },
+    ];
+    this.scoreService.finalizarSolicitud(parametro[0]).subscribe({
+      next: (resp: any) => {
+        this.spinner.hide();
+        this.close(resp);
+
+        Swal.fire({
+          title: 'Finalizar estado!',
+          text: `Se finalizó la solicitud con éxito el:  ${this.DATA_SCORE.idScore_M}`,
+          icon: 'success',
+          confirmButtonText: 'Ok',
+        });
+
+        this.estadoFinalizadoScoreM(resp)
+      },
+      error: () => {
+        Swal.fire('ERROR', 'No se pudo Finalizar la Solicitud', 'warning');
+      },
+    });
+  }
+
 
   campoNoValido(campo: string): boolean {
     if (this.scoreForm.get(campo)?.invalid && this.scoreForm.get(campo)?.touched) {

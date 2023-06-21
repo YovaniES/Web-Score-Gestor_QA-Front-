@@ -55,7 +55,8 @@
     & td{
         vertical-align: middle;
         text-align: center;
-        font-size: .85rem;
+        // font-size: .85rem;
+        font-size: 11px;
         padding: 3px 10px;
     }
     &-actions{
@@ -194,7 +195,7 @@
     & th{
         padding: 5px;
         font-weight: 400;
-        font-size: 12px;
+        font-size: 10px;
     }
     & td{
         font-size: .7rem;

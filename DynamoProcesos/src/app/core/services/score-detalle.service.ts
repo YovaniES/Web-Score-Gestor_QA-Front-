@@ -24,5 +24,10 @@ export class ScoreDetalleService {
 
   listadoCorreosCopia(obj: any){
     return this.http.post(API_SCORE, obj);
-  }
+  };
+
+
+  // listTablasExport(obj: any){
+  //   return this.http.post(API_SCORE, obj);
+  // }
 }
