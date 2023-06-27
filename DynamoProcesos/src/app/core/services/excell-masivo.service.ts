@@ -27,20 +27,27 @@ export class ExcellMasivoService {
   }
 
   generarExcell(dataExcel: any[], listadoWL:any[]): Promise<any>{
-    const casoGeneral   = this.buscarPorCasoScore(dataExcel, 'GENERAL') // 9
-    const casoExcepcion = this.buscarPorCasoScore(dataExcel, 'EXCEPCION') // 8
+    const tipoGeneral   = this.buscarPorCasoScore(dataExcel, 'GENERAL')
+    const tipoExcepcion = this.buscarPorCasoScore(dataExcel, 'EXCEPCION')
 
-    console.log('MASIVO(G-E)', casoGeneral, casoExcepcion, listadoWL);
+    console.log('MASIVO(G-E)', tipoGeneral, tipoExcepcion, listadoWL);
 
 
     console.log('export-data', dataExcel);
      this.wb = new Workbook();
 
      this.createListaTX(dataExcel);
-     this.createForExcepGeneral(casoGeneral); // <=====
+    //  this.createForExcepGeneral(tipoGeneral); // <=====
+     if (dataExcel.find(x => x.tipoScore.toUpperCase() == 'GENERAL')) {
+      this.createForExcepGeneral(tipoGeneral);
+     }
      this.createTablas(dataExcel);
      this.createCasosEspeciales(dataExcel);
-     this.createForExcepEscen(casoExcepcion); // <=====
+
+    //  this.createForExcepEscen(tipoExcepcion); // <=====
+     if (dataExcel.find(x => x.tipoScore.toUpperCase() == 'EXCEPCION')) {
+      this.createForExcepEscen(tipoGeneral);
+     }
      this.createWL(listadoWL);
 
      return this.wb.xlsx.writeBuffer()
@@ -143,7 +150,7 @@ export class ExcellMasivoService {
   }
 
   private createForExcepGeneral(scoreTable: any): void {
-      console.log('GENERAL-MASIVO =>', scoreTable, scoreTable[0].gama, scoreTable[0].Fecha_score);
+      console.log('GENERAL-MASIVO =>', scoreTable, scoreTable[0].gama, scoreTable[0].fecha_score);
 
     const sheet = this.wb.addWorksheet('FOR EXCEP V1-GENERAL'); //Nombre de la Hoja
 
@@ -533,22 +540,22 @@ export class ExcellMasivoService {
         const fila = insertarFila[i];
 
         fila.values = [
-          scoreTable[i].solicitante,                //A
-          scoreTable[i].rq,                         //B
-          scoreTable[i].proyecto,                   //C
-          scoreTable[i].casos,                      //D
-          scoreTable[i].cuota_inicial,              //E
-          scoreTable[i].gama,                       //F
-          scoreTable[i].tipo_documento,             //G
-          scoreTable[i].numero_documento,           //H
-          scoreTable[i].fecha_score,                //I
-          scoreTable[i].cargo_fijo_max,             //J
-          scoreTable[i].num_lin_disp,               //K
-          scoreTable[i].score,                      //L
-          scoreTable[i].cap_financ_prev,            //M
-          scoreTable[i].cod_finan,                  //N
-          scoreTable[i].cap_finan_2,                //O OJO falta agregar col BD ***
-          scoreTable[i].usuario,                    //P
+          scoreTable[i].solicitante,       //A
+          scoreTable[i].rq,                //B
+          scoreTable[i].proyecto,          //C
+          scoreTable[i].casos,             //D
+          scoreTable[i].cuota_inicial,     //E
+          scoreTable[i].gama,              //F
+          scoreTable[i].tipo_documento,    //G
+          scoreTable[i].numero_documento,  //H
+          scoreTable[i].fecha_score,       //I
+          scoreTable[i].cargo_fijo_max,    //J
+          scoreTable[i].num_lin_disp,      //K
+          scoreTable[i].score,             //L
+          scoreTable[i].cap_financ_prev,   //M
+          scoreTable[i].cod_finan,         //N
+          scoreTable[i].cap_finan_2,       //O OJO falta agregar col BD ***
+          scoreTable[i].usuario,           //P
           // '8242-DITO-STD ALONE-FINANCIADO-1608-90-1-250-1',//Q
           scoreTable[i].rq+'-'+scoreTable[i].proyecto+'-'+ scoreTable[i].casos+'-'+ scoreTable[i].cuota_inicial+'-'+ scoreTable[i].score+'-'+ scoreTable[i].cargo_fijo_max+'-'+ scoreTable[i].num_lin_disp+'-'+ scoreTable[i].cap_financ_prev+'-'+ scoreTable[i].cod_finan+'-',
           'SI',                         //R

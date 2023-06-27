@@ -8,19 +8,19 @@
   </button>
 </div>
 
-<form class="row g-3" [formGroup]="asigObservacionForm">
+<form class="row g-3" [formGroup]="asigComentarioForm">
   <div class="cli-form newvac-wrapper">
     <div class="chart-draw">
 
       <div style="display: flex" >
-        <div class="id-score">Score : <span  class="total">{{asigObservacionForm.controls['score'].value}}</span></div>
+        <div class="id-score">Score : <span  class="total">{{asigComentarioForm.controls['score'].value}}</span></div>
         <div class="flex-1" style="background: #f8f9fa;"></div>
           <ng-container class="input-group">
             <div class="input-group-text" style="background: #f8f9fa; color: #858d95;"><mat-icon class="icon-13">contact_page</mat-icon></div>
-            <div class="cli-user">{{asigObservacionForm.controls['tipo_documento'].value | uppercase}}</div>
+            <div class="cli-user">{{asigComentarioForm.controls['tipo_documento'].value | uppercase}}</div>
           </ng-container>
           <div class="flex-1" style="background: #f8f9fa;"></div>
-          <div class="s-dni">Número DOC : <span  class="total">{{asigObservacionForm.controls['numero_documento'].value}}</span></div>
+          <div class="s-dni">Número DOC : <span  class="total">{{asigComentarioForm.controls['numero_documento'].value}}</span></div>
       </div>
 
         <div class="pr-module-container">
@@ -29,23 +29,26 @@
               <label>Estado</label>
               <select class="cli-input-white" formControlName="id_estado_d">
                 <option [value]="0" disabled>- Seleccione -</option>
-                <option [value]="estado.idEstado"*ngFor="let estado of listEstadoDetalle">{{ estado.cNombre }}</option>
+                <option [value]="estado.idEstado"*ngFor="let estado of listEstados">{{ estado.cNombre }}</option>
               </select>
             </div>
 
-            <div class="cli-form-element mb-2" *ngIf="asigObservacionForm.controls['id_estado_d'].value == 2 || asigObservacionForm.controls['id_estado_d'].value == 4 || asigObservacionForm.controls['id_estado_d'].value == 5 || asigObservacionForm.controls['id_estado_d'].value == 7">
+            <div class="cli-form-element mb-2" *ngIf="asigComentarioForm.controls['id_estado_d'].value == 2 || asigComentarioForm.controls['id_estado_d'].value == 4 || asigComentarioForm.controls['id_estado_d'].value == 5 || asigComentarioForm.controls['id_estado_d'].value == 7 || asigComentarioForm.controls['id_estado_d'].value == 8">
               <label>Comentario <small style="color: red;">*</small></label>
               <textarea
                 class="form-control"
                 style="background-image: none; border-color: #bdbdbd; font-size: 12px;"
                 rows="3"
                 placeholder="Describa alguna Nota sobre el cambio que realizó en el registro..."
-                formControlName="observacion_usu">
+                formControlName="comentario_usu">
               </textarea>
-              <small class="form-text text-alert" *ngIf="campoNoValido('observacion_usu')">* Describa un comentario es obligatorio</small>
+              <small class="form-text text-alert" *ngIf="campoNoValido('comentario_usu')">* Describa un comentario es obligatorio</small>
+              <small class="form-text text-alert" *ngIf="campoNoValido('comentario_usu')">* Carácteres mímino 15</small>
             </div>
           </div>
         </div>
+        <h5 class="cli-warning"> <mat-icon class="icon-13" style="color:#ffc107">warning</mat-icon> <small style="color: #ffd863; font-weight: 600; margin-right: 5px;">NOTA:</small> Carácteres mímino 15</h5>
+
     </div>
 
 
@@ -55,7 +58,7 @@
       </button>
       <button
         class="cli-btn btn-m btn-skyblue"
-        [disabled]="asigObservacionForm.invalid"
+        [disabled]="asigComentarioForm.invalid"
         (click)="asignarComentarioScore_d()">
         <mat-icon class="icon-18">save</mat-icon> Guardar
       </button>

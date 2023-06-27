@@ -21,7 +21,6 @@
   & td {
     vertical-align: middle;
     // text-align: center;
-    // font-size: 0.7rem;
     font-size: 11px; // cambio actualizado
   }
   &-actions {
@@ -50,7 +49,6 @@
   border: solid 1px #0daef4;
   border-radius: 10px;
   padding: 0px 4px;
-  // padding: 2px 3px;
 }
 
 .obs-score {
@@ -167,7 +165,6 @@
   font-weight: 400;
 
   color: #212529;
-  // font-weight: 500;
   border: solid 0.5px #0daef4;
   border-radius: 4px;
   background: #f8f9fa;
@@ -175,8 +172,6 @@
 }
 
 ::ng-deep .mat-form-field {
-  // display: inline-block;
-  // position: relative;
   text-align: center;
 }
 

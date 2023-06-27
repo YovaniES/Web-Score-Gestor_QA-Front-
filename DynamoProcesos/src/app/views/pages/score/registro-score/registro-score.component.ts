@@ -76,7 +76,6 @@ export class RegistroScoreComponent implements OnInit {
           // p_solicitante  : this.authService.getUserNameByRol(this.filtroForm.value.lider),
           p_actualiza_por: this.filtroForm.controls['actualiza_por'].value,
           p_id_estado    : this.filtroForm.controls['id_estado'].value,
-          // p_id_estado    : this.filtroForm.value.id_estado,
           p_tipoFormato  : this.filtroForm.controls['tipo_formato'].value,
 
           inicio         : this.datepipe.transform(this.filtroForm.value.fecha_solic_ini,'yyyy/MM/dd'),

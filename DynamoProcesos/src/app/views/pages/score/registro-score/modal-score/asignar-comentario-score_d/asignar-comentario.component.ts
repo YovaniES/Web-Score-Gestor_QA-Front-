@@ -14,7 +14,7 @@ import Swal from 'sweetalert2';
 })
 export class AsignarComentarioComponent implements OnInit {
 
-  asigObservacionForm!: FormGroup;
+  asigComentarioForm!: FormGroup;
 
   constructor(
     private scoreService: ScoreService,
@@ -30,35 +30,40 @@ export class AsignarComentarioComponent implements OnInit {
     this.newForm();
     this.getUserID();
     this.getUsername();
-    this.getListEstadoDetalle();
+    this.getListEstados();
     this.cargarComentarioScore_d_ByID();
-    console.log('DATA_SCORE_DETALLE_OBS', this.DATA_SCORE_DET, this.DATA_SCORE_DET);
+    console.log('DATA_scoreComentForm', this.DATA_SCORE_DET.scoreComentForm);
+    console.log('ID_COMENTARIO', this.DATA_SCORE_DET.scoreComentForm.id_score);
+
+    console.log('DATA', this.DATA_SCORE_DET.DATA, this.DATA_SCORE_DET.DATA.id_estado);
+
+    console.log('DATA_SCORE_DETALLE_Y_estado', this.DATA_SCORE_DET, this.DATA_SCORE_DET.estado);
     console.log('DATA_SCORE_DET_OBS', this.DATA_SCORE_DET.observacion_solic);
-    console.log('DATA_SCORE_OBS_GEST', this.DATA_SCORE_DET.obs_registro);
+    console.log('DATA_SCORE_COMENT_GEST', this.DATA_SCORE_DET.obs_registro);
   }
 
   newForm(){
-    this.asigObservacionForm = this.fb.group({
+    this.asigComentarioForm = this.fb.group({
       id_estado_d        : [''],
       tipo_documento     : [''],
       numero_documento   : [''],
       score              : [''],
-      observacion_usu    : ['', Validators.required],
+      comentario_usu     : ['', [Validators.required, Validators.minLength(15)]],
     })
    }
 
    asignarComentarioScore_d() {
     this.spinner.show();
-    const formValues = this.asigObservacionForm.getRawValue();
-    console.log('O B S', this.asigObservacionForm.value);
+    const formValues = this.asigComentarioForm.getRawValue();
+    console.log('O B S', this.asigComentarioForm.value, formValues);
 
     let parametro: any[] = [{ queryId: 12,
         mapValue: {
-          p_idscored           : this.DATA_SCORE_DET.idScored,
+          p_idscored           : this.DATA_SCORE_DET.DATA.idScored,
           p_id_estado          : formValues.id_estado_d,
           p_actualiza          : this.userName,
           p_f_actualiza        : '',
-          p_obs_registro       : formValues.observacion_usu ,
+          p_obs_registro       : formValues.comentario_usu  ,
           CONFIG_USER_ID       : this.userID,
           CONFIG_OUT_MSG_ERROR : '',
           CONFIG_OUT_MSG_EXITO : ''
@@ -66,7 +71,7 @@ export class AsignarComentarioComponent implements OnInit {
       }];
      this.scoreService.asignarComentarioScore_d(parametro[0]).subscribe({next: (resp: any) => {
         this.spinner.hide();
-      console.log('OBS_ACTUALIZADO', resp);
+      console.log('COMENT_ACTUALIZADO', resp);
 
         this.cargarComentarioScore_d_ByID();
 
@@ -88,23 +93,68 @@ export class AsignarComentarioComponent implements OnInit {
         }
      });
   }
-
+  // id_estado:6
   cargarComentarioScore_d_ByID(){
-      this.asigObservacionForm.controls['observacion_usu' ].setValue(this.DATA_SCORE_DET.obs_registro);
-      this.asigObservacionForm.controls['id_estado_d'     ].setValue(this.DATA_SCORE_DET.id_estado);
-      this.asigObservacionForm.controls['tipo_documento'  ].setValue(this.DATA_SCORE_DET.tipo_documento);
-      this.asigObservacionForm.controls['numero_documento'].setValue(this.DATA_SCORE_DET.numero_documento);
-      this.asigObservacionForm.controls['score'           ].setValue(this.DATA_SCORE_DET.score);
-       console.log('OBSERV_BY_ID', this.asigObservacionForm.value);
+      this.asigComentarioForm.controls['comentario_usu'  ].setValue(this.DATA_SCORE_DET.DATA.obs_registro);
+      this.asigComentarioForm.controls['id_estado_d'     ].setValue(this.DATA_SCORE_DET.DATA.id_estado);
+      this.asigComentarioForm.controls['tipo_documento'  ].setValue(this.DATA_SCORE_DET.DATA.tipo_documento);
+      this.asigComentarioForm.controls['numero_documento'].setValue(this.DATA_SCORE_DET.DATA.numero_documento);
+      this.asigComentarioForm.controls['score'           ].setValue(this.DATA_SCORE_DET.DATA.score);
+       console.log('COMENTARIO_BY_ID', this.asigComentarioForm.value);
   }
 
-  listEstadoDetalle: any[] = [];
-  getListEstadoDetalle(){
+  listEstados: any[] = [];
+  getListEstados(){
     let parametro: any[] = [{ queryId: 5 }];
 
-    this.scoreService.getListEstadoDetalle(parametro[0]).subscribe((resp: any) => {
-      this.listEstadoDetalle = resp.list.filter((x: any) => x.idEstado == 2 || x.idEstado == 4 || x.idEstado == 5 || x.idEstado == 7 || x.idEstado == 8 );
-      console.log('ESTADOS_DETALLE', resp.list);
+    this.scoreService.getListEstados(parametro[0]).subscribe((resp: any) => {
+
+      // ESTADO SCORE_M SOLICITADO
+      if (this.DATA_SCORE_DET.scoreComentForm.id_estado_m == 2) {
+        this.listEstados = resp.list.filter((x: any) => x.idEstado == 2 || x.idEstado == 4 || x.idEstado == 5);
+        console.log('COMENT_STADO_M_SOLICITADO', resp.list);
+      }
+
+      // ESTADO SCORE_M OBSERVADO
+      if (this.DATA_SCORE_DET.scoreComentForm.id_estado_m == 4) {
+        if (this.DATA_SCORE_DET.DATA.id_estado == 4) {
+          this.listEstados = resp.list.filter((x: any) => x.idEstado == 4);
+          }
+      }
+
+      // ESTADO SCORE_M APROBADO
+      if (this.DATA_SCORE_DET.scoreComentForm.id_estado_m == 5) {
+        this.listEstados = resp.list.filter((x: any) => x.idEstado == 4 || x.idEstado == 5);
+        console.log('COMENT_STADO_M_APROBADO', resp.list);
+      }
+
+      // ESTADO SCORE_M EN VALIDACION
+      if (this.DATA_SCORE_DET.scoreComentForm.id_estado_m == 3) {
+        // ESTADO DETALLE EN OBSERVADO, ENVIADO
+        if (this.DATA_SCORE_DET.DATA.id_estado == 4 || this.DATA_SCORE_DET.DATA.id_estado == 6 ) {
+          this.listEstados = resp.list.filter((x: any) => x.idEstado == 4 || x.idEstado == 6);
+        }
+
+        // SCORE DETALLE ES APROBADO U OBSERVADO
+        if (this.DATA_SCORE_DET.DATA.id_estado == 4 || this.DATA_SCORE_DET.DATA.id_estado == 5) {
+          this.listEstados = resp.list.filter((x: any) => x.idEstado == 4 || x.idEstado == 5);
+        }
+
+        // SCORE DETALLE EN SOLICITADO SE PUEDE APROBAR U OBSERVAR
+        if (this.DATA_SCORE_DET.DATA.id_estado == 2) {
+          this.listEstados = resp.list.filter((x: any) => x.idEstado == 2 || x.idEstado == 4 || x.idEstado == 5);
+        }
+
+        // SCORE DETALLE SUBSANADO SE PUEDE OBSERVAR, APROBAR
+        if (this.DATA_SCORE_DET.DATA.id_estado == 8) {
+          this.listEstados = resp.list.filter((x: any) => x.idEstado == 4 || x.idEstado == 5 || x.idEstado == 8);
+        }
+      }
+
+      // ESTADO SCORE_M ENVIADO El Gestor PUEDE OBSERVAR O FINALIZAR
+      if (this.DATA_SCORE_DET.scoreComentForm.id_estado_m == 6) {
+        this.listEstados = resp.list.filter((x: any) => x.idEstado == 4 || x.idEstado == 6);
+      }
     });
   }
 
@@ -125,7 +175,7 @@ export class AsignarComentarioComponent implements OnInit {
    }
 
   campoNoValido(campo: string): boolean {
-    if (this.asigObservacionForm.get(campo)?.invalid && this.asigObservacionForm.get(campo)?.touched) {
+    if (this.asigComentarioForm.get(campo)?.invalid && this.asigComentarioForm.get(campo)?.touched) {
       return true;
     } else {
       return false;

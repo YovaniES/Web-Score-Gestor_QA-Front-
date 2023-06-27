@@ -6,7 +6,7 @@ import * as fs from 'file-saver';
 export class ExcellDiurnoService {
   private wb!: Workbook;
 
-   dowloadExcel(dataExcel: any[]): any{
+   dowloadExcel(dataExcel: any[], listadoWL:any[]): any{
     // console.log('export-data_masivo', dataExcel);
     this.wb = new Workbook();
 
@@ -18,7 +18,7 @@ export class ExcellDiurnoService {
      this.createTablas(dataExcel);
      this.createCasosEspeciales(dataExcel);
      this.createForExcepEscen(tipoExcepcion);
-     this.createWL(dataExcel);
+     this.createWL(listadoWL);
 
     this.wb.xlsx.writeBuffer().then((data) => {
       const blob = new Blob([data]);
@@ -36,13 +36,21 @@ export class ExcellDiurnoService {
 
     console.log('DIURNO(G-E)', tipoGeneral, tipoExcepcion, listadoWL, listaTablas);
     console.log('export-data', dataExcel);
+    console.log('EXISTE-EXCEP', dataExcel.find(x => x.tipoScore.toUpperCase() == 'EXCEPCION' ));
+
      this.wb = new Workbook();
 
      this.createListaTX(dataExcel);
-     this.createForExcepGeneral(tipoGeneral);
+     if (dataExcel.find(x => x.tipoScore.toUpperCase() == 'GENERAL' )) {
+       this.createForExcepGeneral(tipoGeneral);
+      }
+
      this.createTablas(listaTablas);
      this.createCasosEspeciales(dataExcel);
-     this.createForExcepEscen(tipoExcepcion);
+
+     if (dataExcel.find(x => x.tipoScore.toUpperCase() == 'EXCEPCION' )) {
+       this.createForExcepEscen(tipoExcepcion);
+     }
      this.createWL(listadoWL);
 
      return this.wb.xlsx.writeBuffer()
@@ -50,7 +58,7 @@ export class ExcellDiurnoService {
 
 
   private createListaTX(scoreTable: any): void {
-    console.log('F-EXCEP-DIURNA',scoreTable, scoreTable[0].GAMADEEQUIPO, scoreTable[0].Fecha_APP);
+    console.log('F-EXCEP-DIURNA',scoreTable,);
 
     const sheet = this.wb.addWorksheet('LISTA-TX'); //Nombre de la Hoja
 
@@ -78,24 +86,46 @@ export class ExcellDiurnoService {
       // CABECERA DE LA TABLA CON ESTILOS
       const headerFila = sheet.getRow(2);
       headerFila.values = [
-        'LLAVE',
-        'NEGOCIO',
-        'TIPO DE TRAN',
-        'TIPO DE VENTA',
-        'GAMA',
-        'CUOTA INICIAL',
-        'CUOTAS',
-        'LIMITE DE CREDITO',
-        'CAP FINAN',
-        'SCORE (4DIG)',
-        'NRO DE LINEAS',
-        'CODIGO FINAN',
+        'LLAVE',            //A
+        'NEGOCIO',          //B
+        'TIPO DE TRAN',     //C
+        'TIPO DE VENTA',    //D
+        'GAMA',             //E
+        'CUOTA INICIAL',    //F
+        'CUOTAS',           //G
+        'LIMITE DE CREDITO',//H
+        'CAP FINAN',        //I
+        'SCORE (4DIG)',     //J
+        'NRO DE LINEAS',    //K
+        'CODIGO FINAN',     //L
       ];
+
+      // Insertamos la data en las respectivas Columnas.
+      const insertarFila = sheet.getRows(3, scoreTable.length)!;
+      for (let i = 0; i < insertarFila.length; i++) {
+        const fila = insertarFila[i];
+
+        fila.values = [
+          'MOVISTAR TOTAL-TOTALIZACIÓN MT-PORTA FINANCIADO - FIJA UPFRONT-BAJA-CI MINIMA 35%-12', //A
+          'MOVISTAR TOTAL',                        //B
+          'TOTALIZACIÓN MT',                       //C
+          'CAEQ/ALTA FINANCIADO - FIJA FINANCIADO',//D
+          'MEDIA',                                 //E
+          'CI MINIMA 35%',                         //F
+          12,                                      //G
+          260,        //H
+          100,        //I
+          3307,       //J
+          1,          //K
+          3,          //L
+        ];
+        fila.font = { size: 11}
+        fila.alignment = { horizontal: 'center', vertical: 'middle'}
+      }
 
       headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
       headerFila.height = 30;
-
 
       // Bauground fila 1 - Tabla
       sheet.getCell('A2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF32CD32'}}
@@ -112,28 +142,6 @@ export class ExcellDiurnoService {
       sheet.getCell('K2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
       sheet.getCell('L2').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
 
-      // Insertamos la data en las respectivas Columnas.
-      const insertarFila = sheet.getRows(3, scoreTable.length)!;
-      for (let i = 0; i < insertarFila.length; i++) {
-        const fila = insertarFila[i];
-
-        fila.values = [
-          'MOVISTAR TOTAL-TOTALIZACIÓN MT-PORTA FINANCIADO - FIJA UPFRONT-BAJA-CI MINIMA 35%-12',
-          'MOVISTAR TOTAL',
-          scoreTable[i].Codigo_Financiamiento,
-          scoreTable[i].Segmento,
-          scoreTable[i].Num_Lin_Disp,
-          scoreTable[i].Usuario,
-          scoreTable[i].Fecha_APP,
-          scoreTable[i].Capacidad_Financiamiento,
-          scoreTable[i].Codigo_Financiamiento,
-          scoreTable[i].SCORE,
-          scoreTable[i].CARGOFIJOMAXIMO,
-          scoreTable[i].NEGOCIOYSEGMENTO,
-        ];
-        fila.font = { size: 11}
-        fila.alignment = { horizontal: 'center', vertical: 'middle'}
-      }
 
      this.borderTable(sheet, scoreTable);
     });
@@ -506,7 +514,11 @@ export class ExcellDiurnoService {
       ];
 
       // Insertamos la data en las respectivas Columnas.
+      // const insertarFila = sheet.getRows(2, scoreTable.length != null? scoreTable.lengt : 1)!;
       const insertarFila = sheet.getRows(2, scoreTable.length)!;
+      console.log('LENGTH-DIURNA', scoreTable.length);
+      console.log('LENGTH-INSERT' , insertarFila.length);
+
       for (let i = 0; i < insertarFila.length; i++) {
         const fila = insertarFila[i];
 
@@ -540,7 +552,7 @@ export class ExcellDiurnoService {
                 scoreTable[i].cod_finan+'-'+
                 scoreTable[i].validWL+'-'+
                 scoreTable[i].validGama,    //S
-          'PROCEDE',                      //T
+          'PROCEDE',                        //T
 
         ];
         fila.font = { size: 11}

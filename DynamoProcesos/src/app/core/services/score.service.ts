@@ -61,7 +61,7 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   }
 
-  getListEstadoDetalle(obj: any){
+  getListEstados(obj: any){
     return this.http.post(API_SCORE, obj);
   }
 
@@ -85,7 +85,7 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   };
 
-  aprobarOfinalizarSolicitud(obj: any){
+  aprobarSolicitud(obj: any){
     return this.http.post(API_SCORE, obj);
   }
 

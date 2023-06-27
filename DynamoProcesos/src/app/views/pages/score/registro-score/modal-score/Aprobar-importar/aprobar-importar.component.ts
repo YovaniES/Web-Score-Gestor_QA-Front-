@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { API_IMPORT_PDF_SCORE } from 'src/app/core/constants/url.constants';
 import { Evidencias } from 'src/app/core/models/archivo-pdf';
 import { Status } from 'src/app/core/models/status';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -18,9 +19,9 @@ import Swal from 'sweetalert2';
 })
 export class AprobarImportarComponent implements OnInit {
   @BlockUI() blockUI!: NgBlockUI;
-  // loadingItem: boolean = false;
   importForm!: FormGroup;
   loadingItem: boolean = false;
+  imgBaseUrl = API_IMPORT_PDF_SCORE + '/resources/';
 
   imgFile!: File;
 
@@ -45,17 +46,32 @@ export class AprobarImportarComponent implements OnInit {
 
   ngOnInit(): void {
     this.newFilfroForm();
+    this.obtenerEvidencias();
 
     console.log('IMPORTpdf', this.DATA_SCORE.scoreObsForm);
-
   }
 
   newFilfroForm() {
     this.importForm = this.fb.group({
       id            : [0],
-      nombrePdf     : ['', [Validators.required]],
+      // nombrePdf     : ['', [Validators.required]],
+      nombrePdf     : [''],
       imgArchivo    : ['', [Validators.required]],
     });
+  }
+
+  // evidencias!: Evidencias[];
+  listEvidencias!:Evidencias[];
+  obtenerEvidencias(){
+    this.pdfImportService.getAllPdf().subscribe({
+      next: (resp) => { this.listEvidencias = resp; console.log('LIST-PDF', resp);},
+      error: (err)=> { console.log(err);
+      }
+    })
+  }
+
+  guardarPdf(){
+
   }
 
   guardarPdf_y_AprobarSolicitud() {
@@ -67,14 +83,14 @@ export class AprobarImportarComponent implements OnInit {
 
     let parametro: any[] = [
       {
-        queryId: 16, //OJO Falta importar y guardar el pdf en la BD
+        queryId: 16, //OJO Falta importar y guardar el pdf en la BD p_idScore
         mapValue: {
           p_idScore: this.DATA_SCORE.scoreObsForm.id_score,
         },
       },
     ];
 
-    this.scoreService.aprobarOfinalizarSolicitud(parametro[0]).subscribe({
+    this.scoreService.aprobarSolicitud(parametro[0]).subscribe({
       next: (resp: any) => {
         this.spinner.hide();
 
@@ -93,10 +109,10 @@ export class AprobarImportarComponent implements OnInit {
     });
   }
 
-  listEvidencias: any[] = [
-    { nombre: 'Evidencia 1', archivo: 'Archivo 1', link: 'abc'},
-    { nombre: 'Evidencia 2', archivo: 'Archivo 2', link: 'xyz'},
-  ];
+  // listEvidencias: any[] = [
+  //   { nombre: 'Evidencia 1', archivo: 'Archivo 1', link: 'abc'},
+  //   { nombre: 'Evidencia 2', archivo: 'Archivo 2', link: 'xyz'},
+  // ];
 
   onChange(event: any){
     // this.archivoPdf.imgArchivo = event.target.files[0];
@@ -130,35 +146,9 @@ export class AprobarImportarComponent implements OnInit {
     })
   }
 
-  evidencias!: Evidencias[];
-  getListEvidencias(){
-    this.pdfImportService.getAllPdf().subscribe({
-      next: (resp) => {
-        console.log('LIST-EVID', resp);
-        this.evidencias = resp;
-      },
-      error: (err) =>{
-        console.log('E R R O R', err);
-      }
-    })
-  }
-
-  esIgualTotalEvidencia(){
+  descargarPdf(id: any){
 
   }
-
-  descargarPdf(id: number){
-
-  }
-
-  // OnSubmit(nombre_pdf: any, file_pdf:any){
-  //   this.pdfImportService.postFile(nombre_pdf.value, this.archivoCargado).subscribe(data => {
-  //     console.log('pdf_*');
-  //     nombre_pdf.value = null;
-  //     file_pdf.value = null;
-
-  //   })
-  // }
 
   campoNoValido(campo: string): boolean {
     if (this.importForm.get(campo)?.invalid && this.importForm.get(campo)?.touched) {

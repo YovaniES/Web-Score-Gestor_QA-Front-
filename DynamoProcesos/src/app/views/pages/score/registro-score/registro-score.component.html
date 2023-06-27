@@ -5,14 +5,6 @@
       <!-- BUSCADOR POR FILTRO ---------------------------------------------------------------->
       <div class="card" style="border-radius: 2px; font-weight: 600; padding: 7px">
           <form class="row g-3" [formGroup]="filtroForm">
-            <!-- <div class="col-sm-3 cli-form-element" >
-              <label>Lider QA</label>
-              <input
-                type="text"
-                class="form-control cli-input-white"
-                formControlName="lider"/>
-            </div> -->
-
             <div class="col-sm-3 cli-form-element">
               <label>Formato Score</label>
               <select class="cli-input-white" formControlName="tipo_formato">
@@ -116,18 +108,17 @@
                       }">
               <td class="w50">
                 <div class="cli-table-actions">
-
                   <button matTooltip="Actualizar"
-                  class="icon-btn btn-trans c-blue"
-                  (click)="actualizarScore(score)"
-                  ><mat-icon class="icon-13">drive_file_rename_outline</mat-icon>
-                </button>
+                    class="icon-btn btn-trans c-blue"
+                    (click)="actualizarScore(score)"
+                    ><mat-icon class="icon-13">drive_file_rename_outline</mat-icon>
+                  </button>
 
-                  <button matTooltip ="Descargar"
+                  <!-- <button matTooltip ="Descargar"
                     class="icon-btn btn-trans c-green-export"
                     (click)="exportarRegistro(score.idScoreM, score.formato_envio)"
                     ><mat-icon class="icon-13">file_download</mat-icon>
-                  </button>
+                  </button> -->
                 </div>
               </td>
               <td>{{ score.idScore_M       }}</td>
@@ -147,7 +138,6 @@
               </td>
               <!-- <td><div matBadgeSize="small" [matBadge] = 15 matBadgeOverlap="false" class="demo-section" matBadgePosition="after" matBadgeColor="accent">{{ score.solicitante}}</div></td> -->
 
-              <!-- <td class="w100">{{ score.carga }}</td> -->
               <td style="font-size: 12px;">
                 <span *ngIf="score.estado == 'Registrado'"    class="label est-reg">       {{ score.estado | uppercase }}</span>
                 <span *ngIf="score.estado == 'En Validación'" class="label est-valid">     {{ score.estado | uppercase }}</span>

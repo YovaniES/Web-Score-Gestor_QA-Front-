@@ -11,7 +11,7 @@
 <form class="row g-3" [formGroup]="scoreForm">
   <div class="cli-form newvac-wrapper">
     <div class="chart-draw">
-      <!-- DATOS DEL EVENTO ------------------------------------------------------------------------->
+      <!-- DATOS DEL SCORE ------------------------------------------------------------------------->
       <div style="display: flex" *ngIf="DATA_SCORE">
         <div class="pr-subtitle mt-2">Datos del Score</div>
 
@@ -197,9 +197,9 @@
                               <th style="min-width: 115px;">Tipo Transacción</th>
                               <th style="min-width: 250px;">Tipo Venta</th>
                               <th style="min-width: 115px;">Gama de Equipo</th>
-                              <th style="min-width: 65px;" >Estado</th>
-                              <th style="min-width: 130px;">C O M E N T A R I O S</th>
-                              <th style="min-width: 110px;">Req. Validación</th>
+                              <th style="min-width: 102px;">Req. Val.</th>
+                              <th>Estado</th>
+                              <th style="min-width: 315px;">C O M E N T A R I O S</th>
                               <th style="min-width: 65px;" >Tipo Doc</th>
                               <th style="min-width: 65px;" >RUC</th>
                               <th style="min-width: 205px;">Nombres y Apellidos del Cliente</th>
@@ -225,7 +225,11 @@
                             <td>{{ score.tipoTransaccion }}</td>
                             <td>{{ score.tipoVenta       }}</td>
                             <td>{{ score.gama            }}</td>
-                            <td style="min-width: 118px;">
+                            <td>
+                              <span *ngIf="score.req_validacion == '0'"  style="color: #0daef4">NO</span>
+                              <span *ngIf="score.req_validacion == '1'"  style="color: #fd0d89">SI</span>
+                            </td>
+                            <td>
                               <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">       {{ score.estado | uppercase }}</span>
                               <span *ngIf="score.estado == 'Observado'"  class="label est-observado ">{{ score.estado | uppercase }}</span>
                               <span *ngIf="score.estado == 'Enviado'"    class="label est-enviado ">  {{ score.estado | uppercase }}</span>
@@ -234,24 +238,22 @@
                               <span *ngIf="score.estado == 'Subsanado'"  class="label est-subsanado"> {{ score.estado | uppercase }}</span>
                             </td>
                             <td class="obs-score">
-                            <ng-container *ngIf="((authService.esUsuarioGestor() || authService.esUsuarioLider()) && ( score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
-                              <div style="display: flex; min-width: 175px;">
-                                <button
-                                  class="btn-obs btn-obs"
-                                  style="margin: 0"
-                                  type="button"
-                                  (click)="asignarComentarioScore_d(score)"
-                                  matTooltip="Observar o Aprobar registro"
-                                  ><mat-icon class="icon-13">loupe</mat-icon>
-                                </button>{{ score.obs_registro }}
-                            </div>
-                            </ng-container>
+                              <div *ngIf="(authService.esUsuarioGestor() && (score.estado != 'Observado' || score.estado != 'Aprobado') || (((authService.esUsuarioLider() && validarSiExisteReqValidacion()) && score.estado == 'Solicitado'))) ">
+                                <ng-container *ngIf="((authService.esUsuarioGestor() && (score.estado != 'Finalizado')) || (authService.esUsuarioLider() && score.estado != 'Finalizado') && (score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
+                                  <div style="display: flex">
+                                    <button
+                                      class="btn-obs btn-obs"
+                                      style="margin: 0"
+                                      type="button"
+                                      (click)="asignarComentarioScore_d(score)"
+                                      matTooltip="Observar o Aprobar registro"
+                                      ><mat-icon class="icon-13">loupe</mat-icon>
+                                    </button>{{ score.obs_registro }}
+                                </div>
+                                </ng-container>
+                              </div>
                             </td>
-                            <td style="min-width: 145px;color: #4089ff;">
-                              <span *ngIf="score.req_validacion == '0'"  style="color: #0daef4">NO</span>
-                              <span *ngIf="score.req_validacion == '1'"  style="color: #fd0d89">SI</span>
-                            </td>
-                            <td>{{ score.tipo_documento   }}</td>
+                             <td>{{ score.tipo_documento   }}</td>
                             <td>{{ score.numero_documento }}</td>
                             <td>{{ score.nombres_apell    }}</td>
                             <td>{{ score.num_lin_disp     }}</td>
@@ -274,7 +276,7 @@
                         <div
                           *ngIf="!loadingItem && listScoreDetalleCorp.length == 0"
                           class="cli-loader mt-5"
-                          style="color: #f83434">
+                          style="color: #f97fa9">
                           No hay Score tipo Corporativo disponible para mostrar
                         </div>
                       </div>
@@ -388,9 +390,9 @@
                                 <th style="min-width: 110px;" >Fecha APP</th>
                                 <th style="min-width: 65px;"  >TIpo Doc</th>
                                 <th style="min-width: 67px;"  >Num Doc</th>
-                                <th style="min-width: 65px;"  >Estado</th>
-                                <th style="min-width: 140px;" >C O M E N T A R I O S</th>
-                                <th style="min-width: 110px;" >Req. Validación</th>
+                                <th style="min-width: 102px;" >Req. Val.</th>
+                                <th>Estado</th>
+                                <th style="min-width: 315px;" >C O M E N T A R I O S</th>
                                 <th style="min-width: 115px;" >Segmento</th>
                                 <th style="min-width: 118px;" >Tipo Transacción</th>
                                 <th style="min-width: 250px;" >Tipo Venta</th>
@@ -415,13 +417,16 @@
                                         currentPage: page,
                                         totalItems: totalScore }">
                               <td>{{ score.idScored         }}</td>
-                              <td>{{ score.solicitante      }}</td>
-                              <td>{{ score.nombre_proyecto  }}</td>
+                              <td>{{ score.solicitante }}</td>
+                              <td style="text-align: left;">{{ score.nombre_proyecto  }}</td>
                               <td>{{ score.fecha_score      }}</td>
                               <td>{{ score.tipo_documento   }}</td>
                               <td>{{ score.numero_documento }}</td>
-
-                              <td style="min-width: 118px; ">
+                              <td>
+                                <span *ngIf="score.req_validacion == '0'" style="color: #0daef4">NO</span>
+                                <span *ngIf="score.req_validacion == '1'" style="color: #fd0d89">SI</span>
+                              </td>
+                              <td>
                                 <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">        {{ score.estado | uppercase }}</span>
                                 <span *ngIf="score.estado == 'Observado'"  class="label est-observado">  {{ score.estado | uppercase }}</span>
                                 <span *ngIf="score.estado == 'Enviado'"    class="label est-enviado">    {{ score.estado | uppercase }}</span>
@@ -430,22 +435,20 @@
                                 <span *ngIf="score.estado == 'Subsanado'"  class="label est-subsanado">  {{ score.estado | uppercase }}</span>
                               </td>
                               <td class="obs-score">
-                                <ng-container *ngIf="((authService.esUsuarioGestor() || (authService.esUsuarioLider() && score.estado != 'Finalizado')) && (score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
-                                  <div style="display: flex">
-                                    <button
-                                      class="btn-obs btn-obs"
-                                      style="margin: 0"
-                                      type="button"
-                                      (click)="asignarComentarioScore_d(score)"
-                                      matTooltip="Observar o Aprobar registro"
-                                      ><mat-icon class="icon-13">loupe</mat-icon>
-                                    </button>{{ score.obs_registro }}
+                                <div *ngIf="(authService.esUsuarioGestor() && (score.estado != 'Observado' || score.estado != 'Aprobado') || (((authService.esUsuarioLider() && validarSiExisteReqValidacion()) && score.estado == 'Solicitado'))) ">
+                                  <ng-container *ngIf="((authService.esUsuarioGestor() && (score.estado != 'Finalizado')) || (authService.esUsuarioLider() && score.estado != 'Finalizado') && (score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
+                                    <div style="display: flex">
+                                      <button
+                                        class="btn-obs btn-obs"
+                                        style="margin: 0"
+                                        type="button"
+                                        (click)="asignarComentarioScore_d(score)"
+                                        matTooltip="Observar o Aprobar registro"
+                                        ><mat-icon class="icon-13">loupe</mat-icon>
+                                      </button>{{ score.obs_registro }}
+                                  </div>
+                                  </ng-container>
                                 </div>
-                                </ng-container>
-                              </td>
-                              <td style="min-width: 145px;color: #4089ff;">
-                                <span *ngIf="score.req_validacion == '0'" style="color: #0daef4">NO</span>
-                                <span *ngIf="score.req_validacion == '1'" style="color: #fd0d89">SI</span>
                               </td>
                               <td style="text-align: left;"  >{{ score.segmento        }}</td>
                               <td style="text-align: left;"  >{{ score.tipoTransaccion }}</td>
@@ -474,7 +477,7 @@
                           <div
                             *ngIf="!loadingItem && listScoreDetalleGen.length == 0"
                             class="cli-loader mt-5"
-                            style="color: #f83434">
+                            style="color: #f97fa9">
                             No hay Score tipo General disponible para mostrar
                           </div>
                         </div>
@@ -578,10 +581,10 @@
                                 <th style="min-width: 120px;" >Solicitante</th>
                                 <th style="min-width: 80px;"  >Rq</th>
                                 <th style="min-width: 142px;" >Proyecto</th>
-                                <th style="min-width: 115px;"  >Casos</th>
-                                <th style="min-width: 65px;"  >Estado</th>
-                                <th style="min-width: 140px;" >C O M E N T A R I O S</th>
-                                <th style="min-width: 108px;" >Req. Validación</th>
+                                <th style="min-width: 115px;" >Casos</th>
+                                <th style="min-width: 102px;" >Req. Val.</th>
+                                <th>Estado</th>
+                                <th style="min-width: 315px;" >C O M E N T A R I O S</th>
                                 <th style="min-width: 90px;"  >Cuota Inicial</th>
                                 <th style="min-width: 65px;"  >Gama</th>
                                 <th style="min-width: 63px;"  >Tipo Doc</th>
@@ -609,6 +612,10 @@
                               <td>{{ score.proyecto    }}</td>
                               <td>{{ score.casos       }}</td>
                               <td>
+                                <span *ngIf="score.req_validacion == '0'"  style="color: #0daef4">NO</span>
+                                <span *ngIf="score.req_validacion == '1'"  style="color: #fd0d89">SI</span>
+                              </td>
+                              <td>
                                 <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">        {{ score.estado | uppercase }}</span>
                                 <span *ngIf="score.estado == 'Observado'"  class="label est-observado">  {{ score.estado | uppercase }}</span>
                                 <span *ngIf="score.estado == 'Enviado'"    class="label est-enviado">    {{ score.estado | uppercase }}</span>
@@ -617,22 +624,20 @@
                                 <span *ngIf="score.estado == 'Subsanado'"  class="label est-subsanado">  {{ score.estado | uppercase }}</span>
                               </td>
                               <td class="obs-score">
-                                <ng-container *ngIf="((authService.esUsuarioGestor() || (authService.esUsuarioLider() && score.estado != 'Finalizado')) && ( score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
-                                  <div style="display: flex">
-                                    <button
-                                      class="btn-obs btn-obs"
-                                      style="margin: 0"
-                                      type="button"
-                                      (click)="asignarComentarioScore_d(score)"
-                                      matTooltip="Observar o Aprobar registro"
-                                      ><mat-icon class="icon-13">loupe</mat-icon>
-                                    </button>{{ score.obs_registro }}
+                                <div *ngIf="(authService.esUsuarioGestor() && (score.estado != 'Observado' || score.estado != 'Aprobado') || (((authService.esUsuarioLider() && validarSiExisteReqValidacion()) && score.estado == 'Solicitado'))) ">
+                                  <ng-container *ngIf="((authService.esUsuarioGestor() && (score.estado != 'Finalizado')) || (authService.esUsuarioLider() && score.estado != 'Finalizado') && (score.estado != 'Enviado') || score.estado == 'Solicitado' || score.estado == 'Observado' || score.estado == 'Aprobado')">
+                                    <div style="display: flex">
+                                      <button
+                                        class="btn-obs btn-obs"
+                                        style="margin: 0"
+                                        type="button"
+                                        (click)="asignarComentarioScore_d(score)"
+                                        matTooltip="Observar o Aprobar registro"
+                                        ><mat-icon class="icon-13">loupe</mat-icon>
+                                      </button>{{ score.obs_registro }}
+                                  </div>
+                                  </ng-container>
                                 </div>
-                                </ng-container>
-                              </td>
-                              <td style="min-width: 145px;color: #4089ff;">
-                                <span *ngIf="score.req_validacion == '0'"  style="color: #0daef4">NO</span>
-                                <span *ngIf="score.req_validacion == '1'"  style="color: #fd0d89">SI</span>
                               </td>
                               <td>{{ score.cuota_inicial    }}</td>
                               <td>{{ score.gama             }}</td>
@@ -659,7 +664,7 @@
                           <div
                             *ngIf="!loadingItem && listScoreDetalleExcep.length == 0"
                             class="cli-loader mt-5"
-                            style="color: #f83434">
+                            style="color: #f97fa9">
                             No hay Score tipo Excepción disponible para mostrar
                           </div>
                         </div>
@@ -727,14 +732,14 @@
 
     <!----------------------------------------------BOTONES ------------------------------------------>
     <div class="cli-form-buttons">
-      <button *ngIf="(authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 6 || scoreForm.controls['id_estado_m'].value == 8))
-                  || (authService.esUsuarioLider()  && (scoreForm.controls['id_estado_m'].value == 1 || scoreForm.controls['id_estado_m'].value == 4 || scoreForm.controls['id_estado_m'].value != 3 || scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 8))"
+      <button *ngIf="(authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 4 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 6 || scoreForm.controls['id_estado_m'].value == 7 || scoreForm.controls['id_estado_m'].value == 8))
+                  || (authService.esUsuarioLider()  && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 4 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 6 || scoreForm.controls['id_estado_m'].value == 7 || scoreForm.controls['id_estado_m'].value == 8))"
          class="cli-btn btn-m btn-salir"
          type="submit" (click)="close()">
         <mat-icon class="icon-18">cancel</mat-icon> Salir
       </button>
 
-      <ng-container *ngIf="((authService.esUsuarioLider() && validarSiExiteReqValidacion() ) && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 8)) && !authService.esUsuarioGestor()">
+      <ng-container *ngIf="((authService.esUsuarioLider() && validarSiExisteReqValidacion()) && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 8)) && !authService.esUsuarioGestor()">
         <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
            class="cli-btn btn-m btn-aprobar"
            type="submit"
@@ -746,31 +751,31 @@
       </ng-container>
 
       <ng-container *ngIf="DATA_SCORE">
-        <ng-container *ngIf="((authService.esUsuarioGestor() || (authService.esUsuarioLider() && validarSiExiteReqValidacion() && scoreForm.controls['id_estado_m'].value != 7)) && ( scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 7))">
+        <ng-container *ngIf="(authService.esUsuarioGestor() || (authService.esUsuarioLider() && scoreForm.controls['id_estado_m'].value != 2 && scoreForm.controls['id_estado_m'].value != 5 && scoreForm.controls['id_estado_m'].value != 6)) && (scoreForm.controls['id_estado_m'].value == 2 || ((scoreForm.controls['id_estado_m'].value == 2 && validarSiExisteReqValidacion()) || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 6 || scoreForm.controls['id_estado_m'].value == 8))">
           <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
              class="cli-btn btn-m btn-observar"
              matTooltip="Observar masivamente la Solicitud"
              type="submit"
              (click)="observarMasivamenteSolicitud()"
-             [disabled]="validarSiExiteRegistroObservado()"
+             [disabled]="validarSiExisteRegistroObservado()"
              >
              <mat-icon class="icon-18">rule</mat-icon> Observar
           </button>
         </ng-container>
       </ng-container>
 
-      <ng-container *ngIf="authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 8  )">
+      <ng-container *ngIf="(authService.esUsuarioGestor() && (!validarSiExisteReqValidacion() || scoreForm.controls['id_estado_m'].value == 5))  && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 8 )">
         <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
            class="cli-btn-mail btn-m btn-mail"
            type="submit"
            (click)="enviarSolicitudTDP()"
-           [disabled]="existeScore_dAprobado()"
            >
+           <!-- [disabled]="existeScoreD_Aprobado()" -->
            <mat-icon class="icon-18">forward_to_inbox</mat-icon> Enviar
           </button>
       </ng-container>
 
-      <ng-container *ngIf="authService.esUsuarioGestor()  && scoreForm.controls['id_estado_m'].value == 6">
+      <ng-container *ngIf="authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 6)">
         <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
            class="cli-btn btn-m btn-fin"
            type="submit"
