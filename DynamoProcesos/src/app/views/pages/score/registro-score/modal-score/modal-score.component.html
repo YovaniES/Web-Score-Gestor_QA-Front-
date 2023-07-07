@@ -744,22 +744,21 @@
            class="cli-btn btn-m btn-aprobar"
            type="submit"
            (click)="importarPdf_AprobarSolicitud()"
-           >
+           ><mat-icon class="icon-18">check_small</mat-icon> Aprobar
            <!-- (click)="notificarAprobacionPorCorreo()" -->
-           <mat-icon class="icon-18">check_small</mat-icon> Aprobar
-          </button>
+        </button>
       </ng-container>
 
       <ng-container *ngIf="DATA_SCORE">
-        <ng-container *ngIf="(authService.esUsuarioGestor() || (authService.esUsuarioLider() && scoreForm.controls['id_estado_m'].value != 2 && scoreForm.controls['id_estado_m'].value != 5 && scoreForm.controls['id_estado_m'].value != 6)) && (scoreForm.controls['id_estado_m'].value == 2 || ((scoreForm.controls['id_estado_m'].value == 2 && validarSiExisteReqValidacion()) || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 6 || scoreForm.controls['id_estado_m'].value == 8))">
+        <ng-container *ngIf="(authService.esUsuarioGestor() || (authService.esUsuarioLider() && scoreForm.controls['id_estado_m'].value == 2 && scoreForm.controls['id_estado_m'].value != 5 && scoreForm.controls['id_estado_m'].value != 6))
+                          && ((scoreForm.controls['id_estado_m'].value == 2 && validarSiExisteReqValidacion()) || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 6 || scoreForm.controls['id_estado_m'].value == 8)">
           <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
              class="cli-btn btn-m btn-observar"
              matTooltip="Observar masivamente la Solicitud"
              type="submit"
              (click)="observarMasivamenteSolicitud()"
              [disabled]="validarSiExisteRegistroObservado()"
-             >
-             <mat-icon class="icon-18">rule</mat-icon> Observar
+             ><mat-icon class="icon-18">rule</mat-icon> Observar
           </button>
         </ng-container>
       </ng-container>
@@ -772,7 +771,7 @@
            >
            <!-- [disabled]="existeScoreD_Aprobado()" -->
            <mat-icon class="icon-18">forward_to_inbox</mat-icon> Enviar
-          </button>
+        </button>
       </ng-container>
 
       <ng-container *ngIf="authService.esUsuarioGestor() && (scoreForm.controls['id_estado_m'].value == 6)">
@@ -781,7 +780,7 @@
            type="submit"
            (click)="finalizarSolicitud()">
            <mat-icon class="icon-18">forward_to_inbox</mat-icon> Finalizar
-          </button>
+        </button>
       </ng-container>
     </div>
   </div>

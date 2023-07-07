@@ -554,14 +554,13 @@ export class ExcellMasivoService {
           scoreTable[i].score,             //L
           scoreTable[i].cap_financ_prev,   //M
           scoreTable[i].cod_finan,         //N
-          scoreTable[i].cap_finan_2,       //O OJO falta agregar col BD ***
+          scoreTable[i].cap_finan_2,       //O
           scoreTable[i].usuario,           //P
           // '8242-DITO-STD ALONE-FINANCIADO-1608-90-1-250-1',//Q
           scoreTable[i].rq+'-'+scoreTable[i].proyecto+'-'+ scoreTable[i].casos+'-'+ scoreTable[i].cuota_inicial+'-'+ scoreTable[i].score+'-'+ scoreTable[i].cargo_fijo_max+'-'+ scoreTable[i].num_lin_disp+'-'+ scoreTable[i].cap_financ_prev+'-'+ scoreTable[i].cod_finan+'-',
-          'SI',                         //R
-          scoreTable[i].validWL,                              //S
-          // '8241-DITO-STD ALONE-FINANCIADO-1506-80-1-100-1',//T
-          scoreTable[i].rq+'-'+scoreTable[i].proyecto+'-'+ scoreTable[i].casos+'-'+ scoreTable[i].cuota_inicial+'-'+ scoreTable[i].score+'-'+ scoreTable[i].cargo_fijo_max+'-'+ scoreTable[i].num_lin_disp+'-'+ scoreTable[i].cap_financ_prev+'-'+ scoreTable[i].cod_finan+'-',
+          'SI',                            //R
+          scoreTable[i].validWL,           //S
+          scoreTable[i].rq+'-'+scoreTable[i].proyecto+'-'+ scoreTable[i].casos+'-'+ scoreTable[i].cuota_inicial+'-'+ scoreTable[i].score+'-'+ scoreTable[i].cargo_fijo_max+'-'+ scoreTable[i].num_lin_disp+'-'+ scoreTable[i].cap_financ_prev+'-'+ scoreTable[i].cod_finan+'-',//T
           'PROCEDE'                              //U
         ];
         fila.font = { size: 11}

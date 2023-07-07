@@ -89,7 +89,7 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   }
 
-  actualizarComentarioScore_materiales(obj: any){
+  actualizarComentarioScore_m(obj: any){
     return this.http.post(API_SCORE, obj);
   }
 

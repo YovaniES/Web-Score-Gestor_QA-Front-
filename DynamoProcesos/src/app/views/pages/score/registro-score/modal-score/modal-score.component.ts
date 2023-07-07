@@ -17,6 +17,7 @@ import { ObservarMasivamenteComponent } from './observar-masivamente/observar-ma
 import { AprobarImportarComponent } from './Aprobar-importar/aprobar-importar.component';
 import { AsignarComentarioComponent } from './asignar-comentario-score_d/asignar-comentario.component';
 import { Enums } from 'src/app/core/enums/enums';
+import { PdfImportService } from 'src/app/core/services/import-pdf.service';
 
 @Component({
   selector: 'app-modal-evento',
@@ -48,8 +49,8 @@ export class ModalStoreComponent implements OnInit {
     private excellDiurnoService: ExcellDiurnoService,
     private excellMasivoService: ExcellMasivoService,
     private excellB2BService: ExcellB2BService,
-
     private sendMailService: SendMailService,
+    private pdfImportService: PdfImportService,
     private fb: FormBuilder,
     private spinner: NgxSpinnerService,
     public datePipe: DatePipe,
@@ -59,6 +60,7 @@ export class ModalStoreComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.getListJira();
     this.newFilfroForm();
     this.isGestorTDP();
     this.getUsername();
@@ -68,9 +70,10 @@ export class ModalStoreComponent implements OnInit {
       this.score_Id = this.DATA_SCORE.idScore_M;
       this.ListaHistoricoCambios(this.DATA_SCORE,);
       this.cargarSCoreByID();
+      this.listaCorreosTDP();
     }
-    console.log('DATA_SCORE_M', this.DATA_SCORE);
-    console.log('SCOREFORM', this.scoreForm.value);
+    // console.log('DATA_SCORE_M', this.DATA_SCORE);
+    // console.log('SCOREFORM', this.scoreForm.value);
   }
 
   newFilfroForm() {
@@ -90,7 +93,17 @@ export class ModalStoreComponent implements OnInit {
       fechaIniPrueba  : [null],
       fechaFinPrueba  : [null],
       fechaEnvioPrueba: [null],
+
+      // username: ['astsusuariointegrador'],
+      // password: ['MINDintegrador']
     });
+  }
+
+  // this.pdfImportService.getListJira(this.scoreForm.controls['username'].value, this.scoreForm.controls['password'].value).subscribe(resp =>{
+  getListJira(){
+      this.pdfImportService.getAllListJira('astsusuariointegrador','MINDintegrador').subscribe(resp =>{
+      console.log('LIST-JIRA', resp);
+    })
   }
 
   onTabClick(tab: string) {
@@ -102,7 +115,7 @@ export class ModalStoreComponent implements OnInit {
   listScoreDetalleGen  : any[] = [];
   listScoreDetalleCorp : any[] = [];
   cargarOBuscarScoreDetalle() {
-    console.log('DATA_DETALLE_*', this.scoreForm.getRawValue(), this.DATA_SCORE);
+    // console.log('DATA_DETALLE_*', this.scoreForm.getRawValue(), this.DATA_SCORE);
 
     this.listScoreDetalle = [];
     this.blockUI.start('Cargando Score detalle...');
@@ -211,26 +224,26 @@ export class ModalStoreComponent implements OnInit {
     this.actualizarScore_m(estado.idEstado);
   }
 
-  observarScoreRegistro() {
-    if (this.DATA_SCORE.estado == 'Solicitado' || this.DATA_SCORE.estado == 'Aprobado' || this.DATA_SCORE.estado == 'En Validación') {
-      Swal.fire({
-        title: 'Observar estado?',
-        text: `¿Estas seguro que desea cambiar de estado a Observado?`,
-        icon: 'question',
-        confirmButtonColor: '#20c997',
-        cancelButtonColor: '#9da7b1',
-        confirmButtonText: 'Si, Cambiar!',
-        showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-      }).then((resp) => {
-        if (resp.value) {
-          this.cambiarEstadoScoreM('OBSERVADO');
-          this.cambiarEstadoDetalleAobservado();
-          this.cargarOBuscarScoreDetalle();
-        }
-      });
-    }
-  }
+  // observarScoreRegistro() {
+  //   if (this.DATA_SCORE.estado == 'Solicitado' || this.DATA_SCORE.estado == 'Aprobado' || this.DATA_SCORE.estado == 'En Validación') {
+  //     Swal.fire({
+  //       title: 'Observar estado?',
+  //       text: `¿Estas seguro que desea cambiar de estado a Observado?`,
+  //       icon: 'question',
+  //       confirmButtonColor: '#20c997',
+  //       cancelButtonColor: '#9da7b1',
+  //       confirmButtonText: 'Si, Cambiar!',
+  //       showCancelButton: true,
+  //       cancelButtonText: 'Cancelar',
+  //     }).then((resp) => {
+  //       if (resp.value) {
+  //         this.cambiarEstadoScoreM('OBSERVADO');
+  //         this.cambiarEstadoDetalleAobservado();
+  //         this.cargarOBuscarScoreDetalle();
+  //       }
+  //     });
+  //   }
+  // }
 
   descargarExcelScore_D() { //DESCARGAR EXCELL - PRUEBA
     let parametro: any[] = [
@@ -247,16 +260,32 @@ export class ModalStoreComponent implements OnInit {
   }
 
   enviarSolicitudTDP() {
+    console.log('CORREOS-TDPX', this.listCorreosTDP);
+
     if (this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO' || this.DATA_SCORE.estado.toUpperCase() == 'APROBADO' || this.DATA_SCORE.estado.toUpperCase() == 'EN VALIDACIÓN') {
       Swal.fire({
-        title: 'Enviar Solicitud score?',
-        text: `¿Estas seguro que desea enviar la Solicitud y cambiar el estado a enviado? `,
-        icon: 'question',
-        confirmButtonColor: '#20c997',
-        cancelButtonColor: '#9da7b1',
-        confirmButtonText: 'Si, Enviar!',
-        showCancelButton: true,
-        cancelButtonText: 'Cancelar',
+           title: 'Enviar Solicitud score?',
+          //  text: `¿Estas seguro que desea enviar la Solicitud y cambiar el estado a enviado? `, //NO se muestra en la alerte??
+           icon: 'question',
+           confirmButtonColor: '#20c997',
+           cancelButtonColor: '#9da7b1',
+           confirmButtonText: 'Si, Enviar!',
+           showCancelButton: true,
+           cancelButtonText: 'Cancelar',
+           html:
+           '<div style="text-align: center; color: #6c757d">'+'¿Estas seguro que desea enviar la Solicitud a la siguiente lista de correos TDP y cambiar el estado a enviado? </div> </br>' +
+           '<div style="text-align: left; display: flex; font-size: 13px;">'+'Correos TDP:'+'</div>'+
+
+           '<div>'+
+             '<small style="color: #08a0af;">'+
+             // '<li>'+
+             '['+
+               this.listCorreosTDP +
+             ']'+
+             // '</li>'+
+             '</small>'+
+           '</div>',
+
       }).then((resp) => {
         console.log('123', resp);
 
@@ -339,13 +368,22 @@ export class ModalStoreComponent implements OnInit {
       });
   }
 
-  listCorreoTdp: string = '';
   listadoCorreosTDP(file: Blob) {
     let parametro: any[] = [{ queryId: 15 }];
     this.scoreDetalleService.listadoCorreosTDP(parametro[0]).subscribe((resp: any) => {
         if (resp && resp.list) {
           console.log('CORREOS-TDP',resp.list, resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
           this.enviarCorreo(file, resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
+        }
+      });
+  }
+
+  listCorreosTDP: string = '';
+  listaCorreosTDP() {
+    let parametro: any[] = [{ queryId: 15 }];
+    this.scoreDetalleService.listadoCorreosTDP(parametro[0]).subscribe((resp: any) => {
+        if (resp && resp.list) {
+          this.listCorreosTDP = resp.list.map((x: any) => x.valor_texto_1);
         }
       });
   }
@@ -624,7 +662,7 @@ export class ModalStoreComponent implements OnInit {
     ];
     this.scoreService.ListaHistoricoCambios(parametro[0]).subscribe((resp: any) => {
         this.listHistoricoCambios = resp.list;
-        console.log('listHistorico', resp.list);
+        // console.log('listHistorico', resp.list);
         this.spinner.hide();
       });
   }

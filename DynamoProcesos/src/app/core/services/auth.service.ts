@@ -18,7 +18,7 @@ export class AuthService {
   login_score(loginData: any) {
     return this.http.post<any>(API_AUTH_SESSION_SCORE, loginData).pipe(
       tap((resp: any) => {
-        console.log('LOGIN_SCORE:', resp);
+        // console.log('LOGIN_SCORE:', resp);
         console.log('LOGIN_SCORE_ACCESO: ', resp.user.acceso);
         console.log('LOGIN_SCORE_APLIC: ', resp.user.aplicacion);
         console.log('LOGIN_SCORE_ROLNAME: ', resp.user.rolName);
@@ -36,7 +36,7 @@ export class AuthService {
 
   getRolID(){
     const decodedToken: any = this.decodeToken();
-    console.log('TOKEN', decodedToken);
+    // console.log('TOKEN', decodedToken);
     return decodedToken ? decodedToken.ROL_ID : '';
   }
 
@@ -52,7 +52,7 @@ export class AuthService {
 
   getRolId(){
     const usuarioLogeado: any = this.decodeToken();
-    console.log('ROL_ID_TOKEN', usuarioLogeado);
+    // console.log('ROL_ID_TOKEN', usuarioLogeado);
 
     if (!usuarioLogeado || usuarioLogeado.ROL_ID != ROL_SOLICITANTE.rolID ) {
       return null
@@ -79,14 +79,14 @@ export class AuthService {
   // unique_name:"jysantiago"
   getCurrentUser() {
     const currentUser: any = localStorage.getItem('currentUser');
-    console.log('USER_LOGUEADO',JSON.parse(currentUser));
+    // console.log('USER_LOGUEADO',JSON.parse(currentUser));
     return of(currentUser ? JSON.parse(currentUser) : '');
   }
 
   getUsername() {
     const decodedToken: any = this.decodeToken();
     console.log('UNIQUE_NAME', decodedToken, decodedToken.name);
-    console.log('USER_NAME', decodedToken.name);
+    // console.log('USER_NAME', decodedToken.name);
     return decodedToken ? decodedToken.name : '';
   }
 

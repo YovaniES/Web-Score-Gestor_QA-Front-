@@ -227,7 +227,7 @@ export class ExcellDiurnoService {
           scoreTable[i].cuota_inicial,             //J
           scoreTable[i].cuotas,                    //K
           scoreTable[i].cap_finan_2,               //L
-          scoreTable[i].validWL,                   //M  VERIFICAR Y AGREGA COL validWL
+          scoreTable[i].validWL,                   //M
           scoreTable[i].validGama,                 //N
           scoreTable[i].segmento+'-'+scoreTable[i].tipoTransaccion+'-'+scoreTable[i].tipoVenta+'-'+scoreTable[i].gama+'-'+scoreTable[i].cuota_inicial+'-'+scoreTable[i].cuotas+'-', //O
           // scoreTable[i].segmento+'-'+scoreTable[i].tipoTransaccion+'-'+scoreTable[i].tipoVenta+'-'+scoreTable[i].gama+'-'+scoreTable[i].cuota_inicial+'-'+scoreTable[i].cuotas+'-', //P
@@ -524,10 +524,10 @@ export class ExcellDiurnoService {
 
         fila.values = [
           scoreTable[i].solicitante,     //A
-          scoreTable[i].score,           //B
-          scoreTable[i].rq,              //C
-          scoreTable[i].idProyecto,      //D
-          scoreTable[i].casos,           //E
+          scoreTable[i].rq,              //B
+          scoreTable[i].nombre_proyecto, //C
+          scoreTable[i].casos,           //D
+          scoreTable[i].cuota_inicial,   //E
           scoreTable[i].gama,            //F
           scoreTable[i].tipo_documento,  //G
           scoreTable[i].numero_documento,//H

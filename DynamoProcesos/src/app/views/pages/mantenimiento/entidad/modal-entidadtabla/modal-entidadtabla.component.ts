@@ -63,7 +63,7 @@ export class ModalEntidadtablaComponent implements OnInit {
 
     this.entidadService.cargarOBuscarEntidades(arrayParametro[0]).subscribe(data => {
       const arrayData:any[] = Array.of(data);
-      console.log('ARRAY', arrayData);
+      // console.log('ARRAY', arrayData);
 
       this.entidadTabla = [];
       for (let index = 0; index < arrayData[0].list.length; index++) {
@@ -104,7 +104,7 @@ export class ModalEntidadtablaComponent implements OnInit {
         },
       };
 
-     console.log('TABLA-ENT-AGREGADO', this.entidadTablaForm.value , parametro);
+    //  console.log('TABLA-ENT-AGREGADO', this.entidadTablaForm.value , parametro);
     this.entidadService.agregarEntidadTabla(parametro).subscribe((resp: any) => {
 
       Swal.fire({
@@ -161,7 +161,7 @@ export class ModalEntidadtablaComponent implements OnInit {
 
   btnAction: string = 'Agregar'
   cargarTablaEntidadByID(){
-    console.log('DTA_BY_MODAL', this.DATA_ENTIDAD, this.DATA_ENTIDAD.idTablaEntidad);
+    // console.log('DTA_BY_MODAL', this.DATA_ENTIDAD, this.DATA_ENTIDAD.idTablaEntidad);
 
     if (!this.DATA_ENTIDAD.isCreation) {
       this.btnAction = 'Actualizar'

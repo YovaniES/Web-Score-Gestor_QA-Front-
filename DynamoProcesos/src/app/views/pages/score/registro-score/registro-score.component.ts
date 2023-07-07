@@ -84,8 +84,7 @@ export class RegistroScoreComponent implements OnInit {
     }];
     this.scoreService.cargarOBuscarScoreM(parametro[0]).subscribe((resp: any) => {
     this.blockUI.stop();
-     console.log('DATA_SCORE_M**', resp.list );
-    //  console.log('FORMATO_ENVIO', resp.list.find((f: any) => f.formato_envio == 1) );
+    //  console.log('DATA_SCORE_M**', resp.list );
       this.listScore = resp.list;
 
       this.spinner.hide();
@@ -95,7 +94,7 @@ export class RegistroScoreComponent implements OnInit {
   // OJO FALTA REPARAR EL DESCARGAR SEGUN FORMATO- 14-06
   exportarRegistro(id: number, tipo_formato?: number) {
     const tpoFormato = this.listScore.find(f => f.formatoScore == tipo_formato)
-    console.log('tipo_formato', tpoFormato.formatoScore);
+    // console.log('tipo_formato', tpoFormato.formatoScore);
 
 
     if (tpoFormato.formatoScore.toUpperCase() == 'B2B') {

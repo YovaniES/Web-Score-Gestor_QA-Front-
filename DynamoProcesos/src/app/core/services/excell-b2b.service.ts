@@ -24,7 +24,7 @@ export class ExcellB2BService {
   };
 
   generarExcell(dataExcel: any[]): Promise<any>{
-    console.log('export-data-b2b', dataExcel);
+    // console.log('export-data-b2b', dataExcel);
      this.wb = new Workbook();
 
      this.createFormato(dataExcel);

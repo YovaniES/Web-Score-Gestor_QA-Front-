@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { API_IMPORT_PDF_SCORE } from 'src/app/core/constants/url.constants';
 import { Evidencias } from 'src/app/core/models/archivo-pdf';
 import { Status } from 'src/app/core/models/status';
 import { AuthService } from 'src/app/core/services/auth.service';
@@ -20,18 +19,12 @@ import Swal from 'sweetalert2';
 export class AprobarImportarComponent implements OnInit {
   @BlockUI() blockUI!: NgBlockUI;
   importForm!: FormGroup;
-  loadingItem: boolean = false;
-  imgBaseUrl = API_IMPORT_PDF_SCORE + '/resources/';
-
   imgFile!: File;
-
-  archivoPdf: Evidencias = {
-    id: 0,
-    nombreEvidencia: '',
-    imgEvidencia: '',
-    // archivoPdf: ,
-  }
   status!: Status;
+  // imgBaseUrl = API_IMPORT_PDF_SCORE + '/resources/';
+  imgBaseUrl= 'https://localhost:7174/resources/'
+
+  loadingItem: boolean = false;
 
   constructor(
     public authService: AuthService,
@@ -46,44 +39,54 @@ export class AprobarImportarComponent implements OnInit {
 
   ngOnInit(): void {
     this.newFilfroForm();
-    this.obtenerEvidencias();
+    this.getAllEvidencias();
 
     console.log('IMPORTpdf', this.DATA_SCORE.scoreObsForm);
+    console.log('IdScore_IMPORT', this.DATA_SCORE.scoreObsForm.id_score);
   }
 
   newFilfroForm() {
     this.importForm = this.fb.group({
-      id            : [0],
-      // nombrePdf     : ['', [Validators.required]],
-      nombrePdf     : [''],
-      imgArchivo    : ['', [Validators.required]],
+      id         : [''],
+      idScore_m  : [''],
+      nombre     : ['', [Validators.required, Validators.minLength(10)]],
+      archivo    : ['', [Validators.required]],
     });
   }
 
-  // evidencias!: Evidencias[];
+  idScoreM: any = 0;
   listEvidencias!:Evidencias[];
-  obtenerEvidencias(){
+  getAllEvidencias(){
+    this.idScoreM  = this.DATA_SCORE.scoreObsForm.id_score;
+
+    console.log('ID_SCORE_IMP', this.idScoreM);
+
     this.pdfImportService.getAllPdf().subscribe({
-      next: (resp) => { this.listEvidencias = resp; console.log('LIST-PDF', resp);},
+      next: (resp) => {
+        //  this.listEvidencias = resp;
+        console.log('GETALL', resp, );
+         this.listEvidencias = resp.filter(x => x.idScore_m == this.DATA_SCORE.scoreObsForm.id_score);
+
+         console.log('GET_BY_IDSCORE', resp.filter(x => x.idScore_m == this.DATA_SCORE.scoreObsForm.id_score ), );
+        },
       error: (err)=> { console.log(err);
       }
     })
   }
 
-  guardarPdf(){
+  existeEvidencia(){
 
   }
 
-  guardarPdf_y_AprobarSolicitud() {
+  aprobarSolicitud() {
     this.spinner.show();
 
-    const formValues = this.importForm.getRawValue();
-    console.log('O B S_IMPORT',this.importForm.value, this.DATA_SCORE.scoreObsForm.id_score);
+    // const formValues = this.importForm.getRawValue();
     console.log('ID_Score_IMPORT', this.DATA_SCORE.scoreObsForm.id_score);
 
     let parametro: any[] = [
       {
-        queryId: 16, //OJO Falta importar y guardar el pdf en la BD p_idScore
+        queryId: 16,
         mapValue: {
           p_idScore: this.DATA_SCORE.scoreObsForm.id_score,
         },
@@ -97,47 +100,54 @@ export class AprobarImportarComponent implements OnInit {
         this.close(resp);
 
         Swal.fire({
-          title: 'Importar evidencia!',
-          text: `Se Importó con éxito la evidencia`,
+          title: 'Aprobar solicitud!',
+          text: `Se aprobó con éxito la solicitud`,
           icon: 'success',
           confirmButtonText: 'Ok',
         });
       },
       error: () => {
-        Swal.fire('ERROR', 'No se pudo Importar la evidencia', 'warning');
+        Swal.fire('ERROR', 'No se pudo Aprobar la solicitud', 'warning');
       },
     });
   }
 
-  // listEvidencias: any[] = [
-  //   { nombre: 'Evidencia 1', archivo: 'Archivo 1', link: 'abc'},
-  //   { nombre: 'Evidencia 2', archivo: 'Archivo 2', link: 'xyz'},
-  // ];
-
   onChange(event: any){
-    // this.archivoPdf.imgArchivo = event.target.files[0];
+    // this.archivoPdf.archivo = event.target.files[0];
     this.imgFile = event.target.files[0];
-    console.log('EVENT', this.archivoPdf);
   }
 
-  onPost(){
+  guardarEvidencia(){
+    this.spinner.show();
     console.log('FORM-IMPORT', this.importForm.value);
 
     this.status = { statusCode: 0, message:'Cargando Archivo PDF'}
 
-    const importData: Evidencias = Object.assign(this.importForm.value);
-    importData.archivoPdf = this.imgFile;
-    // importData.idScore = this.DATA_SCORE.idScoreM;
-    importData.nombreEvidencia = importData.nombreEvidencia;
+    const frmData: Evidencias = Object.assign(this.importForm.value);
+
+    frmData.archivo = this.imgFile;
+    frmData.idScore_m = this.idScoreM;
 
     // LLamamos el Servicio
-    this.pdfImportService.addPdf(importData).subscribe({
+    this.pdfImportService.addPdf(frmData).subscribe({
       next:(resp) => {
-        console.log('SERV', resp);
-        this. status = resp;
+        console.log('SERV-ADD', resp);
+        this.status = resp;
+
         if (this.status.statusCode == 1) {
           this.importForm.reset();
         }
+
+        this.spinner.hide(); //Cerramos el spinner
+
+        Swal.fire({
+          title: 'Agregar Evidencia!',
+          text: `Se guardó con éxito la evidencia`,
+          icon: 'success',
+          confirmButtonText: 'Ok',
+        });
+
+        this.getAllEvidencias();
 
       }, error: (err) => {
         this.status = { statusCode:0, message:'Error en el lado del Servidor'}
@@ -145,6 +155,7 @@ export class AprobarImportarComponent implements OnInit {
       }
     })
   }
+
 
   descargarPdf(id: any){
 

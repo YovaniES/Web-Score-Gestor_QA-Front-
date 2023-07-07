@@ -10,15 +10,15 @@
 
 <ng-container ></ng-container>
 <form class="row g-3" [formGroup]="importForm" style="padding: 10px" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m != 5">
-  <!-- <div class="col-sm-12 cli-form-element">
+  <div class="col-sm-12 cli-form-element">
     <label>Nombre Evidencia</label>
     <input
       type="text"
       class="form-control cli-input-white"
-      formControlName="nombrePdf"
+      formControlName="nombre"
     />
-    <small class="text-alert" *ngIf="campoNoValido('nombrePdf')">* El Nombre de la evidencia es obligatorio</small>
-  </div> -->
+    <small class="text-alert" *ngIf="campoNoValido('nombre')">* El Nombre de la evidencia es obligatorio</small>
+  </div>
 
   <div class="col-sm-9 cli-form-element">
     <label>Importar evidencia (PDF).</label>
@@ -26,32 +26,32 @@
       type="file"
       class="cli-import"
       accept="image/*"
-      formControlName="imgArchivo"
+      formControlName="archivo"
       (change)="onChange($event)"
     />
-    <small class="text-alert" *ngIf="campoNoValido('imgArchivo')">* El importar archivo es obligatorio</small>
+    <small class="text-alert" *ngIf="campoNoValido('archivo')">* El importar archivo es obligatorio</small>
   </div>
 
-  <!-- <div class="col-sm-3">
+  <div class="col-sm-3">
     <div class="cli-pdf" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m != 5">
       <button *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 2"
         class="cli-btn btn-m-pdf btn-purple"
         matTooltip="Importar Máx 4 Pdf"
-        (click)="guardarPdf()"
+        (click)="guardarEvidencia()"
         [disabled]="importForm.invalid"
         >
         <mat-icon class="icon-18">save</mat-icon> Guardar
       </button>
     </div>
-  </div> -->
+  </div>
   <!-- [disabled]="esIgualTotalEvidencia()" -->
-
   <div class="mb-3 form-check" *ngIf="status">
     {{ status.message }}
   </div>
 </form>
 <!-- LISTA DE PDF ------------------------------------------------------------------------->
-<div style="color: #6c757d" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 5">
+<div style="color: #6c757d">
+  <!-- <div style="color: #6c757d" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 5"> -->
   <div class="pr-subtitle mt-2">Listado de Evidencias Score</div>
   <div class="pr-module-container">
     <div style="overflow: auto; min-height: 160px; max-height: 160px">
@@ -69,18 +69,23 @@
         <tbody>
           <tr *ngFor="let evidencia of listEvidencias; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ evidencia.nombreEvidencia }}</td>
-            <td>
-              <img style="height: 80px; width: 100px;"
-                [src]="imgBaseUrl + evidencia.imgEvidencia">
+            <td>{{ evidencia.nombre }}</td>
+            <td><img style="height: 80px; width: 100px;"
+                [src]="imgBaseUrl+evidencia.imagen">
             </td>
-            <td>{{ evidencia.archivoPdf    }}</td>
+            <td>{{ evidencia.archivo }}</td>
             <td class="w300">
               <div class="cli-table-actions">
                 <button matTooltip="Descargar"
-                class="icon-btn btn-trans c-fucsia"
-                (click)="descargarPdf(evidencia)"
-                ><mat-icon class="icon-13">picture_as_pdf</mat-icon>
+                  class="icon-btn btn-trans c-cyan-pdf"
+                  (click)="descargarPdf(evidencia)"
+                  ><mat-icon class="icon-13">picture_as_pdf</mat-icon>
+                </button>
+
+                <button matTooltip="Eliminar" *ngIf="!authService.esUsuarioGestor()"
+                  class="icon-btn btn-trans c-fucsia"
+                  (click)="descargarPdf(evidencia)"
+                  ><mat-icon class="icon-13">delete_forever</mat-icon>
               </button>
               </div>
             </td>
@@ -104,12 +109,12 @@
 <div class="cli-form-buttons" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m != 5">
   <button *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 2 || this.DATA_SCORE.scoreObsForm.id_estado_m == 3"
     class="cli-btn btn-m btn-lemon-green"
+    matTooltip="Cuidado!, se aprobará la Solicitud"
     style="margin-top: 2%"
-    (click)="guardarPdf_y_AprobarSolicitud()"
+    (click)="aprobarSolicitud()"
     [disabled]="importForm.invalid"
     >
-    <!-- (click)="onPost()" -->
-    <!-- [disabled]="esIgualTotalEvidencia()" -->
+    <!-- (click)="existeEvidencia()" -->
     <mat-icon class="icon-18">check</mat-icon> Aprobar
   </button>
 </div>

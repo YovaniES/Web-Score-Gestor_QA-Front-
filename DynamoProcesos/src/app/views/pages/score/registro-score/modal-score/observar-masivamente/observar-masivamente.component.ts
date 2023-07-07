@@ -44,7 +44,7 @@ export class ObservarMasivamenteComponent implements OnInit {
     this.activeTab = tab;
   }
 
-  actualizarComentarioScore_materiales() {
+  actualizarComentarioScore_m() {
     this.spinner.show();
     const formValues = this.obs_mForm.getRawValue();
     console.log('O B S_MAS', this.obs_mForm.value, this.DATA_SCORE.scoreObsForm.id_score);
@@ -54,13 +54,13 @@ export class ObservarMasivamenteComponent implements OnInit {
       {
         queryId: 22,
         mapValue: {
-          p_idScoreM            : this.DATA_SCORE.scoreObsForm.id_score,
-          p_obs_solicitud       : formValues.obs_solicitud_m,
-          CONFIG_OUT_MSG_EXITO  : '',
+          p_idScoreM          : this.DATA_SCORE.scoreObsForm.id_score,
+          p_obs_solicitud     : formValues.obs_solicitud_m,
+          CONFIG_OUT_MSG_EXITO: '',
         },
       },
     ];
-    this.scoreService.actualizarComentarioScore_materiales(parametro[0]).subscribe({
+    this.scoreService.actualizarComentarioScore_m(parametro[0]).subscribe({
       next: (resp: any) => {
         this.spinner.hide();
         console.log('OBS_NOTA_ACTUALIZADO', resp);
