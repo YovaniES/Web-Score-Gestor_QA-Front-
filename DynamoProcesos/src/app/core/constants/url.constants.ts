@@ -3,8 +3,8 @@ const ENVIROMENT: string = 'PROD';
 let PATH_API_SCORE  = '';
 let API_SAVE_DATA_IMPORT = '';
 let PATH_SCORE_AUTH = '';
-let API_SEND_MAIL = '';
-let API_IMPORT_PDF = '';
+let API_SEND_MAIL   = '';
+let API_IMPORT_PDF  = '';
 
 switch (ENVIROMENT) {
   case 'DEV':
@@ -16,10 +16,8 @@ switch (ENVIROMENT) {
   case 'PROD':
     PATH_SCORE_AUTH      = 'http://seguridadweb.indratools.com/aut/seguridad/'
 
-
-    // API_SAVE_DATA_IMPORT       = 'https://localhost:7247/api/ScoreDetalle';
+    // API_SAVE_DATA_IMPORT  = 'https://localhost:7247/api/ScoreDetalle';
     API_SAVE_DATA_IMPORT = 'http://saveimporteddata.indratools.com/api/ScoreDetalle'
-
 
     // API_SEND_MAIL        = 'http://localhost:36449/api/Mail'
     API_SEND_MAIL        = 'http://senddatascorebyemail.indratools.com/api/Mail'
@@ -37,7 +35,7 @@ switch (ENVIROMENT) {
 // LOGIN
 export const API_AUTH_SESSION_SCORE = PATH_SCORE_AUTH + 'login';
 
-// REGISTRO EVENTO
+// REGISTRO SCORE
 export const API_SCORE = PATH_API_SCORE + 'ExecuteQuery';
 
 // API guardar data importada

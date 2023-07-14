@@ -17,7 +17,6 @@ export class ObservarMasivamenteComponent implements OnInit {
   @BlockUI() blockUI!: NgBlockUI;
   loadingItem: boolean = false;
   obs_mForm!: FormGroup;
-  activeTab: string = 'continuar';
 
   constructor(
     public authService: AuthService,
@@ -38,10 +37,6 @@ export class ObservarMasivamenteComponent implements OnInit {
     this.obs_mForm = this.fb.group({
       obs_solicitud_m: ['', [Validators.required, Validators.minLength(25)]],
     });
-  }
-
-  onTabClick(tab: string) {
-    this.activeTab = tab;
   }
 
   actualizarComentarioScore_m() {

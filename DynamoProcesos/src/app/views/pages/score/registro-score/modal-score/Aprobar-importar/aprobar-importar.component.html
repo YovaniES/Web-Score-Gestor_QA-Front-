@@ -8,50 +8,48 @@
   </button>
 </div>
 
-<ng-container ></ng-container>
+
 <form class="row g-3" [formGroup]="importForm" style="padding: 10px" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m != 5">
-  <div class="col-sm-12 cli-form-element">
-    <label>Nombre Evidencia</label>
-    <input
-      type="text"
-      class="form-control cli-input-white"
-      formControlName="nombre"
-    />
-    <small class="text-alert" *ngIf="campoNoValido('nombre')">* El Nombre de la evidencia es obligatorio</small>
-  </div>
+  <ng-container *ngIf="listEvidencias.length < 4">
+    <!-- <div class="col-sm-12 cli-form-element">
+      <label>Nombre Evidencia</label>
+      <input
+        type="text"
+        class="form-control cli-input-white"
+        formControlName="nombre"/>
+      <small class="text-alert" *ngIf="campoNoValido('nombre')">* El Nombre de la evidencia es obligatorio</small>
+    </div> -->
 
-  <div class="col-sm-9 cli-form-element">
-    <label>Importar evidencia (PDF).</label>
-    <input
-      type="file"
-      class="cli-import"
-      accept="image/*"
-      formControlName="archivo"
-      (change)="onChange($event)"
-    />
-    <small class="text-alert" *ngIf="campoNoValido('archivo')">* El importar archivo es obligatorio</small>
-  </div>
-
-  <div class="col-sm-3">
-    <div class="cli-pdf" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m != 5">
-      <button *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 2"
-        class="cli-btn btn-m-pdf btn-purple"
-        matTooltip="Importar Máx 4 Pdf"
-        (click)="guardarEvidencia()"
-        [disabled]="importForm.invalid"
-        >
-        <mat-icon class="icon-18">save</mat-icon> Guardar
-      </button>
+    <div class="col-sm-9 cli-form-element">
+      <label>Importar evidencia (PDF).</label>
+      <input
+        type="file"
+        class="cli-import"
+        formControlName="archivo"
+        (change)="onChange($event)"/>
+        <small class="text-alert" *ngIf="campoNoValido('archivo')">* El importar archivo es obligatorio</small>
+        <!-- accept="image/*" -->
     </div>
-  </div>
-  <!-- [disabled]="esIgualTotalEvidencia()" -->
-  <div class="mb-3 form-check" *ngIf="status">
-    {{ status.message }}
-  </div>
+
+    <!-- <div class="col-sm-3">
+      <div class="cli-pdf" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m != 5">
+        <button *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 2"
+          class="cli-btn btn-m-pdf btn-purple"
+          matTooltip="Importar Máx 4 Pdf"
+          (click)="guardarEvidencia()"
+          [disabled]="importForm.invalid">
+          <mat-icon class="icon-18">save</mat-icon> Guardar
+        </button>
+      </div>
+    </div> -->
+  </ng-container>
+
+  <div class="mb-3 form-check" *ngIf="status">{{ status.message }}</div>
 </form>
+<h5 class="cli-warning"> <mat-icon class="icon-13" style="color:#ffc107">warning</mat-icon> <small style="color: #ffd863; font-weight: 600; margin-right: 5px;">NOTA:</small> Importación máx. 4 evidendias</h5>
 <!-- LISTA DE PDF ------------------------------------------------------------------------->
-<div style="color: #6c757d">
-  <!-- <div style="color: #6c757d" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 5"> -->
+<!-- <div style="color: #6c757d"> -->
+  <div style="color: #6c757d" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 5">
   <div class="pr-subtitle mt-2">Listado de Evidencias Score</div>
   <div class="pr-module-container">
     <div style="overflow: auto; min-height: 160px; max-height: 160px">
@@ -59,7 +57,7 @@
         <thead>
           <tr class="bgc-variable c-white">
             <th>#</th>
-            <th>Nombre Evidencia</th>
+            <th style="min-width: 120px;">Nombre Evidencia</th>
             <th>Archivo PDF</th>
             <th>Link</th>
             <th>Descargar</th>
@@ -69,7 +67,7 @@
         <tbody>
           <tr *ngFor="let evidencia of listEvidencias; let i = index">
             <td>{{ i + 1 }}</td>
-            <td>{{ evidencia.nombre }}</td>
+            <td style="text-align: left;">{{ evidencia.nombre }}</td>
             <td><img style="height: 80px; width: 100px;"
                 [src]="imgBaseUrl+evidencia.imagen">
             </td>
@@ -78,13 +76,12 @@
               <div class="cli-table-actions">
                 <button matTooltip="Descargar"
                   class="icon-btn btn-trans c-cyan-pdf"
-                  (click)="descargarPdf(evidencia)"
+                  (click)="descargarPdf(evidencia.id)"
                   ><mat-icon class="icon-13">picture_as_pdf</mat-icon>
                 </button>
-
                 <button matTooltip="Eliminar" *ngIf="!authService.esUsuarioGestor()"
                   class="icon-btn btn-trans c-fucsia"
-                  (click)="descargarPdf(evidencia)"
+                  (click)="descargarPdf(evidencia.id)"
                   ><mat-icon class="icon-13">delete_forever</mat-icon>
               </button>
               </div>
@@ -97,11 +94,11 @@
         >cargando...
       </div>
 
-      <!-- <div *ngIf="!loadingItem && listEvidencias.length == 0"
+      <div *ngIf="!loadingItem && listEvidencias.length == 0"
         class="cli-loader mt-2"
-        style="color: #c9c9c9">
+        style="color: #c9c9c9; font-size: 11px;">
         Aquí se mostrará la lista de evidencias del Lider...
-      </div> -->
+      </div>
     </div>
   </div>
 </div>
@@ -114,7 +111,7 @@
     (click)="aprobarSolicitud()"
     [disabled]="importForm.invalid"
     >
-    <!-- (click)="existeEvidencia()" -->
+    <!-- [disabled]="listEvidencias.length == 0 " -->
     <mat-icon class="icon-18">check</mat-icon> Aprobar
   </button>
 </div>

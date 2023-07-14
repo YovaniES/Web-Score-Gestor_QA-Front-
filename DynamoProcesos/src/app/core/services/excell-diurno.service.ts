@@ -597,7 +597,7 @@ export class ExcellDiurnoService {
     // Establecemos el ancho y estilo de las columnas de la Tabla
     sheet.getColumn('A').width = 22;
     sheet.getColumn('B').width = 15;
-    sheet.getColumn('C').width = 22;
+    sheet.getColumn('C').width = 32;
     sheet.getColumn('D').width = 20;
 
     // DATA SCORE - TABLA DINAMICA
@@ -622,7 +622,7 @@ export class ExcellDiurnoService {
         fila.values = [
           scoreTable[i].tipo_doc,//A
           scoreTable[i].cod_doc, //B
-          'MOVISTAR TOTAL',      //C
+          scoreTable[i].tx,      //C
           scoreTable[i].cod_doc, //D
         ];
         fila.font = { size: 11}

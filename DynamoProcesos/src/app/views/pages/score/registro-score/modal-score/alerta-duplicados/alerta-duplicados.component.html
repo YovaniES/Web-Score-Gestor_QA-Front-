@@ -1,0 +1,70 @@
+<div style="display: flex">
+  <div class="flex-1"></div>
+  <div class="modal-title" style="color: #676767">Alerta duplicados?</div>
+  <div class="flex-1"></div>
+
+  <button (click)="close()" class="icon-btn btn-trans c-orange moda-close-btn">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<!-- <h2 style="color: #ffc107; margin: 0 0 7px">Lista de duplicados</h2> -->
+
+<p style="font-size: 14px; color: #a6a6a6; margin-top: 20px;">
+  <strong>CUIDADO.! </strong> La siguiente lista de registros muestran duplicidad en el número de documento, por favor coordine con el Analista u Observe la solicitud.
+</p>
+
+<form class="row g-3">
+  <div class="pr-module-container">
+    <div style="overflow: auto; min-height: 120px; color: #6c757d">
+      <table class="cli-tableAlerta stripedtable underlinedtable">
+        <thead>
+          <tr class="bgc-purple c-white">
+            <th style="min-width: 10px" >N°</th>
+            <th style="min-width: 65px" >ID Score</th>
+            <th style="min-width: 120px">Solicitante</th>
+            <th style="min-width: 63px" >Tipo Doc</th>
+            <th style="min-width: 66px" >Num Doc</th>
+            <th style="min-width: 100px">Tipo TX</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let duplicado of listDuplicados; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{ duplicado.idScored       }}</td>
+            <td>{{duplicado.solicitante     }}</td>
+            <td>{{duplicado.tipo_documento  }}</td>
+            <td style="color: #ff4081;">{{duplicado.numero_documento}}</td>
+            <td>{{duplicado.tipoTransaccion }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="cli-loader" *ngIf="loadingItem">
+        <mat-spinner style="margin-right: 20px" diameter="20"></mat-spinner
+        >cargando...
+      </div>
+
+      <div
+          *ngIf="!loadingItem && listDuplicados.length == 0"
+          class="cli-loader mt-5"
+          style="color: #f97fa9">
+          No hay registros duplicados disponible para mostrar
+        </div>
+    </div>
+  </div>
+
+  <!-- <div class="score-form-buttons" style="margin-top: 5%">
+    <button class="cli-btn btn-m btn-grey" (click)="close()">
+      <div style="display: flex">
+        <mat-icon class="icon-18">cancel</mat-icon> Salir
+      </div>
+    </button>
+    <button
+      class="cli-btn-red btn-m btn-red"
+      >
+      <mat-icon class="icon-18">unpublished</mat-icon>Observar
+    </button>
+  </div> -->
+</form>

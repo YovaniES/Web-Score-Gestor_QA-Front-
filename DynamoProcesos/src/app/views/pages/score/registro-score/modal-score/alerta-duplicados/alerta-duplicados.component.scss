@@ -1,0 +1,105 @@
+@import "variables.scss";
+
+.modal-title {
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin: 4px 0;
+  text-align: center;
+}
+
+.cli-tableAlerta{
+  width: 100%;
+  background-color: #fff;
+  & th{
+      // padding: 5px;
+      font-weight: 300;
+      text-align: center;
+  }
+  & td{
+      vertical-align: middle;
+      text-align: center;
+      font-size: 11px;
+      padding: 3px 10px;
+  }
+ }
+
+.text-alert {
+  font-size: 10px;
+  color: #f66d7a;
+  margin-top: 0;
+}
+
+.form-select {
+  font-size: 12px;
+}
+
+.form-control {
+  font-size: 10px;
+}
+
+.cli-btn-red {
+  border: none;
+  border-radius: 3px;
+  margin: 0 5px;
+  height: 30px;
+  padding: 0 10px;
+  font-family: "Webapp-Bold" !important;
+  display: flex;
+  align-items: center;
+  & mat-icon {
+    margin: 0 5px;
+  }
+  &:disabled {
+    background-color: #fbd1d5;
+    color: #fff;
+  }
+}
+
+.tabs-container{
+  background: #eee;
+  list-style-type: none;
+  padding-left: 0;
+  margin-bottom: 0;
+  height: 30px;
+  border-bottom: 1px solid #ccc;
+  width: 100%;
+  color: #6c757d;
+}
+
+.tabs-container .tab-link{
+  width: 50%;
+  position: relative;
+  height: 100%;
+  // padding: 4px;
+  float: left;
+  text-align: center;
+  cursor: pointer;
+}
+
+.score-form{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  margin-top: 20px;
+  &-buttons{
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      // margin-top: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-title {
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin: 5px 0;
+    text-align: center;
+  }
+  .btn-m {
+    height: 20px;
+    padding: 15px;
+  }
+}

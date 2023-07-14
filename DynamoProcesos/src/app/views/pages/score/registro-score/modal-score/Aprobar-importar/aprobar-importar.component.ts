@@ -49,18 +49,18 @@ export class AprobarImportarComponent implements OnInit {
     this.importForm = this.fb.group({
       id         : [''],
       idScore_m  : [''],
-      nombre     : ['', [Validators.required, Validators.minLength(10)]],
+      nombre     : [''],
+      // nombre     : ['', [Validators.required, Validators.minLength(10)]],
       archivo    : ['', [Validators.required]],
     });
   }
 
   idScoreM: any = 0;
-  listEvidencias!:Evidencias[];
+  listEvidencias:Evidencias[] = [];
   getAllEvidencias(){
     this.idScoreM  = this.DATA_SCORE.scoreObsForm.id_score;
 
-    console.log('ID_SCORE_IMP', this.idScoreM);
-
+    // console.log('ID_SCORE_IMP', this.idScoreM);
     this.pdfImportService.getAllPdf().subscribe({
       next: (resp) => {
         //  this.listEvidencias = resp;
@@ -74,43 +74,54 @@ export class AprobarImportarComponent implements OnInit {
     })
   }
 
-  existeEvidencia(){
+  descargarPdf(id: any){
+    console.log('ID-IMPORT', id);
+
+    this.pdfImportService.descargarPdf(id).subscribe({
+      next: (resp) => {
+
+      },
+      error : (err) => { console.log(err);
+      }
+    })
 
   }
 
   aprobarSolicitud() {
-    this.spinner.show();
-
-    // const formValues = this.importForm.getRawValue();
     console.log('ID_Score_IMPORT', this.DATA_SCORE.scoreObsForm.id_score);
 
-    let parametro: any[] = [
-      {
-        queryId: 16,
-        mapValue: {
-          p_idScore: this.DATA_SCORE.scoreObsForm.id_score,
-        },
-      },
-    ];
+    Swal.fire({
+      title: 'Aprobar solicitud?',
+      text: `¿Estas seguro que desea Aprobar la Solicitud, tenga en cuenta que ya no podrá importar más evidencias? `,
+      icon: 'question',
+      confirmButtonColor: '#08b1c1',
+      cancelButtonColor: '#9da7b1',
+      confirmButtonText: 'Si, Aprobar!',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+    }).then((resp) => {
+      if (resp.value) {
+        this.spinner.show();
 
-    this.scoreService.aprobarSolicitud(parametro[0]).subscribe({
-      next: (resp: any) => {
-        this.spinner.hide();
-
-        this.close(resp);
-
-        Swal.fire({
-          title: 'Aprobar solicitud!',
-          text: `Se aprobó con éxito la solicitud`,
-          icon: 'success',
-          confirmButtonText: 'Ok',
+        let parametro: any[] = [
+          {
+            queryId: 16,
+            mapValue: { p_idScore: this.DATA_SCORE.scoreObsForm.id_score },
+          },
+        ];
+        this.scoreService.aprobarSolicitud(parametro[0]).subscribe({
+          next: (resp: any) => {
+            this.spinner.hide();
+            this.close(resp);
+          },
+          error: () => {
+            Swal.fire('ERROR', 'No se pudo Aprobar la Solicitud', 'warning');
+          },
         });
-      },
-      error: () => {
-        Swal.fire('ERROR', 'No se pudo Aprobar la solicitud', 'warning');
-      },
+      }
     });
   }
+
 
   onChange(event: any){
     // this.archivoPdf.archivo = event.target.files[0];
@@ -154,11 +165,6 @@ export class AprobarImportarComponent implements OnInit {
         console.log(err);
       }
     })
-  }
-
-
-  descargarPdf(id: any){
-
   }
 
   campoNoValido(campo: string): boolean {

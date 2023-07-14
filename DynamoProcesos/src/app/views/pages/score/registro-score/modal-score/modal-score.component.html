@@ -21,7 +21,7 @@
             <div class="cli-user">{{scoreForm.controls['solicitante'].value | uppercase}}</div>
           </ng-container>
           <div class="flex-1" style="background: #f4f4f4;"></div>
-          <div class="id-score">ID : <span  class="total">{{score_Id}}</span></div>
+          <div class="id-score">ID : <span  class="total">{{DATA_SCORE.idScore_M}}</span></div>
       </div>
 
       <div class="pr-section mb-3">
@@ -253,7 +253,7 @@
                                 </ng-container>
                               </div>
                             </td>
-                             <td>{{ score.tipo_documento   }}</td>
+                            <td>{{ score.tipo_documento   }}</td>
                             <td>{{ score.numero_documento }}</td>
                             <td>{{ score.nombres_apell    }}</td>
                             <td>{{ score.num_lin_disp     }}</td>
@@ -751,8 +751,9 @@
 
       <ng-container *ngIf="DATA_SCORE">
         <ng-container *ngIf="(authService.esUsuarioGestor() || (authService.esUsuarioLider() && scoreForm.controls['id_estado_m'].value == 2 && scoreForm.controls['id_estado_m'].value != 5 && scoreForm.controls['id_estado_m'].value != 6))
-                          && ((scoreForm.controls['id_estado_m'].value == 2 && validarSiExisteReqValidacion()) || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 6 || scoreForm.controls['id_estado_m'].value == 8)">
-          <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
+                          && ((scoreForm.controls['id_estado_m'].value == 2 && validarSiExisteReqValidacion()) || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 5 || scoreForm.controls['id_estado_m'].value == 6 || scoreForm.controls['id_estado_m'].value == 8) || existeDuplicados()">
+
+          <button *ngIf="(listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0)"
              class="cli-btn btn-m btn-observar"
              matTooltip="Observar masivamente la Solicitud"
              type="submit"
@@ -769,7 +770,6 @@
            type="submit"
            (click)="enviarSolicitudTDP()"
            >
-           <!-- [disabled]="existeScoreD_Aprobado()" -->
            <mat-icon class="icon-18">forward_to_inbox</mat-icon> Enviar
         </button>
       </ng-container>

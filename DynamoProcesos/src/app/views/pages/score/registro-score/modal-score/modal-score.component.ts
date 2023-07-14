@@ -18,6 +18,7 @@ import { AprobarImportarComponent } from './Aprobar-importar/aprobar-importar.co
 import { AsignarComentarioComponent } from './asignar-comentario-score_d/asignar-comentario.component';
 import { Enums } from 'src/app/core/enums/enums';
 import { PdfImportService } from 'src/app/core/services/import-pdf.service';
+import { AlertaDuplicadosComponent } from './alerta-duplicados/alerta-duplicados.component';
 
 @Component({
   selector: 'app-modal-evento',
@@ -30,7 +31,6 @@ export class ModalStoreComponent implements OnInit {
   activeTab: string = 'General';
 
   scoreForm!: FormGroup;
-  score_Id!: number;
   page = 1;
   pageSize = 10;
 
@@ -66,14 +66,15 @@ export class ModalStoreComponent implements OnInit {
     this.getUsername();
     this.getUserID();
     this.getListEstado();
+
     if (this.DATA_SCORE && this.DATA_SCORE.idScoreM) {
-      this.score_Id = this.DATA_SCORE.idScore_M;
       this.ListaHistoricoCambios(this.DATA_SCORE,);
       this.cargarSCoreByID();
       this.listaCorreosTDP();
+
+      this.listScoreDuplicados()
+      this.existeDuplicados();
     }
-    // console.log('DATA_SCORE_M', this.DATA_SCORE);
-    // console.log('SCOREFORM', this.scoreForm.value);
   }
 
   newFilfroForm() {
@@ -93,13 +94,39 @@ export class ModalStoreComponent implements OnInit {
       fechaIniPrueba  : [null],
       fechaFinPrueba  : [null],
       fechaEnvioPrueba: [null],
-
-      // username: ['astsusuariointegrador'],
-      // password: ['MINDintegrador']
     });
   }
 
-  // this.pdfImportService.getListJira(this.scoreForm.controls['username'].value, this.scoreForm.controls['password'].value).subscribe(resp =>{
+
+
+  existeDuplicados(): boolean{
+    return this.listDuplicados.length > 0;
+  }
+
+  listDuplicados: any[] = [];
+  listScoreDuplicados() {
+    this.spinner.show();
+    let parametro: any[] = [
+      {
+        queryId: 26,
+        mapValue: {
+          p_idScore_m : this.DATA_SCORE.idScoreM,
+        },
+      },
+    ];
+    this.scoreService.listaScoreDuplicados(parametro[0]).subscribe({
+      next: (resp: any) => {
+        this.spinner.hide();
+        this.listDuplicados = resp.list;
+        console.log('LIST_DUPLICADOS', this.listDuplicados);
+
+        if (this.listDuplicados.length > 0) {
+          this.modalAlertaDuplicados();
+        }
+      },
+    });
+  }
+
   getListJira(){
       this.pdfImportService.getAllListJira('astsusuariointegrador','MINDintegrador').subscribe(resp =>{
       console.log('LIST-JIRA', resp);
@@ -224,27 +251,6 @@ export class ModalStoreComponent implements OnInit {
     this.actualizarScore_m(estado.idEstado);
   }
 
-  // observarScoreRegistro() {
-  //   if (this.DATA_SCORE.estado == 'Solicitado' || this.DATA_SCORE.estado == 'Aprobado' || this.DATA_SCORE.estado == 'En Validación') {
-  //     Swal.fire({
-  //       title: 'Observar estado?',
-  //       text: `¿Estas seguro que desea cambiar de estado a Observado?`,
-  //       icon: 'question',
-  //       confirmButtonColor: '#20c997',
-  //       cancelButtonColor: '#9da7b1',
-  //       confirmButtonText: 'Si, Cambiar!',
-  //       showCancelButton: true,
-  //       cancelButtonText: 'Cancelar',
-  //     }).then((resp) => {
-  //       if (resp.value) {
-  //         this.cambiarEstadoScoreM('OBSERVADO');
-  //         this.cambiarEstadoDetalleAobservado();
-  //         this.cargarOBuscarScoreDetalle();
-  //       }
-  //     });
-  //   }
-  // }
-
   descargarExcelScore_D() { //DESCARGAR EXCELL - PRUEBA
     let parametro: any[] = [
       {
@@ -301,12 +307,12 @@ export class ModalStoreComponent implements OnInit {
   }
 
   exportScoreDetalleMasivoOdiurno(id_score: number) {
-    let parametroWL: any[] = [{queryId: 23, mapValue: {},},];
-    let parametro  : any[] = [{queryId: 20, mapValue: {p_idScore: id_score}},];
-    let paramTablas: any[] = [{queryId: 25}];
+    let parametroWL  : any[] = [{queryId: 23, mapValue: {},},];
+    let parametro    : any[] = [{queryId: 20, mapValue: {p_idScore: id_score}},];
+    let paramTablas  : any[] = [{queryId: 25}];
 
-    let listadoWL    :any[]=[];
-    let listadoTablas:any[]=[];
+    let listadoWL    : any[] = [];
+    let listadoTablas: any[] = [];
 
     this.scoreService.listExportWL(parametroWL[0]).pipe(
       tap((respWL: any)=> { console.log('LISTA_WL', respWL);  if (respWL && respWL.list ) {listadoWL = respWL.list}}),
@@ -387,7 +393,7 @@ export class ModalStoreComponent implements OnInit {
         }
       });
   }
-
+// base de datos: id, name, age, photo; importar archivo foto, pdf, importar foto.
   fechaIniPrueba: any = '';
   fechaFinPrueba: any = '';
   enviarCorreo(file: Blob, listaCorreo: string[], correoCopia: string[]) {
@@ -506,10 +512,6 @@ export class ModalStoreComponent implements OnInit {
     ];
 
     this.scoreService.cambiarEstadoDetalleAobservado(parametro[0]).subscribe({ next: (resp: any) => {} });
-  }
-
-  verEvidenciasPDF() {
-    // FALTA IMPLEMENTAR¡¡¡¡¡¡¡¡¡¡¡¡¡¡
   }
 
   mapearScore(idEstado?: number): any[] {
@@ -717,88 +719,6 @@ export class ModalStoreComponent implements OnInit {
     this.page = event;
   }
 
-  estadoEnValidacionScoreM(response: any) {
-    if (response.resp.exitoMessage == 'Actualización exitosa') {
-      this.cambiarEstadoScoreM('EN VALIDACIÓN');
-    }
-  }
-
-  estadoObservadoScoreM(resp: any) {
-    if (resp.exitoMessage == 'Actualización exitosa') {
-      this.cambiarEstadoScoreM('OBSERVADO');
-    }
-  }
-
-  aprobarEstadoScoreM(resp: any) {
-    this.cambiarEstadoScoreM('APROBADO');
-  }
-
-  estadoFinalizadoScoreM(resp: any) {
-    this.cambiarEstadoScoreM('FINALIZADO');
-  }
-
-  validarSiExisteRegistroObservado(): any {
-    // console.log('SCORE_D_OBSERVADO', this.listScoreDetalle);
-    return this.listScoreDetalle.find(s => s.estado.toUpperCase() == 'OBSERVADO');
-  }
-
-  existeScoreD_Aprobado(): any {
-    return this.listScoreDetalle.find(s => s.estado.toUpperCase() == 'APROBADO');
-  }
-
-  asignarComentarioScore_d(DATA: any) {
-    const dialogRef = this.dialog.open(AsignarComentarioComponent, {width: '35%', data:{ scoreComentForm: this.scoreForm.getRawValue(), DATA},});
-
-    dialogRef.afterClosed().subscribe((resp) => {
-      // console.log('DATA_SCOR_MAESTRA', this.listScoreDetalleCorp.find(x=>x.formato_score == 'B2B'));
-
-      if (resp) {
-        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && resp.formValues && resp.formValues.id_estado_d == 4) {
-          console.log('IF_COMENTARIO', resp,);
-          this.estadoEnValidacionScoreM(resp);
-        }else{
-          console.log('ELSE-COMENTARIO');
-          this.listScoreM_ByID()
-          // this.cargarOBuscarScoreDetalle();
-          // this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
-        }
-      }
-    });
-  }
-
-  observarMasivamenteSolicitud() {
-    const dialogRef = this.dialog.open(ObservarMasivamenteComponent, { width: '25%', data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
-    dialogRef.afterClosed().subscribe((resp) => {
-      if (resp) {
-        console.log('X-Y-Z', resp);
-
-        if (this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') {
-          this.estadoObservadoScoreM(resp);
-          this.cambiarEstadoDetalleAobservado();
-          this.listScoreM_ByID();
-        }
-      }
-    });
-  }
-
-  importarPdf_AprobarSolicitud() {
-    const dialogRef = this.dialog.open(AprobarImportarComponent, {width: '35%',data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
-    dialogRef.afterClosed().subscribe((resp) => {
-
-      console.log('XYZ', resp);
-      if (resp) {
-        // return
-        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && (this.scoreForm.controls['id_estado_m'].value == 2 || this.scoreForm.controls['id_estado_m'].value == 3)) {
-          console.log('if');
-          // this.cambiarEstadoDetalleAaprobado();
-        this.aprobarEstadoScoreM(resp);
-        this.cargarOBuscarScoreDetalle();
-        this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
-        }
-      }
-    });
-  }
-
   finalizarSolicitud() {
     if (this.DATA_SCORE.estado.toUpperCase() == 'ENVIADO') {
       Swal.fire({
@@ -832,6 +752,88 @@ export class ModalStoreComponent implements OnInit {
         }
       });
     }
+  }
+
+  estadoEnValidacionScoreM(response: any) {
+    if (response.resp.exitoMessage == 'Actualización exitosa') {
+      this.cambiarEstadoScoreM('EN VALIDACIÓN');
+    }
+  }
+
+  estadoObservadoScoreM(resp: any) {
+    if (resp.exitoMessage == 'Actualización exitosa') {
+      this.cambiarEstadoScoreM('OBSERVADO');
+    }
+  }
+
+  aprobarEstadoScoreM(resp: any) {
+    this.cambiarEstadoScoreM('APROBADO');
+  }
+
+  estadoFinalizadoScoreM(resp: any) {
+    this.cambiarEstadoScoreM('FINALIZADO');
+  }
+
+  validarSiExisteRegistroObservado(): any {
+    // console.log('SCORE_D_OBSERVADO', this.listScoreDetalle);
+    return this.listScoreDetalle.find(s => s.estado.toUpperCase() == 'OBSERVADO');
+  }
+
+  asignarComentarioScore_d(DATA: any) {
+    const dialogRef = this.dialog.open(AsignarComentarioComponent, {width: '35%', data:{ scoreComentForm: this.scoreForm.getRawValue(), DATA},});
+
+    dialogRef.afterClosed().subscribe((resp) => {
+      if (resp) {
+        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && resp.formValues && resp.formValues.id_estado_d == 4) {
+          console.log('IF_COMENTARIO', resp,);
+          this.estadoEnValidacionScoreM(resp);
+        }else{
+          console.log('ELSE-COMENTARIO');
+          this.listScoreM_ByID()
+        }
+      }
+    });
+  }
+
+  modalAlertaDuplicados() {
+    const dialogRef = this.dialog.open(AlertaDuplicadosComponent, { width: '45%', data: { listaDetalleDuplicados: this.listDuplicados, isCreation: true },});
+    dialogRef.afterClosed().subscribe((resp) => {
+      if (resp) {
+        console.log('DUPL-SCORE', resp);
+      }
+    });
+  }
+
+  observarMasivamenteSolicitud() {
+    const dialogRef = this.dialog.open(ObservarMasivamenteComponent, { width: '25%', data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
+    dialogRef.afterClosed().subscribe((resp) => {
+      if (resp) {
+        console.log('X-Y-Z', resp);
+
+        if (this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') {
+          this.estadoObservadoScoreM(resp);
+          this.cambiarEstadoDetalleAobservado();
+          this.listScoreM_ByID();
+        }
+      }
+    });
+  }
+
+  importarPdf_AprobarSolicitud() {
+    const dialogRef = this.dialog.open(AprobarImportarComponent, {width: '35%',data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
+    dialogRef.afterClosed().subscribe((resp) => {
+
+      console.log('XYZ', resp);
+      if (resp) {
+        // return
+        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && (this.scoreForm.controls['id_estado_m'].value == 2 || this.scoreForm.controls['id_estado_m'].value == 3)) {
+          console.log('if');
+        this.aprobarEstadoScoreM(resp);
+        this.cargarOBuscarScoreDetalle();
+        this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
+        }
+      }
+    });
   }
 
   campoNoValido(campo: string): boolean {
