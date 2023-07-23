@@ -60,7 +60,7 @@ export class ModalStoreComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getListJira();
+    // this.getListJira();
     this.newFilfroForm();
     this.isGestorTDP();
     this.getUsername();
@@ -70,8 +70,7 @@ export class ModalStoreComponent implements OnInit {
     if (this.DATA_SCORE && this.DATA_SCORE.idScoreM) {
       this.ListaHistoricoCambios(this.DATA_SCORE,);
       this.cargarSCoreByID();
-      this.listaCorreosTDP();
-
+      this.getCorreosTDP();
       this.listScoreDuplicados()
       this.existeDuplicados();
     }
@@ -127,9 +126,13 @@ export class ModalStoreComponent implements OnInit {
     });
   }
 
+  dataJira: any = {};
   getListJira(){
-      this.pdfImportService.getAllListJira('astsusuariointegrador','MINDintegrador').subscribe(resp =>{
+      this.pdfImportService.getAllListJira('astsusuariointegrador','MINDintegrador').subscribe((resp: any) =>{
+        this.dataJira = resp;
+
       console.log('LIST-JIRA', resp);
+      // console.log('JIRA =>', resp.fields.assignee.name );
     })
   }
 
@@ -160,7 +163,7 @@ export class ModalStoreComponent implements OnInit {
     this.scoreService.cargarOBuscarScoreDetalle(parametro[0]).subscribe((resp: any) => {
         this.blockUI.stop();
 
-        console.log('D A T A - score_D', resp, resp.list.length);
+        // console.log('D A T A - score_D', resp, resp.list.length);
         //ESTADO SCORE_M SOLICITADO
         if ((this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && (this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_M_ESTADOS.SOLICITADO)) {
           this.listScoreDetalleGen   = resp.list.filter((detalle: any) =>(detalle.id_estado == Enums.ESTADOS_SCORE_D.SOLICITADO || detalle.id_estado == Enums.ESTADOS_SCORE_D.APROBADO) && detalle.tipo_score.toUpperCase() == 'GENERAL');
@@ -245,7 +248,7 @@ export class ModalStoreComponent implements OnInit {
   cambiarEstadoScoreM(nombreEstado: string) {
     console.log('DATA_M', this.DATA_SCORE, this.DATA_SCORE.estado);
 
-    console.log('Estados_M', this.listEstado);
+    // console.log('Estados_M', this.listEstado);
     const estado = this.buscarEstadoPorNombre(nombreEstado);
 
     this.actualizarScore_m(estado.idEstado);
@@ -271,7 +274,6 @@ export class ModalStoreComponent implements OnInit {
     if (this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO' || this.DATA_SCORE.estado.toUpperCase() == 'APROBADO' || this.DATA_SCORE.estado.toUpperCase() == 'EN VALIDACIÓN') {
       Swal.fire({
            title: 'Enviar Solicitud score?',
-          //  text: `¿Estas seguro que desea enviar la Solicitud y cambiar el estado a enviado? `, //NO se muestra en la alerte??
            icon: 'question',
            confirmButtonColor: '#20c997',
            cancelButtonColor: '#9da7b1',
@@ -293,8 +295,6 @@ export class ModalStoreComponent implements OnInit {
            '</div>',
 
       }).then((resp) => {
-        console.log('123', resp);
-
         if (resp.value) {
           if (this.scoreForm.controls['formatoScore'].value == 'Masivo' || this.scoreForm.controls['formatoScore'].value == 'Diurno') {
             this.exportScoreDetalleMasivoOdiurno(this.DATA_SCORE.idScoreM);
@@ -307,34 +307,36 @@ export class ModalStoreComponent implements OnInit {
   }
 
   exportScoreDetalleMasivoOdiurno(id_score: number) {
-    let parametroWL  : any[] = [{queryId: 23, mapValue: {},},];
-    let parametro    : any[] = [{queryId: 20, mapValue: {p_idScore: id_score}},];
-    let paramTablas  : any[] = [{queryId: 25}];
+    let p         : any[] = [{queryId: 20, mapValue: {p_idScore: id_score}},];
+    let p_WL      : any[] = [{queryId: 23, mapValue: {},},];
+    let p_Tablas  : any[] = [{queryId: 25}];
+    let p_casosEsp    : any[] = [{queryId: 27}];
+    let p_listTXdiurna: any[] = [{queryId: 28}];
+    let p_listTXmasiva: any[] = [{queryId: 29}];
 
-    let listadoWL    : any[] = [];
-    let listadoTablas: any[] = [];
+    let listadoWL   : any[] = [];
+    let listTablas  : any[] = [];
+    let listCasosEsp: any[] = [];
+    let listTXdiurna: any[] = [];
+    let listTXmasiva: any[] = [];
 
-    this.scoreService.listExportWL(parametroWL[0]).pipe(
-      tap((respWL: any)=> { console.log('LISTA_WL', respWL);  if (respWL && respWL.list ) {listadoWL = respWL.list}}),
-        concatMap(() => this.scoreService.listTablasExport(paramTablas[0]),),
-
-      tap((respTablas: any) => {console.log('LISTA_TABLAS', respTablas); if (respTablas && respTablas.list) { listadoTablas = respTablas.list}}),
-        concatMap(() => this.scoreService.exportScoreDetalleMasivoOdiurno(parametro[0]) )
-
-      ).subscribe((resp: any) => {
-        console.log('Data-PESTAÑAS', resp.list, this.DATA_SCORE.formatoScore, listadoWL, listadoTablas);
+    this.scoreService.listExportWL(p_WL[0]).pipe(tap((respWL: any)=> { console.log('LISTA_WL', respWL);  if (respWL && respWL.list ){listadoWL = respWL.list}}),
+        concatMap(() => this.scoreService.getListTXexport(p_casosEsp[0]),),tap((casosEsp: any) => { if (casosEsp && casosEsp.list){ listCasosEsp = casosEsp.list}; console.log('CASOS-ESP-EXP', casosEsp); }),
+        concatMap(() => this.scoreService.getTablasExport(p_Tablas[0]) ),tap((respTablas: any) => { if (respTablas && respTablas.list){ listTablas = respTablas.list}; console.log('LISTA_TABLAS', respTablas);}),
+        concatMap(() => this.scoreService.getCasosEspExportDiurna(p_listTXdiurna[0]) ), tap((txDiurna: any) => { if (txDiurna && txDiurna.list){ listTXdiurna = txDiurna.list}; console.log('LISTA_TX_DIURNA', txDiurna);}),
+        concatMap(() => this.scoreService.getCasosEspExportMasiva(p_listTXmasiva[0]) ), tap((txMasiva: any) => { if (txMasiva && txMasiva.list){ listTXmasiva = txMasiva.list}; console.log('LISTA_TX_MASIVA', txMasiva); }),
+        concatMap(() => this.scoreService.exportScoreDetalleMasivoOdiurno(p[0]) ),).subscribe((resp: any) => {
 
         if (resp) {
-          if (this.DATA_SCORE.formatoScore == 'Masivo') { console.log('IF-MASIVO');
-            this.excellMasivoService.generarExcell(resp.list, listadoWL).then((file: any) => {
+          if (this.DATA_SCORE.formatoScore == 'Masivo') { //console.log('IF-MASIVO');
+            this.excellMasivoService.generarExcell(resp.list, listadoWL, listTablas, listTXmasiva, listCasosEsp).then((file: any) => {
                 const blob = new Blob([file]);
-                // return
                 this.listadoCorreosTDP(blob);
               });
           }
 
-          if (this.DATA_SCORE.formatoScore == 'Diurno'){ console.log('ELSE-DIURNO');
-            this.excellDiurnoService.generarExcell(resp.list, listadoWL, listadoTablas).then((file: any) => {
+          if (this.DATA_SCORE.formatoScore == 'Diurno'){ //console.log('ELSE-DIURNO');
+            this.excellDiurnoService.generarExcell(resp.list, listadoWL, listTablas, listTXmasiva, listCasosEsp).then((file: any) => {
                 const blob = new Blob([file]);
                 // return
                 this.listadoCorreosTDP(blob);
@@ -354,7 +356,7 @@ export class ModalStoreComponent implements OnInit {
       },
     ];
     this.scoreService.exportScoreDetalleB2B(parametro[0]).subscribe((resp: any) => {
-        console.log('TIPO-SCORE-B2B', resp.list);
+        // console.log('TIPO-SCORE-B2B', resp.list);
 
         this.excellB2BService.generarExcell(resp.list).then((file) => {
           const blob = new Blob([file]);
@@ -363,37 +365,33 @@ export class ModalStoreComponent implements OnInit {
       });
   }
 
-  listCorreoGestor: string = '';
-  listadoCorreosGESTOR() {
-    let parametro: any[] = [{ queryId: 15 }];
-    this.scoreDetalleService.listadoCorreosTDP(parametro[0]).subscribe((resp: any) => {
-        if (resp && resp.list) {
-          console.log('CORREOS-GESTOR',resp.list, resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
-          this.notificarAprobacionPorCorreo(resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
-        }
-      });
-  }
-
   listadoCorreosTDP(file: Blob) {
-    let parametro: any[] = [{ queryId: 15 }];
-    this.scoreDetalleService.listadoCorreosTDP(parametro[0]).subscribe((resp: any) => {
-        if (resp && resp.list) {
-          console.log('CORREOS-TDP',resp.list, resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
-          this.enviarCorreo(file, resp.list.map((x: any) => x.valor_texto_1), resp.list.map((cc: any) => cc.valor_texto_2));
+    let p   : any[] = [{ queryId: 15 }];
+    let p_cc: any[] = [{ queryId: 30 }];
+
+    let listCorreo: any[] = [];
+    let listCc: any[] = [];
+
+    this.scoreDetalleService.listadoCorreosTDP(p[0]).pipe(tap((c: any) => { console.log('C-TDP', c); if (c && c.list) { listCorreo = c.list.map((x:any) => x.valor_texto_1)}}),
+      concatMap(()=>this.scoreDetalleService.listadoCorreosCopia(p_cc[0])), tap((cc:any) => { console.log('CC-TDP', cc); ;if (cc && cc.list) { listCc = cc.list.map((y:any) => y.valor_texto_1)}})
+    ).subscribe((resp: any) => {
+
+        if (resp) {
+          this.enviarCorreo(file, listCorreo, listCc);
         }
       });
   }
 
   listCorreosTDP: string = '';
-  listaCorreosTDP() {
+  getCorreosTDP() {
     let parametro: any[] = [{ queryId: 15 }];
-    this.scoreDetalleService.listadoCorreosTDP(parametro[0]).subscribe((resp: any) => {
+    this.scoreDetalleService.geCorreosTDP(parametro[0]).subscribe((resp: any) => {
         if (resp && resp.list) {
           this.listCorreosTDP = resp.list.map((x: any) => x.valor_texto_1);
         }
       });
   }
-// base de datos: id, name, age, photo; importar archivo foto, pdf, importar foto.
+
   fechaIniPrueba: any = '';
   fechaFinPrueba: any = '';
   enviarCorreo(file: Blob, listaCorreo: string[], correoCopia: string[]) {
@@ -406,7 +404,7 @@ export class ModalStoreComponent implements OnInit {
       data.append('ToEmail', listaCorreo.join(';'));
       data.append('Cc', correoCopia.join(';'));
       data.append('Subject','Formato_Solicitud_Score_B2C_ ' +this.fechaIniPrueba +' AL ' +this.fechaFinPrueba +'-MASIVO');
-      data.append('Body','[C O R R E O   P R U E B A-MASIVO] Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación..');
+      data.append('Body','Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación..');
       data.append('Attachments',file,'Formato_Solicitud_Score_B2C_ ' +this.fechaIniPrueba +' AL ' +this.fechaFinPrueba +'-MASIVO' +'.xlsx');
     }
     if (this.scoreForm.controls['formatoScore'].value == 'Diurno') {
@@ -414,7 +412,7 @@ export class ModalStoreComponent implements OnInit {
       data.append('ToEmail', listaCorreo.join(';'));
       data.append('Cc', correoCopia.join(';'));
       data.append('Subject','Formato_Solicitud_Score_B2C_ ' + this.fechaIniPrueba + ' -DIURNA_v2');
-      data.append('Body','[C O R R E O   P R U E B A - DIURNO] Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación.');
+      data.append('Body','Estimados, Por favor su apoyo con la programación del score adjunto. De antemano muchas gracias por el apoyo, estaremos a la espera de tu confirmación.');
       data.append('Attachments',file,'Formato_Solicitud_Score_B2C_ ' +this.fechaIniPrueba +' -DIURNA_v2' +'.xlsx');
     }
     if (this.scoreForm.controls['formatoScore'].value == 'B2B') {
@@ -541,7 +539,6 @@ export class ModalStoreComponent implements OnInit {
       next: (resp: any) => {
         this.spinner.hide();
 
-        console.log('DATA_ACTUALIZADO', resp);
         if (!estadoScore) {
           this.dialogRef.close('Actualizar');
         } else {
@@ -628,7 +625,7 @@ export class ModalStoreComponent implements OnInit {
   rolGestorTdp: number = 0;
   isGestorTDP() {
     this.rolGestorTdp = this.authService.getRolID();
-    console.log('ID_ROL_TDP', this.rolGestorTdp);
+    // console.log('ID_ROL_TDP', this.rolGestorTdp);
   }
 
   disabledControls() {
@@ -689,7 +686,7 @@ export class ModalStoreComponent implements OnInit {
     this.authService.getCurrentUser().subscribe((resp) => {
       this.userName = resp.userName;
       this.scoreForm.controls['solicitante'].setValue(this.userName);
-      console.log('USER_NAME', this.userName);
+      // console.log('USER_NAME', this.userName);
     });
   }
 
@@ -717,41 +714,6 @@ export class ModalStoreComponent implements OnInit {
       this.spinner.hide();
     }
     this.page = event;
-  }
-
-  finalizarSolicitud() {
-    if (this.DATA_SCORE.estado.toUpperCase() == 'ENVIADO') {
-      Swal.fire({
-        title: 'Finalizar solicitud?',
-        text: `¿Estas seguro que desea dar por finalizado la Solicitud, este cambio no se puede revertir? `,
-        icon: 'question',
-        confirmButtonColor: '#1574ff',
-        cancelButtonColor: '#9da7b1',
-        confirmButtonText: 'Si, Finalizar!',
-        showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-      }).then((resp) => {
-        console.log('FINALIZAR_EST', resp);
-
-        if (resp.value) {
-          this.spinner.show();
-          let parametro: any[] = [
-            {
-              queryId: 24, mapValue: {p_idScore: this.DATA_SCORE.idScoreM},
-            },
-          ];
-          this.scoreService.finalizarSolicitud(parametro[0]).subscribe({
-            next: (resp: any) => {
-              this.spinner.hide();
-              this.estadoFinalizadoScoreM(resp)
-            },
-            error: () => {
-              Swal.fire('ERROR', 'No se pudo Finalizar la Solicitud', 'warning');
-            },
-          });
-        }
-      });
-    }
   }
 
   estadoEnValidacionScoreM(response: any) {
@@ -799,7 +761,7 @@ export class ModalStoreComponent implements OnInit {
     const dialogRef = this.dialog.open(AlertaDuplicadosComponent, { width: '45%', data: { listaDetalleDuplicados: this.listDuplicados, isCreation: true },});
     dialogRef.afterClosed().subscribe((resp) => {
       if (resp) {
-        console.log('DUPL-SCORE', resp);
+        // console.log('DUPL-SCORE', resp);
       }
     });
   }
@@ -808,8 +770,6 @@ export class ModalStoreComponent implements OnInit {
     const dialogRef = this.dialog.open(ObservarMasivamenteComponent, { width: '25%', data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
     dialogRef.afterClosed().subscribe((resp) => {
       if (resp) {
-        console.log('X-Y-Z', resp);
-
         if (this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') {
           this.estadoObservadoScoreM(resp);
           this.cambiarEstadoDetalleAobservado();
@@ -819,22 +779,91 @@ export class ModalStoreComponent implements OnInit {
     });
   }
 
-  importarPdf_AprobarSolicitud() {
-    const dialogRef = this.dialog.open(AprobarImportarComponent, {width: '35%',data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
-    dialogRef.afterClosed().subscribe((resp) => {
+  finalizarSolicitud() {
+    if (this.DATA_SCORE.estado.toUpperCase() == 'ENVIADO') {
+      Swal.fire({
+        title: 'Finalizar solicitud?',
+        text: `¿Estas seguro que desea dar por finalizado la Solicitud, este cambio no se puede revertir? `,
+        icon: 'question',
+        confirmButtonColor: '#1574ff',
+        cancelButtonColor: '#9da7b1',
+        confirmButtonText: 'Si, Finalizar!',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+      }).then((resp) => {
+        // console.log('FINALIZAR_EST', resp);
 
-      console.log('XYZ', resp);
-      if (resp) {
-        // return
-        if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && (this.scoreForm.controls['id_estado_m'].value == 2 || this.scoreForm.controls['id_estado_m'].value == 3)) {
-          console.log('if');
-        this.aprobarEstadoScoreM(resp);
-        this.cargarOBuscarScoreDetalle();
-        this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
+        if (resp.value) {
+          this.spinner.show();
+          let parametro: any[] = [
+            {
+              queryId: 24, mapValue: {p_idScore: this.DATA_SCORE.idScoreM},
+            },
+          ];
+          this.scoreService.finalizarSolicitud(parametro[0]).subscribe({
+            next: (resp: any) => {
+              this.spinner.hide();
+              this.estadoFinalizadoScoreM(resp)
+            },
+            error: () => {
+              Swal.fire('ERROR', 'No se pudo Finalizar la Solicitud', 'warning');
+            },
+          });
         }
+      });
+    }
+  }
+
+  aprobarSolicitud() {
+    Swal.fire({
+      title: 'Aprobar solicitud?',
+      text: `¿Estas seguro que desea Aprobar la Solicitud, tenga en cuenta que no podrá revertir esta acción? `,
+      icon: 'question',
+      confirmButtonColor: '#08b1c1',
+      cancelButtonColor: '#9da7b1',
+      confirmButtonText: 'Si, Aprobar!',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+    }).then((resp) => {
+      if (resp.value) {
+        this.spinner.show();
+        let parametro: any[] = [
+          {
+            queryId: 16,
+            mapValue: { p_idScore: this.DATA_SCORE.idScoreM },
+          },
+        ];
+        this.scoreService.aprobarSolicitud(parametro[0]).subscribe({
+          next: (resp: any) => {
+            this.spinner.hide();
+            this.aprobarEstadoScoreM(resp)
+          },
+          error: () => {
+            Swal.fire('ERROR', 'No se pudo Aprobar la Solicitud', 'warning');
+          },
+        });
       }
     });
   }
+
+
+  // NOTA: CUANDO ESTE LISTO LA API DE IMPORTAR, CONTINUAR ====>
+  // importarPdf_AprobarSolicitud() {
+  //   const dialogRef = this.dialog.open(AprobarImportarComponent, {width: '35%',data: { scoreObsForm: this.scoreForm.getRawValue(), isCreation: true },});
+  //   dialogRef.afterClosed().subscribe((resp) => {
+
+  //     console.log('XYZ', resp);
+  //     if (resp) {
+  //       // return
+  //       if ((this.DATA_SCORE.formatoScore == 'B2B' || this.DATA_SCORE.formatoScore == 'Masivo' || this.DATA_SCORE.formatoScore == 'Diurno') && (this.scoreForm.controls['id_estado_m'].value == 2 || this.scoreForm.controls['id_estado_m'].value == 3)) {
+  //         console.log('if');
+  //       this.aprobarEstadoScoreM(resp);
+  //       this.cargarOBuscarScoreDetalle();
+  //       this.ListaHistoricoCambios(this.DATA_SCORE.idScoreM);
+  //       }
+  //     }
+  //   });
+  // }
 
   campoNoValido(campo: string): boolean {
     if (this.scoreForm.get(campo)?.invalid && this.scoreForm.get(campo)?.touched) {

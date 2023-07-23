@@ -9,7 +9,7 @@ export class ExcellMasivoService {
    dowloadExcel(dataExcel: any[]): any{
     this.wb = new Workbook();
 
-     this.createListaTX(dataExcel);
+     this.createListaTXmasivo(dataExcel);
      this.createForExcepGeneral(dataExcel);
      this.createTablas(dataExcel);
      this.createCasosEspeciales(dataExcel);
@@ -26,25 +26,22 @@ export class ExcellMasivoService {
     return dataExcel.filter(registro => registro.tipoScore.toUpperCase() == tipo)
   }
 
-  generarExcell(dataExcel: any[], listadoWL:any[]): Promise<any>{
+  generarExcell(dataExcel: any[], listadoWL:any[], listaTablas:any[], listTX: any[], listCasosEsp: any[]): Promise<any>{
     const tipoGeneral   = this.buscarPorCasoScore(dataExcel, 'GENERAL')
     const tipoExcepcion = this.buscarPorCasoScore(dataExcel, 'EXCEPCION')
 
-    console.log('MASIVO(G-E)', tipoGeneral, tipoExcepcion, listadoWL);
+    console.log('MASIVO(G-E)', tipoGeneral, tipoExcepcion, listadoWL, listaTablas);
 
+    this.wb = new Workbook();
 
-    console.log('export-data', dataExcel);
-     this.wb = new Workbook();
+    this.createListaTXmasivo(listTX);
 
-     this.createListaTX(dataExcel);
-    //  this.createForExcepGeneral(tipoGeneral); // <=====
      if (dataExcel.find(x => x.tipoScore.toUpperCase() == 'GENERAL')) {
       this.createForExcepGeneral(tipoGeneral);
      }
-     this.createTablas(dataExcel);
-     this.createCasosEspeciales(dataExcel);
+     this.createTablas(listaTablas);
+     this.createCasosEspeciales(listCasosEsp);
 
-    //  this.createForExcepEscen(tipoExcepcion); // <=====
      if (dataExcel.find(x => x.tipoScore.toUpperCase() == 'EXCEPCION')) {
       this.createForExcepEscen(tipoGeneral);
      }
@@ -54,17 +51,17 @@ export class ExcellMasivoService {
   };
 
 
-  private createListaTX(scoreTable: any): void {
+  private createListaTXmasivo(scoreTable: any): void {
     // console.log('F-EXCEP-MASIVA*',scoreTable, scoreTable[0].gama, scoreTable[0].fecha_score);
 
     const sheet = this.wb.addWorksheet('LISTA-TX'); //Nombre de la Hoja
 
     // Establecemos el ancho y estilo de las columnas de la Tabla
     sheet.getColumn('A').width = 110;
-    sheet.getColumn('B').width = 24;
+    sheet.getColumn('B').width = 20;
     sheet.getColumn('C').width = 18;
     sheet.getColumn('D').width = 15;
-    sheet.getColumn('E').width = 20;
+    sheet.getColumn('E').width = 35;
     sheet.getColumn('F').width = 15;
     sheet.getColumn('G').width = 16;
     sheet.getColumn('H').width = 27;
@@ -72,8 +69,8 @@ export class ExcellMasivoService {
 
     sheet.getColumn('J').width = 13;
     sheet.getColumn('K').width = 22;
-    sheet.getColumn('L').width = 25;
-    sheet.getColumn('M').width = 25;
+    sheet.getColumn('L').width = 20;
+    sheet.getColumn('M').width = 20;
 
 
     // DATA SCORE - TABLA DINAMICA
@@ -99,11 +96,33 @@ export class ExcellMasivoService {
         'CODIGO FINAN'      //M
       ];
 
-
       headerFila.font = { bold: true, size: 12 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-      headerFila.height = 35;
+      headerFila.height = 30;
 
+      // Insertamos la data en las respectivas Columnas.
+      const insertarFila = sheet.getRows(2, scoreTable.length)!;
+      for (let i = 0; i < insertarFila.length; i++) {
+        const fila = insertarFila[i];
+
+        fila.values = [
+          scoreTable[i].llaveTexto,     //A
+          scoreTable[i].revisionWL,     //B
+          scoreTable[i].negocio,        //C
+          scoreTable[i].tipoTran,       //D
+          scoreTable[i].tipoVenta,      //E
+          scoreTable[i].gama,           //F
+          scoreTable[i].cuotaInicial,   //G
+          scoreTable[i].cuotas,         //H
+          scoreTable[i].limiteCredito,  //I
+          scoreTable[i].capFinan,       //J
+          scoreTable[i].score,          //K
+          scoreTable[i].nroLineas,      //L
+          scoreTable[i].codigoFinan,    //M
+        ];
+        fila.font = { size: 11}
+        fila.alignment = { horizontal: 'center', vertical: 'middle'}
+      }
 
       // Bauground fila 1 - Tabla
       sheet.getCell('A1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
@@ -113,38 +132,12 @@ export class ExcellMasivoService {
       sheet.getCell('E1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
       sheet.getCell('F1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
       sheet.getCell('G1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FFADFF2F'}}
-
       sheet.getCell('H1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
       sheet.getCell('I1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
       sheet.getCell('J1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
       sheet.getCell('K1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
       sheet.getCell('L1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
       sheet.getCell('M1').fill = {type:'pattern', pattern:'solid', fgColor: {argb: 'FF4169E1'}}
-
-      // Insertamos la data en las respectivas Columnas.
-      const insertarFila = sheet.getRows(2, scoreTable.length)!;
-      for (let i = 0; i < insertarFila.length; i++) {
-        const fila = insertarFila[i];
-
-        fila.values = [
-          'FIJA-ALTA-ALTA-NO-APLICA-FINANCIADO--', //A
-          'NO',                                    //B
-          'FIJA',                                  //C
-          'MIGRACION',                             //D
-          scoreTable[i].Num_Lin_Disp,              //E
-          scoreTable[i].Usuario,                   //F
-          scoreTable[i].Fecha_APP,                 //G
-          scoreTable[i].Capacidad_Financiamiento,  //H
-          scoreTable[i].Codigo_Financiamiento,     //I
-          scoreTable[i].SCORE,                     //J
-          scoreTable[i].CARGOFIJOMAXIMO,           //K
-          scoreTable[i].NEGOCIOYSEGMENTO,          //L
-          scoreTable[i].Segmento,                  //M
-        ];
-        fila.font = { size: 11}
-        fila.alignment = { horizontal: 'center', vertical: 'middle'}
-      }
-
     //  this.borderTable(sheet, scoreTable);
     });
   }
@@ -350,9 +343,9 @@ export class ExcellMasivoService {
       ];
 
 
-      headerFila.font = { bold: true, size: 12 };
+      headerFila.font = { bold: true, size: 11 };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-      headerFila.height = 35;
+      headerFila.height = 20;
 
 
       // Insertamos la data en las respectivas Columnas.
@@ -362,34 +355,28 @@ export class ExcellMasivoService {
 
         fila.values = [
           '',
-          '1',              //B
-          'CARLOS CUÉLLAR', //C
-          'MOVISTAR TOTAL', //D
-          'PORTA + EQUIPO', //E
-          'CAEQ/ALTA FINANCIADO - FIJA FINANCIADO', //F
-          'NO APLICA',      //G
-          'CI MINIMA 35%',  //H
-          18,               //I
-
-          '',
-          '',
-
-          'E-COMMERCE',      //L
-          'STD ALONE',       //M
-          'FINANCIADO',      //N
-
-          '',                //0
-          '',                //P
-          '',                //Q
-          '',                //R
-          scoreTable[i].Num_Lin_Disp,//S
-          scoreTable[i].Num_Lin_Disp,//T
+          scoreTable[i].tipo_doc,         //B
+          scoreTable[i].solicitante,      //C
+          scoreTable[i].segmento,         //D
+          scoreTable[i].tipo_transaccion, //E
+          scoreTable[i].tipo_venta,       //F
+          scoreTable[i].gama,             //G
+          scoreTable[i].cuota_inicial,    //H
+          scoreTable[i].cuotas,           //I
+          '',                             //J
+          '',                             //K
+          scoreTable[i].proyecto,         //L
+          scoreTable[i].casos,            //M
+          scoreTable[i].cuota_inicial,    //N
+          scoreTable[i].rq,               //O
+          '',                             //P
+          '',                             //Q
+          '',                             //R
+          scoreTable[i].movistar_total,   //S
+          scoreTable[i].fija,             //T
           'CAEQ/ALTA CONTADO - FIJA UPFRONT',//U
-
-          '',                 //V
-
-          'PREMIUM',          //W
-
+          '',                             //V
+          scoreTable[i].totalizacion_mt,  //W
         ];
         fila.font = { size: 11}
         fila.alignment = { horizontal: 'center', vertical: 'middle'}
@@ -437,14 +424,14 @@ export class ExcellMasivoService {
         'CFM',              //H
         'CANT LINEAS',      //I
         'CAP FIN',          //J
-        'COD DIN',          //K
+        'COD FIN',          //K
         'LLAVE',            //L
         'REVISION WL',      //M
       ];
 
       headerFila.font = { bold: true, size: 12, color: {argb: 'FF4169E1'} };
       headerFila.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true };
-      headerFila.height = 35;
+      headerFila.height = 25;
 
       // Insertamos la data en las respectivas Columnas.
       const insertarFila = sheet.getRows(2, scoreTable.length)!;
@@ -452,25 +439,23 @@ export class ExcellMasivoService {
         const fila = insertarFila[i];
 
         fila.values = [
-          '8241',                       //A
-          '',                           //B
-          'DITO',                       //C
-          'STD ALONE',                  //D
-          'FINANCIADO',                 //E
-          '',                           //F
-          '',                           //G
-          '3301',                       //H
-          scoreTable[i].Segmento,       //I
-          scoreTable[i].Num_Lin_Disp,   //J
-          scoreTable[i].Usuario,        //K
-          '8241-DITO-STD ALONE-FINANCIADO-1701-100-0-0-1', //L
-          'NO'
+          scoreTable[i].rq,           //A
+          scoreTable[i].esc,          //B
+          scoreTable[i].proyecto,     //C
+          scoreTable[i].casos,        //D
+          scoreTable[i].cuotaInicial, //E
+          scoreTable[i].gama,         //F
+          scoreTable[i].score,        //G
+          scoreTable[i].cfm,          //H
+          scoreTable[i].cantLineas,   //I
+          scoreTable[i].capFin,       //J
+          scoreTable[i].codFin,       //K
+          scoreTable[i].llave,        //L
+          scoreTable[i].revisionWL    //M
         ];
         fila.font = { size: 11}
         fila.alignment = { horizontal: 'center', vertical: 'middle'}
       }
-
-    //  this.borderTableForExcep(sheet, scoreTable);
     });
   }
 
@@ -653,50 +638,6 @@ export class ExcellMasivoService {
 
      this.borderTableWL(sheet, scoreTable);
     });
-  }
-
-
-  private fontUsuarioMasivo(sheet: Worksheet, scoreTable: any){
-    for (let i = 1; i < 1 + scoreTable.length; i++) {
-      [`F${i + 1}`,
-      ].forEach((key) => {
-        sheet.getCell(key).style = {font: { bold: true, size: 11, color: {argb: 'FF3CB371'}}, alignment: { horizontal: 'center'}};
-        sheet.getCell(key).border = {
-          top   : {style:'thin'},
-          left  : {style:'thin'},
-          bottom: {style:'thin'},
-          right : {style:'thin'},
-        }
-      });
-    }
-  }
-
-  private borderTable(sheet: Worksheet, scoreTable: any) {
-    for (let i = 0; i < 1 + scoreTable.length; i++) {
-      [`A${i + 1}`,
-       `B${i + 1}`,
-       `C${i + 1}`,
-       `D${i + 1}`,
-       `E${i + 1}`,
-       `F${i + 1}`,
-       `G${i + 1}`,
-
-       `H${i + 1}`,
-       `I${i + 1}`,
-       `J${i + 1}`,
-       `K${i + 1}`,
-       `L${i + 1}`,
-
-      ].forEach((key) => {
-        // sheet.getCell(key).style = { alignment: { horizontal: 'center', vertical: 'middle'} ,fill: {type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFB0C4DE' },}};
-        sheet.getCell(key).border = {
-          top   : {style:'thin'},
-          left  : {style:'thin'},
-          bottom: {style:'thin'},
-          right : {style:'thin'},
-        }
-      });
-    }
   }
 
   private borderTableForExcepGeneral(sheet: Worksheet, scoreTable: any) {

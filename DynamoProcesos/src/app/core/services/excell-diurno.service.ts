@@ -13,7 +13,7 @@ export class ExcellDiurnoService {
     const tipoGeneral   = this.buscarPorTipoScore(dataExcel, 'GENERAL')
     const tipoExcepcion = this.buscarPorTipoScore(dataExcel, 'EXCEPCION')
 
-     this.createListaTX(dataExcel);
+     this.createListaTXdiurno(dataExcel);
      this.createForExcepGeneral(tipoGeneral);
      this.createTablas(dataExcel);
      this.createCasosEspeciales(dataExcel);
@@ -30,25 +30,25 @@ export class ExcellDiurnoService {
     return dataExcel.filter(registro => registro.tipoScore.toUpperCase() == tipo)
   }
 
-  generarExcell(dataExcel: any[], listadoWL:any[], listaTablas:any[]): Promise<any>{
+  generarExcell(dataExcel: any[], listadoWL:any[], listaTablas:any[], listTX: any[], listCasosEsp: any[]): Promise<any>{
     const tipoGeneral   = this.buscarPorTipoScore(dataExcel, 'GENERAL')
     const tipoExcepcion = this.buscarPorTipoScore(dataExcel, 'EXCEPCION')
 
     console.log('DIURNO(G-E)', tipoGeneral, tipoExcepcion, listadoWL, listaTablas);
     console.log('export-data', dataExcel);
-    console.log('EXISTE-EXCEP', dataExcel.find(x => x.tipoScore.toUpperCase() == 'EXCEPCION' ));
+    console.log('EXISTE-EXCEP', dataExcel.find(x => x.tipoScore.toUpperCase() == 'EXCEPCION'));
 
      this.wb = new Workbook();
 
-     this.createListaTX(dataExcel);
-     if (dataExcel.find(x => x.tipoScore.toUpperCase() == 'GENERAL' )) {
+     this.createListaTXdiurno(listTX);
+     if (dataExcel.find(x => x.tipoScore.toUpperCase() == 'GENERAL')) {
        this.createForExcepGeneral(tipoGeneral);
       }
 
      this.createTablas(listaTablas);
-     this.createCasosEspeciales(dataExcel);
+     this.createCasosEspeciales(listCasosEsp);
 
-     if (dataExcel.find(x => x.tipoScore.toUpperCase() == 'EXCEPCION' )) {
+     if (dataExcel.find(x => x.tipoScore.toUpperCase() == 'EXCEPCION')) {
        this.createForExcepEscen(tipoExcepcion);
      }
      this.createWL(listadoWL);
@@ -57,7 +57,7 @@ export class ExcellDiurnoService {
   };
 
 
-  private createListaTX(scoreTable: any): void {
+  private createListaTXdiurno(scoreTable: any): void {
     console.log('F-EXCEP-DIURNA',scoreTable,);
 
     const sheet = this.wb.addWorksheet('LISTA-TX'); //Nombre de la Hoja
@@ -67,7 +67,7 @@ export class ExcellDiurnoService {
     sheet.getColumn('B').width = 24;
     sheet.getColumn('C').width = 18;
     sheet.getColumn('D').width = 15;
-    sheet.getColumn('E').width = 20;
+    sheet.getColumn('E').width = 35;
     sheet.getColumn('F').width = 15;
     sheet.getColumn('G').width = 16;
     sheet.getColumn('H').width = 27;
@@ -75,7 +75,7 @@ export class ExcellDiurnoService {
 
     sheet.getColumn('J').width = 13;
     sheet.getColumn('K').width = 22;
-    sheet.getColumn('L').width = 25;
+    sheet.getColumn('L').width = 20;
 
 
     // DATA SCORE - TABLA DINAMICA
@@ -106,18 +106,18 @@ export class ExcellDiurnoService {
         const fila = insertarFila[i];
 
         fila.values = [
-          'MOVISTAR TOTAL-TOTALIZACIÓN MT-PORTA FINANCIADO - FIJA UPFRONT-BAJA-CI MINIMA 35%-12', //A
-          'MOVISTAR TOTAL',                        //B
-          'TOTALIZACIÓN MT',                       //C
-          'CAEQ/ALTA FINANCIADO - FIJA FINANCIADO',//D
-          'MEDIA',                                 //E
-          'CI MINIMA 35%',                         //F
-          12,                                      //G
-          260,        //H
-          100,        //I
-          3307,       //J
-          1,          //K
-          3,          //L
+          scoreTable[i].llaveTexto,     //A
+          scoreTable[i].negocio,        //B
+          scoreTable[i].tipoTran,       //D
+          scoreTable[i].tipoVenta,      //D
+          scoreTable[i].gama,           //E
+          scoreTable[i].cuotaInicial,   //F
+          scoreTable[i].cuotas,         //G
+          scoreTable[i].limiteCredito,  //H
+          scoreTable[i].capFinan,       //I
+          scoreTable[i].score,          //J
+          scoreTable[i].nroLineas,      //K
+          scoreTable[i].codigoFinan,    //L
         ];
         fila.font = { size: 11}
         fila.alignment = { horizontal: 'center', vertical: 'middle'}
@@ -436,18 +436,18 @@ export class ExcellDiurnoService {
         const fila = insertarFila[i];
 
         fila.values = [
-          '8241',                       //A
-          '',                           //B
-          'DITO',                       //C
-          'STD ALONE',                  //D
-          'FINANCIADO',                 //E
-          '',                           //F
-          '',                           //G
-          '3301',                       //H
-          scoreTable[i].Segmento,       //I
-          scoreTable[i].Num_Lin_Disp,   //J
-          scoreTable[i].Usuario,        //K
-          '8241-DITO-STD ALONE-FINANCIADO-1701-100-0-0-1', //L
+          scoreTable[i].rq,           //A
+          scoreTable[i].esc,          //B
+          scoreTable[i].proyecto,     //C
+          scoreTable[i].casos,        //D
+          scoreTable[i].cuotaInicial, //E
+          scoreTable[i].gama,         //F
+          scoreTable[i].score,        //G
+          scoreTable[i].cfm,          //H
+          scoreTable[i].cantLineas,   //I
+          scoreTable[i].capFin,       //J
+          scoreTable[i].codFin,       //K
+          scoreTable[i].llave,        //L
         ];
         fila.font = { size: 11}
         fila.alignment = { horizontal: 'center', vertical: 'middle'}
@@ -516,7 +516,7 @@ export class ExcellDiurnoService {
       // Insertamos la data en las respectivas Columnas.
       // const insertarFila = sheet.getRows(2, scoreTable.length != null? scoreTable.lengt : 1)!;
       const insertarFila = sheet.getRows(2, scoreTable.length)!;
-      console.log('LENGTH-DIURNA', scoreTable.length);
+      // console.log('LENGTH-DIURNA', scoreTable.length);
       console.log('LENGTH-INSERT' , insertarFila.length);
 
       for (let i = 0; i < insertarFila.length; i++) {

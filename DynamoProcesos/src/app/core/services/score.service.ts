@@ -97,12 +97,33 @@ export class ScoreService {
     return this.http.post(API_SCORE, obj);
   }
 
-  listTablasExport(obj: any){
-    return this.http.post(API_SCORE, obj);
-  }
-
   finalizarSolicitud(obj: any){
     return this.http.post(API_SCORE, obj);
   };
+
+  getTablasExport(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
+
+  getCasosEspExport(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
+
+  getWLexport(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
+
+  getListTXexport(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
+
+
+  getCasosEspExportDiurna(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
+
+  getCasosEspExportMasiva(obj: any){
+    return this.http.post(API_SCORE, obj);
+  }
 
 }

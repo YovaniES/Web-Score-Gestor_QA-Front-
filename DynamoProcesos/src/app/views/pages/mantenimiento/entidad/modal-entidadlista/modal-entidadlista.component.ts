@@ -37,7 +37,7 @@ export class ModalEntidadlistaComponent implements OnInit {
       nombre      : ['', Validators.required],
       descripcion : [''],
       entidad     : [''],
-      idPadre     : ['']
+      // idPadre     : ['']
     })
   }
 
@@ -65,12 +65,11 @@ export class ModalEntidadlistaComponent implements OnInit {
     let parametro: any =  {
         queryId: 9,
         mapValue: {
-          "param_nombre"        : formValues.nombre,
-          "param_descripcion"   : formValues.descripcion,
-          "param_padre_id"      : formValues.idPadre,
-          "CONFIG_USER_ID"      : this.userID,
-          "CONFIG_OUT_MSG_ERROR":'',
-          "CONFIG_OUT_MSG_EXITO":''
+          p_nombre            : formValues.nombre,
+          p_descripcion       : formValues.descripcion,
+          CONFIG_USER_ID      : this.userID,
+          CONFIG_OUT_MSG_ERROR:'',
+          CONFIG_OUT_MSG_EXITO:''
         },
       };
 

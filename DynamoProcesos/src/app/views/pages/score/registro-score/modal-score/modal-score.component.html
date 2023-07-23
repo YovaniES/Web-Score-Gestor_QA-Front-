@@ -24,7 +24,7 @@
           <div class="id-score">ID : <span  class="total">{{DATA_SCORE.idScore_M}}</span></div>
       </div>
 
-      <div class="pr-section mb-3">
+      <div class="pr-section mb-1">
         <div class="pr-module-container">
           <div class="row g-3">
               <div class="col-sm-3 cli-form-element" *ngIf="!DATA_SCORE || this.DATA_SCORE.formatoScore == 'Residencial'">
@@ -105,7 +105,7 @@
       <!-- DETALLES SCORE ------------------------------------------------------------------------->
       <ng-container *ngIf="DATA_SCORE">
         <div class="pr-subtitle mt-1">Detalle Score</div>
-        <div class="pr-section mb-3">
+        <div class="pr-section mb-1">
           <div class="pr-module-container">
             <div class="cli-card">
 
@@ -162,20 +162,18 @@
                       </div>
                       <div class="flex-1"></div>
 
-                      <div class="col-sm-2" *ngIf="scoreForm.controls['id_estado_m'].value == 5">
-                        <div style="margin-top: 27px; display: flex;">
-                          <button
-                            type="submit"
-                            matTooltip="Ver PDF"
-                            class="cli-btn-pdf"
-                            style="border-radius: 2px;"
-                            (click)="importarPdf_AprobarSolicitud()">
-                            <mat-icon class="icon-18" style="color: #e97eff">visibility</mat-icon>Ver evidencias
-                            <!-- <mat-icon class="icon-18" style="color: #e97eff">picture_as_pdf</mat-icon>Descargar D -->
-                          </button>
-                        </div>
+                      <div class="col-sm-2" *ngIf="scoreForm.controls['id_estado_m'].value == 5" style="margin-top: 27px; display: flex; justify-content: right;display: flex;">
+                        <button
+                          type="submit"
+                          matTooltip="Ver PDF"
+                          class="cli-btn-pdf"
+                          style="border-radius: 2px;"
+                          (click)="aprobarSolicitud()"
+                          >
+                          <mat-icon class="icon-16" style="color: #e97eff">visibility</mat-icon>Evidencias
+                        </button>
+                        <!-- (click)="importarPdf_AprobarSolicitud()" -->
                       </div>
-
 
                       <div style="display: flex">
                         <div class="flex-1"></div>
@@ -186,7 +184,7 @@
 
                       <!-- TABLA DE LISTADO SCORE_DETALLE ------------------------------------------------------------------>
                       <!-- <div style="overflow: auto; min-height: 445px"> -->
-                      <div style="overflow: auto; min-height: 317px; color: #6c757d;">
+                      <div style="overflow: auto; min-height: 335px; color: #6c757d;">
                         <table class="cli-table stripedtable underlinedtable">
                           <thead>
                             <tr class="bgc-turquey c-white">
@@ -197,6 +195,7 @@
                               <th style="min-width: 115px;">Tipo Transacción</th>
                               <th style="min-width: 250px;">Tipo Venta</th>
                               <th style="min-width: 115px;">Gama de Equipo</th>
+                              <th style="min-width: 115px;">Analista</th>
                               <th style="min-width: 102px;">Req. Val.</th>
                               <th>Estado</th>
                               <th style="min-width: 315px;">C O M E N T A R I O S</th>
@@ -225,9 +224,19 @@
                             <td>{{ score.tipoTransaccion }}</td>
                             <td>{{ score.tipoVenta       }}</td>
                             <td>{{ score.gama            }}</td>
+                            <td style="text-align:left ">
+                              <div class="cli-table-user">
+                                <button
+                                  matTooltip={{score.fullName}}
+                                  class="icon-btn btn-trans"
+                                  style="color: #3d38ff61;"
+                                  ><mat-icon class="icon-18">account_circle</mat-icon>
+                                </button>{{score.usuario}}
+                              </div>
+                            </td>
                             <td>
                               <span *ngIf="score.req_validacion == '0'"  style="color: #0daef4">NO</span>
-                              <span *ngIf="score.req_validacion == '1'"  style="color: #fd0d89">SI</span>
+                              <span *ngIf="score.req_validacion == '1'"  style="color: #ef8a83">SI</span>
                             </td>
                             <td>
                               <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">       {{ score.estado | uppercase }}</span>
@@ -255,7 +264,7 @@
                             </td>
                             <td>{{ score.tipo_documento   }}</td>
                             <td>{{ score.numero_documento }}</td>
-                            <td>{{ score.nombres_apell    }}</td>
+                            <td style="text-align: left"> {{ score.nombres_apell }}</td>
                             <td>{{ score.num_lin_disp     }}</td>
                             <td>{{ score.score            }}</td>
                             <td>{{ score.cf_disponible    }}</td>
@@ -358,29 +367,26 @@
 
                         <div class="flex-1"></div>
 
-                        <div class="col-sm-2" *ngIf="scoreForm.controls['id_estado_m'].value == 5">
-                          <div style="margin-top: 27px; display: flex;">
-                            <button
-                              type="submit"
-                              matTooltip="Ver PDF"
-                              class="cli-btn-pdf"
-                              style="border-radius: 2px;"
-                              (click)="importarPdf_AprobarSolicitud()">
-                              <mat-icon class="icon-18" style="color: #e97eff">visibility</mat-icon>Ver evidencias
-                            </button>
-                          </div>
-                        </div>
+                        <!-- <div class="col-sm-2" *ngIf="scoreForm.controls['id_estado_m'].value == 5" style="margin-top: 27px; display: flex; justify-content: right;display: flex;">
+                          <button
+                            type="submit"
+                            matTooltip="Ver PDF"
+                            class="cli-btn-pdf"
+                            style="border-radius: 2px;"
+                            (click)="importarPdf_AprobarSolicitud()">
+                            <mat-icon class="icon-16" style="color: #e97eff">visibility</mat-icon>Evidencias
+                          </button>
+                        </div> -->
 
                         <div style="display: flex">
                           <div class="flex-1"></div>
-                          <div style="color: #0daef4">
-                            Total :<span class="total">{{ listScoreDetalleGen.length }} Score detalle</span>
-                          </div>
+                          <div style="color: #0daef4">Total :<span class="total">{{ listScoreDetalleGen.length }} Score detalle</span></div>
                         </div>
 
+                        <!-- <span >{{ jira.fields }}</span> -->
                         <!-- TABLA DE LISTADO SCORE_DETALLE ------------------------------------------------------------------>
                         <!-- <div style="overflow: auto; min-height: 445px"> -->
-                        <div style="overflow: auto; min-height: 317px; color: #6c757d;">
+                        <div style="overflow: auto; min-height: 335px; color: #6c757d;">
                           <table class="cli-table stripedtable underlinedtable">
                             <thead>
                               <tr class="bgc-turquey c-white">
@@ -390,6 +396,7 @@
                                 <th style="min-width: 110px;" >Fecha APP</th>
                                 <th style="min-width: 65px;"  >TIpo Doc</th>
                                 <th style="min-width: 67px;"  >Num Doc</th>
+                                <th style="min-width: 67px;"  >Analista</th>
                                 <th style="min-width: 102px;" >Req. Val.</th>
                                 <th>Estado</th>
                                 <th style="min-width: 315px;" >C O M E N T A R I O S</th>
@@ -422,9 +429,19 @@
                               <td>{{ score.fecha_score      }}</td>
                               <td>{{ score.tipo_documento   }}</td>
                               <td>{{ score.numero_documento }}</td>
+                              <td style="text-align:left ">
+                                <div class="cli-table-user">
+                                  <button
+                                    matTooltip={{score.fullName}}
+                                    class="icon-btn btn-trans"
+                                    style="color: #3d38ff61;"
+                                    ><mat-icon class="icon-18">account_circle</mat-icon>
+                                  </button>{{score.usuario}}
+                                </div>
+                              </td>
                               <td>
                                 <span *ngIf="score.req_validacion == '0'" style="color: #0daef4">NO</span>
-                                <span *ngIf="score.req_validacion == '1'" style="color: #fd0d89">SI</span>
+                                <span *ngIf="score.req_validacion == '1'" style="color: #ef8a83">SI</span>
                               </td>
                               <td>
                                 <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">        {{ score.estado | uppercase }}</span>
@@ -550,19 +567,17 @@
 
                         <div class="flex-1"></div>
 
-                        <div class="col-sm-2" *ngIf="scoreForm.controls['id_estado_m'].value == 5">
-                          <div style="margin-top: 27px; display: flex;">
+                          <!-- <div class="col-sm-2" *ngIf="scoreForm.controls['id_estado_m'].value == 5" style="margin-top: 27px; display: flex; justify-content: right; display: flex;">
                             <button
                               type="submit"
                               matTooltip="Ver PDF"
                               class="cli-btn-pdf"
                               style="border-radius: 2px;"
                               (click)="importarPdf_AprobarSolicitud()">
-                              <mat-icon class="icon-18" style="color: #e97eff">visibility</mat-icon>Ver evidencias
+                              <mat-icon class="icon-16" style="color: #e97eff">visibility</mat-icon>Evidencias
                             </button>
-                          </div>
+                          </div> -->
                         </div>
-
                         <div style="display: flex">
                           <div class="flex-1"></div>
                           <div style="color: #0daef4">
@@ -572,7 +587,7 @@
 
                         <!-- TABLA DE LISTADO SCORE_DETALLE ------------------------------------------------------------------>
                         <!-- <div style="overflow: auto; min-height: 445px"> -->
-                        <div style="overflow: auto; min-height: 317px; color: #6c757d;">
+                        <div style="overflow: auto; min-height: 335px; color: #6c757d;">
                           <table class="cli-table stripedtable underlinedtable">
                             <thead>
                               <tr class="bgc-green c-white">
@@ -582,6 +597,7 @@
                                 <th style="min-width: 80px;"  >Rq</th>
                                 <th style="min-width: 142px;" >Proyecto</th>
                                 <th style="min-width: 115px;" >Casos</th>
+                                <th style="min-width: 115px;" >Analista</th>
                                 <th style="min-width: 102px;" >Req. Val.</th>
                                 <th>Estado</th>
                                 <th style="min-width: 315px;" >C O M E N T A R I O S</th>
@@ -611,9 +627,19 @@
                               <td>{{ score.Rq          }}</td>
                               <td>{{ score.proyecto    }}</td>
                               <td>{{ score.casos       }}</td>
+                              <td style="text-align:left ">
+                                <div class="cli-table-user">
+                                  <button
+                                    matTooltip={{score.fullName}}
+                                    class="icon-btn btn-trans"
+                                    style="color: #3d38ff61;"
+                                    ><mat-icon class="icon-18">account_circle</mat-icon>
+                                  </button>{{score.usuario}}
+                                </div>
+                              </td>
                               <td>
                                 <span *ngIf="score.req_validacion == '0'"  style="color: #0daef4">NO</span>
-                                <span *ngIf="score.req_validacion == '1'"  style="color: #fd0d89">SI</span>
+                                <span *ngIf="score.req_validacion == '1'"  style="color: #ef8a83">SI</span>
                               </td>
                               <td>
                                 <span *ngIf="score.estado == 'Solicitado'" class="label est-sol">        {{ score.estado | uppercase }}</span>
@@ -685,15 +711,14 @@
             </div>
           </div>
         </div>
-      </div>
       </ng-container>
 
       <!-- HISTORICO DE ESTADOS SCORE ------------------------------------------------------------------------->
       <div *ngIf="DATA_SCORE" style="color: #6c757d;">
         <div class="pr-subtitle mt-2">Histórico de cambios</div>
-        <div class="pr-section mb-3">
+        <div class="pr-section mb-1">
           <div class="pr-module-container">
-            <div style="overflow: auto; min-height: 160px; max-height: 160px;">
+            <div style="overflow: auto; min-height: 110px; max-height: 160px;">
               <table class="cli-table stripedtable underlinedtable">
                 <thead>
                   <tr class="bgc-variable c-white">
@@ -704,13 +729,12 @@
                     <th>Fecha y hora</th>
                   </tr>
                 </thead>
-
                 <tbody>
                   <tr *ngFor="let historico of listHistoricoCambios; let i = index">
                     <td>{{ i + 1 }}</td>
-                    <td>{{ historico.id_score_m }}</td>
-                    <td>{{ historico.cNombre    }}</td>
-                    <td class="w300">{{ historico.responsable }}</td>
+                    <td>{{ historico.id_score_m   }}</td>
+                    <td>{{ historico.cNombre      }}</td>
+                    <td>{{ historico.responsable  }}</td>
                     <td>{{ historico.fecha_cambio }}</td>
                   </tr>
                 </tbody>
@@ -720,9 +744,9 @@
               </div>
 
               <div *ngIf="!loadingItem && listHistoricoCambios.length == 0"
-                class="cli-loader mt-2"
-                style="color: #c9c9c9"
-                >Aquí se mostrará el histórico del cambios de Estado del Score...
+                   class="cli-loader mt-2"
+                   style="color: #c9c9c9"
+                  >Aquí se mostrará el histórico del cambios de Estado del Score...
               </div>
             </div>
           </div>
@@ -742,9 +766,10 @@
       <ng-container *ngIf="((authService.esUsuarioLider() && validarSiExisteReqValidacion()) && (scoreForm.controls['id_estado_m'].value == 2 || scoreForm.controls['id_estado_m'].value == 3 || scoreForm.controls['id_estado_m'].value == 8)) && !authService.esUsuarioGestor()">
         <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
            class="cli-btn btn-m btn-aprobar"
+           (click)="aprobarSolicitud()"
            type="submit"
-           (click)="importarPdf_AprobarSolicitud()"
            ><mat-icon class="icon-18">check_small</mat-icon> Aprobar
+           <!-- (click)="importarPdf_AprobarSolicitud()" -->
            <!-- (click)="notificarAprobacionPorCorreo()" -->
         </button>
       </ng-container>
@@ -768,8 +793,7 @@
         <button *ngIf="listScoreDetalleExcep.length > 0 || listScoreDetalleGen.length > 0 || listScoreDetalleCorp.length > 0"
            class="cli-btn-mail btn-m btn-mail"
            type="submit"
-           (click)="enviarSolicitudTDP()"
-           >
+           (click)="enviarSolicitudTDP()">
            <mat-icon class="icon-18">forward_to_inbox</mat-icon> Enviar
         </button>
       </ng-container>

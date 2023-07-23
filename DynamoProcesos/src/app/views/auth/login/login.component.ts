@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { first } from 'rxjs';
 import { AuthService } from 'src/app/core/services/auth.service';
 import Swal from 'sweetalert2';
@@ -12,6 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent  {
+  @BlockUI() blockUI!: NgBlockUI;
 
   loginForm: FormGroup = this.fb.group({
     idaplicacion: [4],
@@ -27,7 +29,9 @@ export class LoginComponent  {
   ) {}
 
   login() {
+    this.blockUI.start('Validando usuario...');
     this.authService.login_score( this.loginForm.value ).pipe(first()).subscribe( resp => {
+
 
         if (resp.user.acceso > 0 && resp.user.aplicacion == 4) {
           this.spinner.hide();
@@ -37,6 +41,7 @@ export class LoginComponent  {
             "Bienvenid@ <br />" + `${resp.user.nombres} ${resp.user.apellidoPaterno}`,
             "success"
           );
+          this.blockUI.stop();
           this.router.navigateByUrl('home');
         }else{
         Swal.fire('Error', 'Credenciales Incorrectas para esta aplicación', 'error' );

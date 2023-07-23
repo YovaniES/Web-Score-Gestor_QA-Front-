@@ -25,8 +25,8 @@ switch (ENVIROMENT) {
     API_IMPORT_PDF       = 'https://localhost:7174/api/score'
     // API_IMPORT_PDF       = 'http://saveimportpdfscore.indratools.com/api/score'
 
-    // PATH_API_SCORE       = 'https://localhost:3061/api/configurador/';
-    PATH_API_SCORE       = 'http://backwebprocesos.indratools.com/api/configurador/'
+    PATH_API_SCORE       = 'https://localhost:3061/api/configurador/';
+    // PATH_API_SCORE       = 'http://backwebprocesos.indratools.com/api/configurador/'
     break;
   default:
     break;

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { API_IMPORT_PDF_SCORE } from '../constants/url.constants';
 import { Evidencias, UserJira } from '../models/archivo-pdf';
 import { Status } from '../models/status';
-import { FnParam } from '@angular/compiler/src/output/output_ast';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +11,7 @@ export class PdfImportService {
 
   constructor(private http: HttpClient) {}
 
-    addPdf(data: Evidencias){
+    agregarEvidencia(data: Evidencias){
       console.log('DATA', data);
       const formData: FormData = new FormData();
 1
@@ -32,7 +31,7 @@ export class PdfImportService {
     }
 
     descargarPdf(id: number){
-      return this.http.get<any>(API_IMPORT_PDF_SCORE+'/descargar/', {
+      return this.http.get<any>(API_IMPORT_PDF_SCORE+'/descargar', {
         params:{
           id: id
         }

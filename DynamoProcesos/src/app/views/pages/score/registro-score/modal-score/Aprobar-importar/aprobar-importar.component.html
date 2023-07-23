@@ -11,34 +11,35 @@
 
 <form class="row g-3" [formGroup]="importForm" style="padding: 10px" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m != 5">
   <ng-container *ngIf="listEvidencias.length < 4">
-    <!-- <div class="col-sm-12 cli-form-element">
-      <label>Nombre Evidencia</label>
+    <div class="col-sm-12 cli-form-element">
+      <label>Nombre Evidencia <small style="color: red;">*</small></label>
       <input
         type="text"
         class="form-control cli-input-white"
         formControlName="nombre"/>
-      <small class="text-alert" *ngIf="campoNoValido('nombre')">* El Nombre de la evidencia es obligatorio</small>
-    </div> -->
+      <small class="text-alert" *ngIf="campoNoValido('nombre')">* El Nombre de la evidencia es obligatorio [mín. 10 caracteres]</small>
+    </div>
 
     <div class="col-sm-9 cli-form-element">
-      <label>Importar evidencia (PDF).</label>
+      <label>Importar evidencia (PDF) <small style="color: red;">*</small></label>
       <input
         type="file"
         class="cli-import"
         formControlName="archivo"
+        accept="application/pdf"
         (change)="onChange($event)"/>
         <small class="text-alert" *ngIf="campoNoValido('archivo')">* El importar archivo es obligatorio</small>
         <!-- accept="image/*" -->
     </div>
 
-    <!-- <div class="col-sm-3">
+    <!-- <div class="col-sm-3 btn-lateral">
       <div class="cli-pdf" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m != 5">
         <button *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 2"
-          class="cli-btn btn-m-pdf btn-purple"
+          class="cli-btn-purple btn-m-pdf btn-purple"
           matTooltip="Importar Máx 4 Pdf"
-          (click)="guardarEvidencia()"
+          (click)="agregarEvidencia()"
           [disabled]="importForm.invalid">
-          <mat-icon class="icon-18">save</mat-icon> Guardar
+          <mat-icon class="icon-16">save</mat-icon> Guardar
         </button>
       </div>
     </div> -->
@@ -46,13 +47,17 @@
 
   <div class="mb-3 form-check" *ngIf="status">{{ status.message }}</div>
 </form>
-<h5 class="cli-warning"> <mat-icon class="icon-13" style="color:#ffc107">warning</mat-icon> <small style="color: #ffd863; font-weight: 600; margin-right: 5px;">NOTA:</small> Importación máx. 4 evidendias</h5>
+
+<div *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 2 && listEvidencias.length < 4">
+  <h5 class="cli-warning"> <mat-icon class="icon-13" style="color:#ffc107">warning</mat-icon> <small style="color: #ffd863; font-weight: 600; margin-right: 5px;">NOTA:</small> Importación máx. 4 evidendias</h5>
+</div>
+
 <!-- LISTA DE PDF ------------------------------------------------------------------------->
+<div style="color: #6c757d" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 5">
 <!-- <div style="color: #6c757d"> -->
-  <div style="color: #6c757d" *ngIf="this.DATA_SCORE.scoreObsForm.id_estado_m == 5">
-  <div class="pr-subtitle mt-2">Listado de Evidencias Score</div>
+  <div class="pr-subtitle mt-2">Listado de Evidencias Score <small style="color: #6c757d;">({{listEvidencias.length}})</small></div>
   <div class="pr-module-container">
-    <div style="overflow: auto; min-height: 160px; max-height: 160px">
+    <div style="overflow: auto; min-height: 110px; max-height: 198px">
       <table class="cli-table stripedtable underlinedtable">
         <thead>
           <tr class="bgc-variable c-white">
@@ -69,7 +74,7 @@
             <td>{{ i + 1 }}</td>
             <td style="text-align: left;">{{ evidencia.nombre }}</td>
             <td><img style="height: 80px; width: 100px;"
-                [src]="imgBaseUrl+evidencia.imagen">
+                src="{{imgBaseUrl+evidencia.imagen}}">
             </td>
             <td>{{ evidencia.archivo }}</td>
             <td class="w300">
@@ -97,7 +102,7 @@
       <div *ngIf="!loadingItem && listEvidencias.length == 0"
         class="cli-loader mt-2"
         style="color: #c9c9c9; font-size: 11px;">
-        Aquí se mostrará la lista de evidencias del Lider...
+        Aquí se mostrará las evidencias del Lider va importando...
       </div>
     </div>
   </div>

@@ -38,37 +38,34 @@ export class ModalEntidadtablaComponent implements OnInit {
 
   newForm(){
     this.entidadTablaForm = this.fb.group({
-      // id                : [''],
       nombre            : ['', Validators.required],
       descripcion       : [''],
+      // id       : [''],
       entidad           : [''],
-      idPadre           : [''],
       id_correlativo    : [''],
       val_num           : [''],
       id_tabla          : [''],
-      NombreTablaEntidad: [''],
-      nombrePadre       : [''],
-      idTablaEntidad    : [''],
     })
   }
 
   entidadTabla: any[]=[];
   getListIdPadreTabla(idTabla?:any){
+    console.log('tabla_ent',this.DATA_ENTIDAD );
+
     let arrayParametro:any[] = [{
       queryId: 3,
       mapValue: {
-        "param_id_tabla": this.DATA_ENTIDAD.idTablaEntidad
+        p_id_tabla: this.DATA_ENTIDAD.id
       }
     }];
 
     this.entidadService.cargarOBuscarEntidades(arrayParametro[0]).subscribe(data => {
       const arrayData:any[] = Array.of(data);
-      // console.log('ARRAY', arrayData);
 
       this.entidadTabla = [];
       for (let index = 0; index < arrayData[0].list.length; index++) {
         this.entidadTabla.push({
-          id:arrayData[0].list[index].idPadre,
+          // id:arrayData[0].list[index].idPadre,
           nombre:arrayData[0].list[index].valor_texto_1
         });
       }
@@ -94,18 +91,18 @@ export class ModalEntidadtablaComponent implements OnInit {
     let parametro: any =  {
         queryId: 10,
         mapValue: {
-          "param_nombre"        : formValues.nombre,
-          "param_descripcion"   : formValues.descripcion,
-          "param_id_padre"      : formValues.idPadre,
-          "param_id_tabla"      : this.DATA_ENTIDAD.eForm.entidad,
-          "CONFIG_USER_ID"      : this.userID,
-          "CONFIG_OUT_MSG_ERROR": '',
-          "CONFIG_OUT_MSG_EXITO": ''
+          p_nombre            : formValues.nombre,
+          p_descripcion       : formValues.descripcion,
+          p_id_tabla          : this.DATA_ENTIDAD.eForm.entidad,
+          CONFIG_USER_ID      : this.userID,
+          CONFIG_OUT_MSG_ERROR: '',
+          CONFIG_OUT_MSG_EXITO: ''
         },
       };
 
-    //  console.log('TABLA-ENT-AGREGADO', this.entidadTablaForm.value , parametro);
+     console.log('TABLA-ENT-AGREGADO', this.entidadTablaForm.value , parametro);
     this.entidadService.agregarEntidadTabla(parametro).subscribe((resp: any) => {
+      console.log('RESP-INSERT', resp);
 
       Swal.fire({
         title: 'Agregar Entidad!',
@@ -119,22 +116,22 @@ export class ModalEntidadtablaComponent implements OnInit {
   }
 
   actualizarTablaEntidad(){
+    console.log('DATA_ENTIDAD*', this.DATA_ENTIDAD);
+
     this.spinner.show();
 
     const formValues = this.entidadTablaForm.getRawValue();
     let parametro: any[] = [{
         queryId: 4,
         mapValue: {
-          "p_id"                : this.DATA_ENTIDAD.id,
-          "p_id_tabla"          : formValues.id_tabla,
-          "p_id_correlativo"    : formValues.id_correlativo,
-          "p_valor_texto_1"     : formValues.nombre,
-          "p_descripcion"       : formValues.descripcion,
-          "p_val_num"           : formValues.val_num,
-          "p_id_padre"          : formValues.idPadre,
-          "CONFIG_USER_ID"      : this.userID,
-          "CONFIG_OUT_MSG_ERROR":'',
-          "CONFIG_OUT_MSG_EXITO":''
+          p_id                : this.DATA_ENTIDAD.id,
+          p_id_tabla          : formValues.id_tabla,
+          p_id_correlativo    : formValues.id_correlativo,
+          p_valor_texto_1     : formValues.nombre,
+          p_descripcion       : formValues.descripcion,
+          CONFIG_USER_ID      : this.userID,
+          CONFIG_OUT_MSG_ERROR:'',
+          CONFIG_OUT_MSG_EXITO:''
         },
       }];
 
@@ -161,20 +158,14 @@ export class ModalEntidadtablaComponent implements OnInit {
 
   btnAction: string = 'Agregar'
   cargarTablaEntidadByID(){
-    // console.log('DTA_BY_MODAL', this.DATA_ENTIDAD, this.DATA_ENTIDAD.idTablaEntidad);
+    console.log('DTA_BY_MODAL', this.DATA_ENTIDAD,);
 
     if (!this.DATA_ENTIDAD.isCreation) {
       this.btnAction = 'Actualizar'
-        // this.entidadTablaForm.controls['id'        ].setValue(this.DATA_ENTIDAD.id);
-        this.entidadTablaForm.controls['id_correlativo'    ].setValue(this.DATA_ENTIDAD.id_correlativo);
-        this.entidadTablaForm.controls['nombre'            ].setValue(this.DATA_ENTIDAD.nombre);
-        this.entidadTablaForm.controls['descripcion'       ].setValue(this.DATA_ENTIDAD.descripcion);
-        this.entidadTablaForm.controls['entidad'           ].setValue(this.DATA_ENTIDAD.entidad);
-        this.entidadTablaForm.controls['id_tabla'          ].setValue(this.DATA_ENTIDAD.id_tabla)
-        this.entidadTablaForm.controls['idPadre'           ].setValue(this.DATA_ENTIDAD.idPadre);
-        this.entidadTablaForm.controls['NombreTablaEntidad'].setValue(this.DATA_ENTIDAD.NombreTablaEntidad);
-        this.entidadTablaForm.controls['nombrePadre'       ].setValue(this.DATA_ENTIDAD.nombrePadre);
-        this.entidadTablaForm.controls['idTablaEntidad'    ].setValue(this.DATA_ENTIDAD.idTablaEntidad);
+        this.entidadTablaForm.controls['id_correlativo'].setValue(this.DATA_ENTIDAD.id_correlativo);
+        this.entidadTablaForm.controls['nombre'        ].setValue(this.DATA_ENTIDAD.nombre);
+        this.entidadTablaForm.controls['descripcion'   ].setValue(this.DATA_ENTIDAD.descripcion);
+        this.entidadTablaForm.controls['id_tabla'      ].setValue(this.DATA_ENTIDAD.id_tabla)
     }
   }
 

@@ -84,7 +84,6 @@ export class AprobarImportarComponent implements OnInit {
       error : (err) => { console.log(err);
       }
     })
-
   }
 
   aprobarSolicitud() {
@@ -123,12 +122,13 @@ export class AprobarImportarComponent implements OnInit {
   }
 
 
-  onChange(event: any){
-    // this.archivoPdf.archivo = event.target.files[0];
-    this.imgFile = event.target.files[0];
+  onChange(e: any){
+    // this.archivoPdf.archivo = e.target.files[0];
+    this.imgFile = e.target.files[0];
+    // this.imgFile = e.target.files;
   }
 
-  guardarEvidencia(){
+  agregarEvidencia(){
     this.spinner.show();
     console.log('FORM-IMPORT', this.importForm.value);
 
@@ -139,8 +139,10 @@ export class AprobarImportarComponent implements OnInit {
     frmData.archivo = this.imgFile;
     frmData.idScore_m = this.idScoreM;
 
+    // alert(this.imgFile.length) NOTA: Mostrar alerta en la vista
+
     // LLamamos el Servicio
-    this.pdfImportService.addPdf(frmData).subscribe({
+    this.pdfImportService.agregarEvidencia(frmData).subscribe({
       next:(resp) => {
         console.log('SERV-ADD', resp);
         this.status = resp;
@@ -179,3 +181,6 @@ export class AprobarImportarComponent implements OnInit {
     this.dialogRef.close(succes);
   }
 }
+
+
+

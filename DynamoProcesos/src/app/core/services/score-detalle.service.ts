@@ -27,7 +27,8 @@ export class ScoreDetalleService {
   };
 
 
-  // listTablasExport(obj: any){
-  //   return this.http.post(API_SCORE, obj);
-  // }
+  geCorreosTDP(obj: any){
+    return this.http.post(API_SCORE, obj);
+  };
+
 }

@@ -51,13 +51,16 @@ export class EntidadComponent implements OnInit {
   idPadre     : any
   nombre      : any
   tablaEntidad: any
-  getInfoTotalTablaEntidad(id: any, evento: any) {
+  getInfoTotalTablaEntidad(id: any, e: any) {
+    console.log('EVENT', e);
+
     this.totaltablas.id = id;
-    this.idPadre = evento.target["options"][evento.target["options"].selectedIndex].id;
-    this.nombre  = evento.target["options"][evento.target["options"].selectedIndex].innerText;
+    // this.idPadre = e.target["options"][e.target["options"].selectedIndex].id;
+    this.nombre  = e.target["options"][e.target["options"].selectedIndex].innerText;
+    // this.nombre = e.target.files[0]
     this.tablaEntidad = [];
 
-    // console.log('NNOMBRE_ENT', this.nombre);
+    console.log('NOMBRE_ENT', this.nombre);
     this.cargarOBuscarEntidades(id);
   }
 
@@ -102,11 +105,11 @@ export class EntidadComponent implements OnInit {
     let parametro:any[] = [{
       queryId: 2,
       mapValue: {
-        "param_id_tabla"      : idTabla,
-        "param_id_correlativo": idCorrelativo,
-        "CONFIG_USER_ID"      : this.userID,
-        "CONFIG_OUT_MSG_ERROR":'',
-        "CONFIG_OUT_MSG_EXITO":''
+        p_id_tabla          : idTabla,
+        p_id_correlativo    : idCorrelativo,
+        CONFIG_USER_ID      : this.userID,
+        CONFIG_OUT_MSG_ERROR:'',
+        CONFIG_OUT_MSG_EXITO:''
       }
     }];
     this.entidadService.eliminarEntidad(parametro[0]).subscribe((resp: any) => {
@@ -163,7 +166,7 @@ export class EntidadComponent implements OnInit {
       console.log('List-Ent', this.listEntidad, this.listEntidad.length);
 
       this.nombreEntidad = resp.list.map((n:any) => n.id);
-      // console.log('NAME_ENT',this.nombreEntidad);
+      console.log('NAME_ENT',this.nombreEntidad);
 
     });
   }
@@ -190,8 +193,7 @@ export class EntidadComponent implements OnInit {
 
    actualizarEntidadTabla(DATA: any) {
     console.log('DATA_ENTIDAD',DATA);
-    this.dialog
-      .open(ModalEntidadtablaComponent, { width: '30%', data: DATA})
+    this.dialog.open(ModalEntidadtablaComponent, { width: '30%', data: DATA})
       .afterClosed().subscribe((resp) => {
         if (resp == 'Actualizar') {
           this.cargarOBuscarEntidades(DATA.id_tabla);
