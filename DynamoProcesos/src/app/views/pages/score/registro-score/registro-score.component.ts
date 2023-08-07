@@ -75,9 +75,8 @@ export class RegistroScoreComponent implements OnInit {
       mapValue: {
           // p_solicitante  : this.authService.getUserNameByRol(this.filtroForm.value.lider),
           p_actualiza_por: this.filtroForm.controls['actualiza_por'].value,
-          p_id_estado    : this.filtroForm.controls['id_estado'].value,
-          p_tipoFormato  : this.filtroForm.controls['tipo_formato'].value,
-
+          p_id_estado    : this.filtroForm.controls['id_estado'    ].value,
+          p_tipoFormato  : this.filtroForm.controls['tipo_formato' ].value,
           inicio         : this.datepipe.transform(this.filtroForm.value.fecha_solic_ini,'yyyy/MM/dd'),
           fin            : this.datepipe.transform(this.filtroForm.value.fecha_solic_fin,'yyyy/MM/dd'),
       }
@@ -95,7 +94,6 @@ export class RegistroScoreComponent implements OnInit {
   exportarRegistro(id: number, tipo_formato?: number) {
     const tpoFormato = this.listScore.find(f => f.formatoScore == tipo_formato)
     // console.log('tipo_formato', tpoFormato.formatoScore);
-
 
     if (tpoFormato.formatoScore.toUpperCase() == 'B2B') {
       this.exportScoreDetalleB2B(id);

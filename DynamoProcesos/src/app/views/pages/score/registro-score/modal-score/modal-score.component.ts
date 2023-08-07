@@ -71,6 +71,7 @@ export class ModalStoreComponent implements OnInit {
       this.ListaHistoricoCambios(this.DATA_SCORE,);
       this.cargarSCoreByID();
       this.getCorreosTDP();
+      this.getCorreosCopia();
       this.listScoreDuplicados()
       this.existeDuplicados();
     }
@@ -163,7 +164,7 @@ export class ModalStoreComponent implements OnInit {
     this.scoreService.cargarOBuscarScoreDetalle(parametro[0]).subscribe((resp: any) => {
         this.blockUI.stop();
 
-        // console.log('D A T A - score_D', resp, resp.list.length);
+        console.log('D A T A - score_D', resp, resp.list.length);
         //ESTADO SCORE_M SOLICITADO
         if ((this.authService.esUsuarioLider() || this.authService.esUsuarioGestor()) && (this.scoreForm.controls['id_estado_m'].value == Enums.SCORE_M_ESTADOS.SOLICITADO)) {
           this.listScoreDetalleGen   = resp.list.filter((detalle: any) =>(detalle.id_estado == Enums.ESTADOS_SCORE_D.SOLICITADO || detalle.id_estado == Enums.ESTADOS_SCORE_D.APROBADO) && detalle.tipo_score.toUpperCase() == 'GENERAL');
@@ -270,6 +271,7 @@ export class ModalStoreComponent implements OnInit {
 
   enviarSolicitudTDP() {
     console.log('CORREOS-TDPX', this.listCorreosTDP);
+    console.log('CORREOS-CC', this.listCorreosTDP);
 
     if (this.DATA_SCORE.estado.toUpperCase() == 'SOLICITADO' || this.DATA_SCORE.estado.toUpperCase() == 'APROBADO' || this.DATA_SCORE.estado.toUpperCase() == 'EN VALIDACIÓN') {
       Swal.fire({
@@ -282,7 +284,7 @@ export class ModalStoreComponent implements OnInit {
            cancelButtonText: 'Cancelar',
            html:
            '<div style="text-align: center; color: #6c757d">'+'¿Estas seguro que desea enviar la Solicitud a la siguiente lista de correos TDP y cambiar el estado a enviado? </div> </br>' +
-           '<div style="text-align: left; display: flex; font-size: 13px;">'+'Correos TDP:'+'</div>'+
+           '<div style="text-align: left; display: flex; font-size: 13px;font-weight: 700;">'+'Correos:'+'</div>'+
 
            '<div>'+
              '<small style="color: #08a0af;">'+
@@ -291,6 +293,15 @@ export class ModalStoreComponent implements OnInit {
                this.listCorreosTDP +
              ']'+
              // '</li>'+
+             '</small>'+
+           '</div>'+
+
+           '<div style="text-align: left; display: flex; font-size: 13px; font-weight: 700;">'+'CC:'+'</div>'+
+           '<div>'+
+             '<small style="color: #92a3ff;">'+
+             '['+
+               this.listCorreosCC +
+             ']'+
              '</small>'+
            '</div>',
 
@@ -390,7 +401,18 @@ export class ModalStoreComponent implements OnInit {
           this.listCorreosTDP = resp.list.map((x: any) => x.valor_texto_1);
         }
       });
+  };
+
+  listCorreosCC: string = '';
+  getCorreosCopia() {
+    let parametro: any[] = [{ queryId: 30 }];
+    this.scoreDetalleService.geCorreosTDP(parametro[0]).subscribe((resp: any) => {
+        if (resp && resp.list) {
+          this.listCorreosCC = resp.list.map((x: any) => x.valor_texto_1);
+        }
+      });
   }
+
 
   fechaIniPrueba: any = '';
   fechaFinPrueba: any = '';

@@ -26,11 +26,12 @@
             <mat-icon class="icon-18">undo</mat-icon> Regresar
           </div>
         </button>
-        <button
-          class="cli-btn-red btn-m btn-red"
+        <button class="cli-btn-red btn-m btn-red"
           (click)="actualizarComentarioScore_m()"
-          [disabled]="obs_mForm.invalid"
-        ><mat-icon class="icon-18">unpublished</mat-icon> Si, Observar
+          [disabled]="obs_mForm.invalid">
+          <div style="display: flex">
+            <mat-icon class="icon-18">unpublished</mat-icon> Si, Observar
+          </div>
         </button>
       </div>
     </div>

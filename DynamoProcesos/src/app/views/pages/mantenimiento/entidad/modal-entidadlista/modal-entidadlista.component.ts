@@ -37,7 +37,6 @@ export class ModalEntidadlistaComponent implements OnInit {
       nombre      : ['', Validators.required],
       descripcion : [''],
       entidad     : [''],
-      // idPadre     : ['']
     })
   }
 

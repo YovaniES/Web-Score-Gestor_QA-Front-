@@ -31,4 +31,8 @@ export class ScoreDetalleService {
     return this.http.post(API_SCORE, obj);
   };
 
+  getCorreosCopia(obj: any){
+    return this.http.post(API_SCORE, obj);
+  };
+
 }

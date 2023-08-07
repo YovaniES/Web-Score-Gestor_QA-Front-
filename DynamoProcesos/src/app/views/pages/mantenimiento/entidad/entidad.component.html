@@ -55,7 +55,7 @@
       </div>
 
       <!-- TABLA DE ENTIDADES ------------------------------------------------------------------>
-      <div style="overflow: auto; min-height: 150px">
+      <div style="overflow: auto; min-height: 221px">
         <table class="cli-table stripedtable underlinedtable">
           <thead>
             <tr class="bgc-blue-light c-white">
@@ -64,7 +64,6 @@
               <th>ID Correlativo</th>
               <th style="text-align: left">Nombre</th>
               <th>Descripción</th>
-              <!-- <th>Nombre Padre</th> -->
             </tr>
           </thead>
 
@@ -74,7 +73,7 @@
                       { itemsPerPage: pageSize,
                         currentPage : page,
                         totalItems  : totalEntidad }">
-              <td class="w90">
+              <td>
                 <div class="cli-table-actions">
                   <button
                     matTooltip="Actualizar"
@@ -82,20 +81,12 @@
                     (click)="actualizarEntidadTabla(entidad)"
                     ><mat-icon class="icon-13">edit</mat-icon>
                   </button>
-
-                  <!-- <button
-                    matTooltip="Eliminar"
-                    class="icon-btn btn-trans c-fucsia"
-                    (click)="abrirEliminarEntidad(entidad.id_tabla, entidad.id_correlativo, entidad.nombre)"
-                    ><mat-icon class="icon-13">delete_forever</mat-icon>
-                  </button> -->
                 </div>
               </td>
               <td class="w90">{{ entidad.id_tabla }}</td>
-              <td class="w90">{{ entidad.id_correlativo }}</td>
+              <td>{{ entidad.id_correlativo }}</td>
               <td style="min-width:250px; text-align: left;">{{ entidad.nombre }}</td>
               <td style="text-align: left">{{ entidad.descripcion }}</td>
-              <!-- <td>{{ entidad.nombrePadre | firstCapital }}</td> -->
             </tr>
           </tbody>
         </table>

@@ -23,7 +23,7 @@ export class EntidadComponent implements OnInit {
 
   page = 1;
   totalEntidad: number = 0;
-  pageSize = 5;
+  pageSize = 10;
 
   constructor(
     private entidadService: EntidadService,
@@ -48,16 +48,13 @@ export class EntidadComponent implements OnInit {
     id: "",
   };
 
-  idPadre     : any
   nombre      : any
   tablaEntidad: any
   getInfoTotalTablaEntidad(id: any, e: any) {
     console.log('EVENT', e);
 
     this.totaltablas.id = id;
-    // this.idPadre = e.target["options"][e.target["options"].selectedIndex].id;
     this.nombre  = e.target["options"][e.target["options"].selectedIndex].innerText;
-    // this.nombre = e.target.files[0]
     this.tablaEntidad = [];
 
     console.log('NOMBRE_ENT', this.nombre);
@@ -175,7 +172,6 @@ export class EntidadComponent implements OnInit {
     this.dialog.open(ModalEntidadlistaComponent, {width:'30%'})
                .afterClosed().subscribe(resp => {
       if (resp) {
-        // this.cargarOBuscarEntidades()
         this.getListEntidades()
       }
     })
