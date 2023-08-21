@@ -30,7 +30,11 @@
         </thead>
 
         <tbody>
-          <tr *ngFor="let duplicado of listDuplicados; let i = index">
+          <tr *ngFor="let duplicado of listDuplicados | paginate: {
+            itemsPerPage: pageSize,
+            id: 'scoreDuplicados',
+            currentPage: page,
+            totalItems: totalDuplScore }; let i = index">
             <td>{{i+1}}</td>
             <td>{{ duplicado.idScored       }}</td>
             <td>{{duplicado.solicitante     }}</td>
@@ -55,16 +59,13 @@
     </div>
   </div>
 
-  <!-- <div class="score-form-buttons" style="margin-top: 5%">
-    <button class="cli-btn btn-m btn-grey" (click)="close()">
-      <div style="display: flex">
-        <mat-icon class="icon-18">cancel</mat-icon> Salir
-      </div>
-    </button>
-    <button
-      class="cli-btn-red btn-m btn-red"
-      >
-      <mat-icon class="icon-18">unpublished</mat-icon>Observar
-    </button>
-  </div> -->
+  <div class="card-footer pb-0 pt-3" *ngIf="listDuplicados.length >= 10">
+    <pagination-controls
+      previousLabel="Anterior"
+      nextLabel="Siguiente"
+      [responsive]="false"
+      id="scoreDuplicados"
+      (pageChange)="cambiarPagina($event)">
+    </pagination-controls>
+  </div>
 </form>

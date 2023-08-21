@@ -45,7 +45,6 @@ export class RegistroScoreComponent implements OnInit {
     this.validarSiEsUsuarioLider()
     this.cargarOBuscarScoreM();
     this.getListEstado();
-    // this.getListFormatoEnvio();
   }
 
   newFilfroForm(){
