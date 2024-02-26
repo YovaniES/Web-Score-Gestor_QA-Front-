@@ -82,7 +82,6 @@ export class RegistroScoreComponent implements OnInit {
     }];
     this.scoreService.cargarOBuscarScoreM(parametro[0]).subscribe((resp: any) => {
     this.blockUI.stop();
-    //  console.log('DATA_SCORE_M**', resp.list );
       this.listScore = resp.list;
 
       this.spinner.hide();
@@ -125,8 +124,6 @@ export class RegistroScoreComponent implements OnInit {
       },
     ];
     this.scoreService.exportScoreDetalleB2B(parametro[0]).subscribe((resp: any) => {
-        console.log('TIPO-SCORE-B2B', resp.list);
-
         this.excellB2BService.dowloadExcel(resp.list);
       });
   }
@@ -138,7 +135,6 @@ export class RegistroScoreComponent implements OnInit {
 
     this.scoreService.getListEstado(parametro[0]).subscribe((resp: any) => {
       this.listEstado = resp.list;
-      // console.log('ESTADOS', resp.list);
     });
   }
 
@@ -176,8 +172,6 @@ export class RegistroScoreComponent implements OnInit {
   }
 
   actualizarScore(DATA: any) {
-    console.log('DATA_SCORE_MAESTRA', DATA);
-
     const dialogRef = this.dialog.open(ModalStoreComponent, { width: '75%', height: '90%', data: DATA});
     dialogRef.afterClosed().subscribe((resp) => {
           this.cargarOBuscarScoreM();

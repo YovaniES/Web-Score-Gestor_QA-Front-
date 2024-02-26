@@ -43,7 +43,6 @@ export class ObservarMasivamenteComponent implements OnInit {
     this.spinner.show();
     const formValues = this.obs_mForm.getRawValue();
     console.log('O B S_MAS', this.obs_mForm.value, this.DATA_SCORE.scoreObsForm.id_score);
-    console.log('ESTADO_M_IMPORT', this.obs_mForm.value, this.DATA_SCORE.scoreObsForm);
 
     let parametro: any[] = [
       {
